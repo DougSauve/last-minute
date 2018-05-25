@@ -1,0 +1,8 @@
+[ class $= "link" ] {
+  color: blue;
+  text-decoration: underline;
+}
+[ class $= "link" ]:hover {
+  cursor: pointer;
+  color: darken(blue, 10%);
+}

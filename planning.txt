@@ -1,0 +1,94 @@
+K. Here we are.
+
+So... what now?
+
+
+Models:
+
+  USER (all required)
+  _id objectID
+  name string
+  password hashed string
+  email address string
+  accountCreatedAt number
+  age range string
+  male/female string (length 1)
+  flags[] array of flags against user
+  token token
+
+  EVENT
+
+  _id objectID (all expect content required)
+  createdBy USER object
+  location coordinates (number, number)
+  createdAt number
+  expiresAt number
+  title string
+  content string
+  attendees[] array of USER objects
+  minimumPeople number
+  maximumPeople number
+
+Pages:
+
+  /LANDING: allow log in and sign up. Contains a list of current events going on within 10 miles.
+  /INDEX: Displays current events in area. Able to add comment, choose to attend, and flag event or comments. link to
+          event create, link to edit profile
+  /PROFILE: view profile; update or delete profile
+  /EVENT: create, update or delete an event
+
+crud ops by page:
+
+  USER
+  /landing: c, authenticate
+  /index r
+  /profile r u d
+  /event -
+
+  EVENT
+  /landing: r
+  /index r
+  /profile -
+  /event - c r u d
+
+redux store:
+
+  events (Array of Strings): events read from db
+  events_error (String): error message from /events db ops
+  user (Object): current user
+  distance_radius (Number): Number of miles to search for others (filter)
+
+  Time Goals (loosely):
+
+  Saturday:
+
+  1. Planning (1:30) V
+  2. Set up Models. (0:30) V
+  3. create simple forms on pages. (3:30) V
+  4. Implement basic styling for ease of use (:30) V
+  5. implement crud ops. (2:30)
+  6. get validation working.
+
+
+  Password change:
+  This should probably be a link. Yeah. A modal pops up and asks the user for their current password. Then it emails them a random verification number, which is required on the next slide. When they enter it, they can create a new password (double typed).
+
+
+  Geolocation:
+I need geolocation services for three things:
+
+1. create an event location. When this happens, I can either use the person's location (not a google API, this is my first choice), or they can specify a location using a map or an address.
+If I get their location from their browser's location object, I have coordinates. To show an address, I need to use the geocoder.
+If I get their location off a map, I have an address and a place id. Can I get coordinates too? I think so... using async code. I think that's why it returns a function in the console.
+If I get an address, I have an address. I can put that into the geocoder and get coordinates from here too. If the above way works.
+
+2. choose if an event is in range of a person. To do this, I need:
+Their location - from the browser's location object
+The event's location - in coordinates (then I can do math for it). I need to store event locations based on their coordinates in a tree.
+
+3. Show a person where an event is. To do this, I need:
+the event's coordinates and address - which I already have. I can show this on a map without using geocoding or geolocation - just an embedded map.
+
+So, the only times I'll need to use google geolocation/geocoding is when creating events. Otherwise it's free - I can use the browser's location object, and they don't need their own address or coordinates. I don't need place id at all.
+
+Sweet. :)
