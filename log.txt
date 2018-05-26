@@ -58,7 +58,17 @@ Thursday 24th:
 
 1. Make location the 3rd slide. (0:15) V
 2. Cleaned up minor bugs in /events, removed console.logs (1:00) V
-3. Implement Google Maps in slide 3 (2:15)
+3. Implement Google Maps in slide 3 (3:45) ...learned how to do everything I need to, now just need to get it all working.
+
+Friday 25th: (2:30)
+
+1. Create geocoding file (0:20) V
+2. Get personal geolocation working (2:10)
+
+Saturday 26th start at 11:30
+
+1. Get personal geolocation working (1:00) V
+2. Build reducer for location and implement so that map shows user location to start (1:00) V
 
 Next steps:
 

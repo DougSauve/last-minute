@@ -1,9 +1,13 @@
 import React from 'react';
 
 const CreateMeetingPlace_Address = (props) => (
-  <div className = "create-meeting-place-address">
-    Create Address form here - place finder api
-  </div>
+  // props: {
+  //   address = {props.address}
+  // }
+
+  <form className = "create-meeting-place-address">
+
+  </form>
 );
 
 export default CreateMeetingPlace_Address;

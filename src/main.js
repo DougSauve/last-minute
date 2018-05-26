@@ -24,7 +24,7 @@ const Router = () => {
       case '/': return <Landing />;
       case '/index': return <Index />;
       case '/profile': return <Profile />;
-      case '/events': return <Events />;
+      case '/events': return <Slide3 />;
       default:
       return <NotFound />;
   };
@@ -36,5 +36,6 @@ const WrappedApp = () => (
   </Provider>
 );
 
-ReactDOM.render(<Slide3 />, document.getElementById('app'));
-// ReactDOM.render(<WrappedApp />, document.getElementById('app'));
+ReactDOM.render(<WrappedApp />, document.getElementById('app'));
+
+export { store };
