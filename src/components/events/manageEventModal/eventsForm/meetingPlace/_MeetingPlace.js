@@ -3,10 +3,16 @@ const socket = io();
 
 import './_MeetingPlace.scss';
 
+import { connect } from 'react-redux';
+import { setCurrentAddress } from '../../../../../redux/currentLocation';
+
 import MeetingPlaceList from './MeetingPlaceList';
 import CreateMeetingPlace from './CreateMeetingPlace';
 
 class MeetingPlace extends React.Component {
+  // props: {
+  //   submitSlide3 = {this.props.submitSlide3}
+  // }
 
   state = {
     previousMeetingPlacesExist: true,
@@ -23,7 +29,14 @@ class MeetingPlace extends React.Component {
         }
 
         {(this.state.showCreateMeetingPlace) &&
-          <CreateMeetingPlace />
+          <CreateMeetingPlace
+            submitSlide3 = {this.props.submitSlide3}
+
+            lat = {this.props.lat}
+            lng = {this.props.lng}
+            address = {this.props.address}
+            setCurrentAddress = {this.props.setCurrentAddress}
+          />
         }
 
       </div>
@@ -31,4 +44,14 @@ class MeetingPlace extends React.Component {
   }
 };
 
-export default MeetingPlace;
+const mapStateToProps = (reduxState) => ({
+  lat: reduxState.currentLocationReducer.lat,
+  lng: reduxState.currentLocationReducer.lng,
+  address: reduxState.currentLocationReducer.address,
+});
+
+const mapDispatchToProps = {
+  setCurrentAddress,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MeetingPlace);

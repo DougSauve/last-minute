@@ -6,7 +6,7 @@ const setCurrentCoordinates = ({lat, lng}) => ({
 
 const setCurrentAddress = (address) => ({
   type: 'SET_CURRENT_ADDRESS',
-  address
+  address,
 });
 
 const currentLocationReducerDefaultState = {

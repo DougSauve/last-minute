@@ -6,42 +6,54 @@ const setPositionToStore = async () => {
 
   return new Promise((resolve, reject) => {
 
-    navigator.geolocation.getCurrentPosition( async (position) => {
-      
-      const lat = await position.coords.latitude;
-      const lng = await position.coords.longitude;
-      console.log(lat, lng);
+    navigator.geolocation.getCurrentPosition(
+      //success
+      async (position) => {
 
-      //set coordinates to redux store
-      store.dispatch(setCurrentCoordinates({lat, lng}));
+        const lat = await position.coords.latitude;
+        const lng = await position.coords.longitude;
+        console.log(lat, lng);
 
-      //get address and set to redux store
-      const address = await getAddress(lat, lng);
-      store.dispatch(setCurrentAddress(address));
+        //set coordinates to redux store
+        store.dispatch(setCurrentCoordinates({lat, lng}));
 
-      resolve({
-        lat,
-        lng,
-        address
-      });
+        //get address and set to redux store
+        const addressObject = await getAddress(lat, lng);
+        const address = addressObject.address;
+        store.dispatch(setCurrentAddress(address));
 
-    }, () => {
-      resolve({ err: 'unable to fetch location.' });
-    });
-
+        resolve({
+          lat,
+          lng,
+          address,
+        });
+      },
+      //failure
+      () => {
+        resolve({
+          lat: 0,
+          lng: 0,
+          address: '',
+          err: 'Location not found.',
+        })
+      },
+      //timeout
+      {timeout: 3000}
+    );
   });
 };
 
-const updateStorePosition = async (lat, lng) => {
+const updateStoreLocation = async (lat, lng) => {
   //set coordinates to redux store
   store.dispatch(setCurrentCoordinates({lat, lng}));
 
   //get address and set to redux store
-  const address = await getAddress(lat, lng);
+  const addressObject = await getAddress(lat, lng);
+  const address = addressObject.address;
   store.dispatch(setCurrentAddress(address));
 };
 
 export {
   setPositionToStore,
-  updateStorePosition,
+  updateStoreLocation,
 };

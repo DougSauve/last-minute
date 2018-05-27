@@ -166,7 +166,7 @@ class EventsForm extends React.Component {
 
   submitSlide3 = () => {
     //check if there are any errors
-    if (this.setSlide3Errors()) return; //not catching anything, or at least not tripping
+    if (this.setSlide3Errors()) return;
 
     //if no errors
     this.addEventProperties(

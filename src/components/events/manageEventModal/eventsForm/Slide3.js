@@ -18,7 +18,9 @@ const Slide3 = (props) => (
     </span>
     <br />
 
-    <MeetingPlace />
+    <MeetingPlace
+      submitSlide3 = {props.submitSlide3}
+     />
 
     <form className = "events__create-event-modal__slide3__form">
 
@@ -26,6 +28,8 @@ const Slide3 = (props) => (
         Name of meeting place:
       </span>
       <br />
+
+      <span className = "events__form__error">{props.placeError}</span>
 
       <span className = "form-secondary-text">
         For safety, please choose a public place close to your event, and go to your event's location from there.
@@ -45,15 +49,8 @@ const Slide3 = (props) => (
     </form>
 
     <div
-      className = "events__create-event-modal__continue-button"
-      // onClick = {props.submitSlide3()}
-    >
-      Continue
-    </div>
-
-    <div
       className = "events__create-event-modal__cancel-warn-button"
-      // onClick = {props.closeModal}
+      onClick = {props.closeModal}
     >
       Cancel
     </div>

@@ -15,7 +15,7 @@ import Index from './components/index/_Index';
 import Profile from './components/profile/_Profile';
 import Events from './components/events/_Events';
 
-import Slide3 from './components/events/manageEventModal/eventsForm/Slide3';
+// import Slide3 from './components/events/manageEventModal/eventsForm/Slide3';
 
 
 //router
@@ -24,7 +24,7 @@ const Router = () => {
       case '/': return <Landing />;
       case '/index': return <Index />;
       case '/profile': return <Profile />;
-      case '/events': return <Slide3 />;
+      case '/events': return <Events />;
       default:
       return <NotFound />;
   };
