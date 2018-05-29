@@ -1,67 +1,57 @@
 import React from 'react';
 
 const UserProfileForm = (props) => (
-  <form className = "profile__form">
-    Name:
-    <input
-      className = "profile__form__input-name"
-      type = "text"
-      name = "name"
-      disabled = "true"
-    />
-    <br />
+  // props: {
+  //   user = {this.props.user}
+  // }
+  <div className = "profile__info">
 
-    Password:
-    {/* if password is changed, send an email to verify the change (retype the new password). */}
-    <input
-      className = "profile__form__password"
-      type = "password"
-      name = "password"
-    />
-    <br />
+    <div className = "profile__info__name">
+    <span>Name:</span>
+    <span>{props.user.name}</span>
+    </div>
 
-    Email:
+    <div
+      className = "profile__change-password-button"
+      onClick = {() => {alert('sending change password email')}}
+    >
+      change password
+    </div>
+
     {/* if email address is changed, verify it */}
-    <input
-      className = "profile__form__input-email-address"
-      type = "email"
-      name = "email"
-    />
-    <br />
+    <div
+      className = "profile__email-info"
+    >
+      <span>Email Address:</span>
+      <span>{props.user.email}</span>
+      <span
+        className = "profile__change-email-adress-button"
+        onClick = {() => {alert('sending change password email')}}
+      >
+        change email address
+      </span>
+    </div>
 
-    Age Range:
     {/* age range can only be changed once every 5 years*/}
-    <select
-      className = "profile__form__input-age-range"
-      name = "ageRange"
+    <div
+      className = "profile__email-ageRange"
     >
-      <option value = {props.ageRange ? props.ageRange : ""}>
-        {props.ageRange && props.ageRange}
-      </option>
-      <option value = "1">under 18</option>
-      <option value = "2">18-30</option>
-      <option value = "3">30-45</option>
-      <option value = "4">45-60</option>
-      <option value = "5">60+</option>
-    </select>
-    <br />
+      <span>Age Range:</span>
+      <span>{props.user.ageRange}</span>
+      <span
+        className = "profile__change-age-range-button"
+        onClick = {() => {alert('sending change password email')}}
+      >
+        change age range
+      </span>
+    </div>
 
-    Gender:
-    <select
-      className = "profile__form__input-gender"
-      name = "gender"
-    >
-      <option value = {props.gender ? props.gender : ""}>
-        {props.gender && props.gender}
-      </option>
-      <option value = "Male">Male</option>
-      <option value = "Female">Female</option>
-      <option value = "Other">Other</option>
-      <option value = "None">Prefer not to say</option>
-    </select>
-    <br />
+    <div className = "profile__info__name">
+    <span>Gender:</span>
+    <span>{props.user.gender}</span>
+    </div>
 
-  </form>
+  </div>
 );
 
 export { UserProfileForm as default };

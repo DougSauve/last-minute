@@ -26,20 +26,20 @@ class CreateMeetingPlace extends React.Component {
   };
 
   componentDidMount() {
-    //set initial position in state
+    //set initial position in state - start at USA map
+    this.setState(() => ({
+      initialCenter: {
+        lat: 35,
+        lng:-92,
+      },
+      address: '',
+      readyForMap: true,
+    }));
+
+
     setPositionToStore().then((location) => {
-      if (location.err) {
-        //if geolocation doesn't work
-        this.setState(() => ({
-          initialCenter: {
-            lat: 35,
-            lng:-92,
-          },
-          address: location.err,
-          readyForMap: true,
-        }));
-      } else {
-        //if it does
+      if (!location.err) {
+        //if it works
         this.setState(() => ({
           initialCenter: {
             lat: location.lat,
@@ -47,8 +47,10 @@ class CreateMeetingPlace extends React.Component {
           },
           zoom: 15,
           address: location.address,
-          readyForMap: true,
         }));
+
+        this.currentMarker.marker.setPosition({ lat: location.lat, lng: location.lng });
+        this.currentMap.map.setCenter({ lat: location.lat, lng: location.lng });
       }
     });
   }
@@ -71,7 +73,6 @@ class CreateMeetingPlace extends React.Component {
 
   showAddressOnMap = async () => {
     const coords = await getCoords(this.props.address);
-    console.log('coords', coords);
     this.currentMarker.marker.setPosition({ lat: coords.lat, lng: coords.lng });
     this.currentMap.map.setCenter({ lat: coords.lat, lng: coords.lng });
     this.setState(() => ({ zoom: 15 }));
@@ -80,7 +81,13 @@ class CreateMeetingPlace extends React.Component {
   submitLocation = () => {
     console.log('writing to db:', this.props.address, this.props.lat, this.props.lng);
     console.log(this.props.submitSlide3);
-    this.props.submitSlide3();
+    this.props.submitSlide3(
+      {
+        lat: this.props.lat,
+        lng: this.props.lng,
+      },
+      this.props.address 
+    );
   };
 
   render() {

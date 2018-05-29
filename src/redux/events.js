@@ -9,11 +9,6 @@ const setEvents = ({ events }) => ({
   events
 });
 
-const addEvent = ({ event }) => ({
-  type: 'ADD_EVENT',
-  event
-});
-
 const setSubmitError = ({ submitError }) => ({
   type: 'SET_SUBMIT_ERROR',
   submitError,
@@ -40,8 +35,6 @@ const eventsReducer = (state = eventsReducerDefaultState, action) => {
     return { ...state, mode: action.mode };
     case 'SET_EVENTS':
     return { ...state, events: action.events };
-    case 'ADD_EVENT':
-    return { ...state, events: events.concat(action.event)};
     case 'SET_SUBMIT_ERROR':
     return {
       ...state,

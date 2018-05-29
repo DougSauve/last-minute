@@ -3,12 +3,16 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import 'normalize.css/normalize.css';
 
+
 import './base-styles/_Hub.scss';
 
 import Maintenance from './components/maintenance/maintenance';
 import NotFound from './components/notFound/notFound';
-import createStore, { setEventError } from './redux/store';
+import createStore, { setSocket } from './redux/store';
 const store = createStore();
+
+const socket = io();
+store.dispatch(setSocket(socket));
 
 import Landing from './components/landing/_Landing';
 import Index from './components/index/_Index';
@@ -21,19 +25,21 @@ import Events from './components/events/_Events';
 //router
 const Router = () => {
     switch (window.location.pathname) {
-      case '/': return <Landing />;
-      case '/index': return <Index />;
-      case '/profile': return <Profile />;
-      case '/events': return <Events />;
+      case '/': return <Landing socket = {socket} />;
+      case '/index': return <Index socket = {socket} />;
+      case '/profile': return <Profile socket = {socket} />;
+      case '/events': return <Events socket = {socket} />;
       default:
       return <NotFound />;
   };
 };
 
 const WrappedApp = () => (
-  <Provider store = {store} >
+  <div>
+    <Provider store = {store} >
     <Router />
   </Provider>
+</div>
 );
 
 ReactDOM.render(<WrappedApp />, document.getElementById('app'));

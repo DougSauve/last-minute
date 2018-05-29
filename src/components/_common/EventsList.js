@@ -1,5 +1,4 @@
 import React from 'react';
-const socket = io();
 
 import './EventsList.scss';
 
@@ -17,7 +16,7 @@ class EventsList extends React.Component {
 
   getAllEventsFromDB = () => {
     //populate store events from DB
-    socket.emit('readAllEvents', (err, res) => {
+    this.props.socket.emit('readAllEvents', (err, res) => {
       if (err) {
         console.log(err);
       } else {
@@ -41,7 +40,7 @@ class EventsList extends React.Component {
               </div>
 
               <div className = "index__events-list__event__place">
-                {(event.place) && <span>Where: {event.place}</span>}
+                {(event.place && (!this.props.limited)) && <span>Where: {event.place}</span>}
               </div>
 
               <div className = "index__events-list__event__expiresAt">
@@ -55,7 +54,7 @@ class EventsList extends React.Component {
               </div>
 
               <div className = "index__events-list__event__notes">
-                {(event.notes) && <span>Notes: {event.notes}</span>}
+                {(event.notes && (!this.props.limited)) && <span>Notes: {event.notes}</span>}
               </div>
 
             </div>
@@ -72,6 +71,7 @@ class EventsList extends React.Component {
 const mapStateToProps = (reduxStore) => ({
   //myEvent: reduxStore.myEventReducer.myEvent,
   events: reduxStore.indexReducer.events,
+  socket: reduxStore.socketReducer.socket,
 });
 const mapDispatchToProps = {
   setEvents,

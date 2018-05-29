@@ -10,6 +10,7 @@ const TitleBar = (props) => (
   //   title (string)
   //   titleClass (string)
   //   showLogin (boolean)
+  //   logIn (function)
   //   showLogout (boolean)
   // }
 
@@ -20,7 +21,7 @@ const TitleBar = (props) => (
       {props.title}
     </div>
     {(props.showLogout) && <Logout />}
-    {(props.showLogin) && <Login />}
+    {(props.showLogin) && <Login logIn = {props.logIn} />}
   </div>
 );
 

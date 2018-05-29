@@ -12,7 +12,7 @@ const MyEvent = (props) => (
     </div>
 
     <div className = "event__own-event__place">
-      {(props.event.place) && <span>Place: {props.event.place}</span>}
+      {(props.event.place) && <span>Place: {props.event.place} ({props.event.address}) </span>}
     </div>
 
     <div className = "event__own-event__expiresAt">

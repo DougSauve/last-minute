@@ -1,13 +1,12 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-
+import { setUser } from '../../redux/user';
 
 import TitleBar from '../_common/TitleBar';
 import Footer from '../_common/Footer';
 
 import UserProfileForm from './UserProfileForm';
-import ModifyProfileButtonContainer from './ModifyProfileButtonContainer';
 import Modal from '../_common/modal/_Modal';
 import VerifyDeleteModal from './VerifyDeleteModal';
 
@@ -17,38 +16,48 @@ import VerifyDeleteModal from './VerifyDeleteModal';
 
 class Profile extends React.Component {
   state = {
+    showChangePasswordModal: false,
+    showChangeEmailAddressModal: false,
+    showChangeAgeRangeModal: false,
     showVerifyDeleteModal: false,
   };
 
-  getProfileFromForm = () => {
-    const form = document.getElementsByClassName('profile__form')[0];
+  componentDidMount() {
+    this.props.socket.emit('getCurrentUser', (user) => {
+      if (user) this.props.setUser(user);
+    });
+  };
 
-    return {
-      email: form.elements.email.value.trim(),
-      password: form.elements.password.value,
-      ageRange: form.elements.ageRange.value,
-      gender: form.elements.gender.value,
-    };
-  }
-
-  updateProfile = () => {
-    const profile = this.getProfileFromForm();
-
-    console.log(profile);
-  }
-
+  setShowChangePasswordModal = () => {
+    this.setState(() => ({ showChangePasswordModal: true }));
+  };
+  setShowChangeEmailAddressModal = () => {
+    this.setState(() => ({ showChangeEmailAddressModal: true }));
+  };
+  setShowChangeAgeRangeModal = () => {
+    this.setState(() => ({ showChangeAgeRange: true }));
+  };
   setShowVerifyDeleteModal = () => {
     this.setState(() => ({ showVerifyDeleteModal: true }));
-  }
+  };
+
+  updateProfile = () => {
+    console.log('update profile');
+  };
 
   deleteProfile = () => {
-
-    console.log('delete');
-  }
+    console.log('delete profile');
+  };
 
   closeModal = () => {
-    this.setState(() => ({ showVerifyDeleteModal: false }));
-  }
+    const stateToChange = this.state;
+
+    for (let item in stateToChange) {
+        stateToChange[item] = false;
+    };
+
+    this.setState(() => ({ ...stateToChange }));
+  };
 
   render () {
     return (
@@ -61,13 +70,19 @@ class Profile extends React.Component {
           showLogout = {true}
         />
 
-        <UserProfileForm />
-
-        <ModifyProfileButtonContainer
-          updateProfile = {this.updateProfile}
-          setShowVerifyDeleteModal = {this.setShowVerifyDeleteModal}
+        <UserProfileForm
+          user = {this.props.user}
         />
 
+        {/* Delete Button */}
+        <div
+          className = "profile__delete-button"
+          onClick = {this.setShowVerifyDeleteModal}
+        >
+          Delete Profile
+        </div>
+
+        {/* delete modal */}
         {this.state.showVerifyDeleteModal &&
           <Modal>
             <VerifyDeleteModal
@@ -85,6 +100,11 @@ class Profile extends React.Component {
 };
 
 const mapStateToProps = (reduxStore) => ({
-
+  user: reduxStore.userReducer.user,
 });
-export default connect(mapStateToProps)(Profile);
+
+const mapDispatchToProps = {
+  setUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

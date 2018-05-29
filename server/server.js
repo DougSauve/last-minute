@@ -8,7 +8,9 @@ const server = http.createServer(app);
 const io = socketIO(server);
 const port = process.env.PORT || 4202;
 
-const db = require('./db/crud/_crud');
+const { EventSocketListener } = require('./sockets/EventSocketListener');
+const { UserSocketListener } = require('./sockets/UserSocketListener');
+const { StatePersister } = require('./sockets/StatePersister');
 
 const { sanitize } = require('../utils/sanitize');
 // serves a file in /public if it exists
@@ -25,94 +27,10 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-
 io.on('connection', (socket) => {
-  // console.log('server: connected.');
-
-  socket.on('createEvent', async (event, acknowledge) => {
-
-    let err;
-    let result;
-
-    // add event to DB
-    result = await db.createEvent(event);
-    if(!result) err = "An error occured during event creation.";
-    acknowledge(err, result);
-
-    if (result) {
-        socket.emit('eventCreated', result);
-    }
-  });
-  socket.on('readAllEvents', async (acknowledge) => {
-    let err;
-    let result;
-
-    result = await db.readAllEvents();
-
-    if (!result) err = `Could not find any blog posts.`;
-
-    acknowledge(err, result);
-  });
-  socket.on('updateEvent', async (event, acknowledge) => {
-    let err;
-    let result;
-    if (!await db.readEvent(event._id)) {
-      err = `Could not find that event.`;
-    } else {
-      result = await db.updateEvent(event);
-    }
-    acknowledge(err, result);
-  });
-  socket.on('deleteEvent', async (_id, acknowledge) => {
-    let err;
-    let result;
-
-    result = await db.deleteEvent(_id);
-
-    if (!result) err = `Could not find the event to delete.`;
-
-    acknowledge(err, result);
-  });
-  socket.on('deleteAllEvents', async (password, acknowledge) => {
-    let err;
-    let result;
-
-    result = await db.deleteAllEvents(sanitize(password));
-    if (result === true) {
-       err = 'Incorrect password.';
-    } else if (!result) err = `Could not find any events.`;
-
-    acknowledge(err, result);
-  });
-  socket.on('submitEvent', async (event, acknowledge) => {
-
-    let err;
-    let successMessage;
-    let result;
-
-    if (!await db.readEvent(event._id)) {
-
-      result = await db.createEvent(event);
-
-      if(!result) {
-        err = "An error occured during event creation.";
-      } else {
-        successMessage = `${result.title} has been added.`;
-      }
-
-    } else {
-
-      result = await db.updateEvent(event);
-
-      if (!result) {
-        err = "event update failed.";
-      } else {
-        successMessage = `${result.title} has been updated.`;
-      }
-    }
-
-    acknowledge(err, successMessage, result);
-  });
+  EventSocketListener(socket);
+  UserSocketListener(socket);
+  StatePersister(socket);
 });
 
 server.listen(port, () => {console.log(`http server listening on port ${port}`)});

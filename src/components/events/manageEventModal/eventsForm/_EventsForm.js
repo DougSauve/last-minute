@@ -1,6 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-const socket = io();
 
 import './_EventsForm.scss';
 
@@ -164,7 +163,7 @@ class EventsForm extends React.Component {
     return expiresAt;
   };
 
-  submitSlide3 = () => {
+  submitSlide3 = (location, address) => {
     //check if there are any errors
     if (this.setSlide3Errors()) return;
 
@@ -173,6 +172,14 @@ class EventsForm extends React.Component {
       "events__create-event-modal__slide3__form",
       "place",
     );
+
+    this.setState((prevState) => ({
+      eventUnderConstruction: {
+        ...prevState.eventUnderConstruction,
+        location,
+        address,
+      }
+     }));
 
     this.props.setCurrentSlide("4");
   };
@@ -228,13 +235,12 @@ class EventsForm extends React.Component {
        }));
     }
 
-    socket.emit ('submitEvent', this.state.eventUnderConstruction, (err, successMessage, res) => {
+    this.props.socket.emit ('submitEvent', this.state.eventUnderConstruction, (err, successMessage, res) => {
       if (err) {
         this.props.setSubmitError({ submitError: err });
       } else {
         this.props.setSubmitSuccess({ submitSuccess: successMessage });
-
-        //get the _id and add it to myEvent (for event creation )
+        //get the _id and add it to redux myEvent
         const myEvent = {
           ...this.state.eventUnderConstruction,
           _id: res._id,
@@ -242,6 +248,9 @@ class EventsForm extends React.Component {
 
         this.props.setMyEvent(myEvent);
         this.props.setCurrentSlide("1");
+
+        //add myEvent to persistState (be sure to get it in didmount!)
+        this.props.socket.emit('setMyEvent', myEvent);
 
         this.setState(() => ({
           eventUnderConstruction: {}
@@ -309,6 +318,7 @@ class EventsForm extends React.Component {
 };
 
 const mapStateToProps = ((reduxState) => ({
+  socket: reduxState.socketReducer.socket,
 
   submitError: reduxState.eventsReducer.submitError,
 

@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
     minlength: 6,
     trim: true,
   },
-  emailAddress: {
+  email: {
     type: String,
     required: true,
     minlength: 5,
@@ -24,10 +24,6 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
       validator: validator.isEmail,
       message: `{value} is not a valid email.`,
     },
-  },
-  accountCreatedAt: {
-    type: Number,
-    required: true,
   },
   ageRange: {
     type: String,
@@ -40,6 +36,11 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
     length: 1,
     trim: true,
   },
+  //system-generated properties below here
+  accountCreatedAt: {
+    type: String,
+    required: true,
+  },
   meetingPlaces: [{
     name: {
       type: String,
@@ -49,21 +50,23 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
       lat: {
         type: Number,
         required: true,
-      }
+      },
       lng: {
         type: Number,
         required: true,
-      }
+      },
     },
     address: {
       type: String,
       required: true,
     },
   }],
-  flags: {
-    type: Array,
-    required: true,
-  },
+  flags: [{
+    flag: {
+      type: String,
+      required: true,
+    },
+  }],
   tokens: [{
     access: {
       type: String,
@@ -72,7 +75,7 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
     token: {
       type: String,
       required: true,
-    }
+    },
   }]
 });
 

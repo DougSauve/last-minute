@@ -1,5 +1,4 @@
 import React from 'react';
-const socket = io();
 
 import { connect } from 'react-redux';
 import { setMode, setSubmitError, setSubmitSuccess } from '../../../redux/events';
@@ -8,7 +7,7 @@ import { setMyEvent } from '../../../redux/myEvent';
 class HandleDelete extends React.Component {
 
   deleteEvent = () => {
-    socket.emit ('deleteEvent', this.props.event_id, (err, res) => {
+    this.props.socket.emit ('deleteEvent', this.props.event_id, (err, res) => {
       if (err) {
         this.props.setSubmitError({ submitError: err });
       } else {
@@ -59,6 +58,7 @@ class HandleDelete extends React.Component {
 };
 
 const mapStateToProps = ((reduxState) => ({
+  socket: reduxState.socketReducer.socket,
   mode: reduxState.eventsReducer.mode,
   submitError: reduxState.eventsReducer.submitError,
 

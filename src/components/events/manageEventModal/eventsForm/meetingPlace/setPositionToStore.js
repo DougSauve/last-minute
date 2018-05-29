@@ -38,7 +38,10 @@ const setPositionToStore = async () => {
         })
       },
       //timeout
-      {timeout: 3000}
+      {
+        timeout: 2500,
+        maximumAge: 30000,
+      }
     );
   });
 };

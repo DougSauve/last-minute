@@ -9,8 +9,6 @@ Sunday:
 3. Got /read route working from DB.
 *4. Restructured the directory to be less deep. Learning/developing best practices time here too. (0:45?)
 
-
-
 Monday:
 
 *1. Reworked form to host update as well as create, and button to handle dynamic actions.(4:00)
@@ -72,20 +70,37 @@ Saturday 26th (8:15)
 3. Implement backup for self geolocation fail (3:00) V
 4. Create address bar and make it and the map inter-responsive (3:15) V
 
-Sunday 27th 3:00
+Sunday 27th (1:30)
 
 1. Slide 3 and /events creation modal now add the current event to redux state. (0:45) V
+2. Rework the map to load with USA then switch to their location if it loads. (0:05) V
+3. Display the current event in myEvent and add it to the Events db. (0:10) V
+4. Began reworking /profile form to show info not as editable, but with link to change (0:30)
 
-see if I can rework the map to load with USA then switch to their location if that works.
-now, need to display the current event in myEvent and add it to the Events db.
+Monday 28th (6:35)
+
+1. Get sign up working, validating input and generating errors (3:45) V
+2. Set up /user crud ops (0:20) V
+3. Set up /user routes on the server (0:30) V
+4. Write new users to the database (1:00) V
+5. Be able to view user info in the profile page. (1:00)
+
+**I don't think I'm emitting events from the server properly. This is the second issue I've had doing it.
+**Solved it! I need to declare one client-side socket for the application, not for each page!!
+
+Tuesday 29th 4:10
+1. Be able to view user info in the profile page. (1:20) V
+2. Persist myEvent across the app, not just the page (0:30) V
+
+
+
 Then, create the user - add this to their list of meeting places.
 
 Next steps:
 
-1. Get geolocation working. Add event address to the Event model.
-2. Get the /profile page working
-3. Get cleanup for older-than-a-day (less 1 hour) events -mark events that have already started... add a 'keep this event posted for an hour past when it starts' checkbox, automatically checked
+3. Get cleanup for old events
 4. Implement users in events and user validation
+5. If user's location is available, show distance to events. Might have to ask for location, user has to search, if it's not available.
 
 Further features:
 1. Implement flags

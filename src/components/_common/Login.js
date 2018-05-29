@@ -1,9 +1,12 @@
 import React from 'react';
 
-const Login = () => (
+const Login = (props) => (
+  // props: {
+  //   logIn = {props.logIn}
+  // }
   <div
     className = "login"
-    onClick = {() => {alert('log in')}}
+    onClick = {props.logIn}
   >
       Log in
   </div>
