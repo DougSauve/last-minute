@@ -1,13 +1,11 @@
 Set up password verification email when password is changed
 
-Figure out how to make a geolocation map show up
-
-Reorganize /events form to have 4 slides instead of its current layout X
-
-Landing page needs a filtered list of events
-
-Wire up user account creation on landing page
-
 Make sure that when a user joins an event it removes their myEvent (and warns them).
 
-Maybe I should make location the last slide. I'll make it the 3rd. 
+Age range should only be changed every 5 years.
+
+Maybe I should make location the last slide. I'll make it the 3rd. X
+Wire up user account creation on landing page X
+Landing page needs a filtered list of events X
+Reorganize /events form to have 4 slides instead of its current layout X
+Figure out how to make a geolocation map show up X

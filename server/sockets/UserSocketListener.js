@@ -40,7 +40,7 @@ const UserSocketListener = (socket) => {
     let result;
 
     if (!await db.readUser(user._id)) {
-      err = `Could not find that event.`;
+      err = 'Could not find the specified user.';
     } else {
       result = await db.updateUser(user);
     }

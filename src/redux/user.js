@@ -4,13 +4,13 @@ const setUser = (user) => ({
   user
 });
 
-const setSubmitError = ({ submitError }) => ({
+const setSubmitError = ( submitError ) => ({
   type: 'SET_SUBMIT_ERROR',
   submitError,
   submitSuccess: '',
 });
 
-const setSubmitSuccess = ({ submitSuccess }) => ({
+const setSubmitSuccess = ( submitSuccess ) => ({
   type: 'SET_SUBMIT_SUCCESS',
   submitSuccess,
   submitError: '',

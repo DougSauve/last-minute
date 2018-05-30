@@ -3,7 +3,6 @@ const setEvents = (events = []) => ({
   events
 });
 
-
 const indexReducerDefaultState = {
   events: [],
 };

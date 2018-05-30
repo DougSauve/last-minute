@@ -19,12 +19,13 @@ const readAllEvents = async () => {
   return res;
 };
 
-const removeExpiredEvents = async (res) => {
-
+const removeExpiredEvents = async (res) => { //currently a counter
+  let count = 1;
   res.forEach((event) => {
-    console.log('events are cool'); //working :)
+    count++
   });
 
+  console.log(`There are ${count} events in the db.`);
   //go through the list from the beginning and check to see if expiresAt is older than new moment. If it is, remove it.
   //or... I can instead check each one's expiry date as it gets chosen to show to a user. If it's too old, discard it.
   //

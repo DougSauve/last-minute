@@ -151,6 +151,7 @@ class Landing extends React.Component {
           showLogin = {true}
           logIn = {this.logIn}
         />
+
         <EntryButtonContainer
           setShowSignUpModal = {this.setShowSignUpModal}
           setShowLogInModal = {this.setShowLogInModal}

@@ -3,6 +3,9 @@ import React from 'react';
 const UserProfileForm = (props) => (
   // props: {
   //   user = {this.props.user}
+    // setShowChangePasswordModal = {this.setShowChangePasswordModal}
+    // setShowChangeEmailModal = {this.setShowChangeEmailModal}
+    // setShowChangeAgeRangeModal = {this.setShowChangeAgeRangeModal}
   // }
   <div className = "profile__info">
 
@@ -13,7 +16,7 @@ const UserProfileForm = (props) => (
 
     <div
       className = "profile__change-password-button"
-      onClick = {() => {alert('sending change password email')}}
+      onClick = {props.setShowChangePasswordModal}
     >
       change password
     </div>
@@ -24,26 +27,26 @@ const UserProfileForm = (props) => (
     >
       <span>Email Address:</span>
       <span>{props.user.email}</span>
-      <span
-        className = "profile__change-email-adress-button"
-        onClick = {() => {alert('sending change password email')}}
+      <div
+        className = "profile__change-email-button"
+        onClick = {props.setShowChangeEmailModal}
       >
         change email address
-      </span>
+      </div>
     </div>
 
     {/* age range can only be changed once every 5 years*/}
     <div
-      className = "profile__email-ageRange"
+      className = "profile__change-ageRange"
     >
       <span>Age Range:</span>
-      <span>{props.user.ageRange}</span>
-      <span
+      <span>{props.userFriendlyAgeRange}</span>
+      <div
         className = "profile__change-age-range-button"
-        onClick = {() => {alert('sending change password email')}}
+        onClick = {props.setShowChangeAgeRangeModal}
       >
         change age range
-      </span>
+      </div>
     </div>
 
     <div className = "profile__info__name">
