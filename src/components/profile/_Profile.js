@@ -2,7 +2,7 @@ import React from 'react';
 import validator from 'validator';
 
 import { connect } from 'react-redux';
-import { setUser, setSubmitError, setSubmitSuccess } from '../../redux/user';
+import { setUser, setUserSubmitError, setUserSubmitSuccess } from '../../redux/user';
 
 import TitleBar from '../_common/TitleBar';
 import Footer from '../_common/Footer';
@@ -30,8 +30,12 @@ class Profile extends React.Component {
   };
 
   componentDidMount() {
+    this.props.socket.emit('getMyEvent', (event) => {
+      this.props.setMyEvent(event);
+    });
     this.props.socket.emit('getCurrentUser', (user) => {
-      if (user) this.props.setUser(user);
+      if (!user) return window.location.pathname = '/';
+      this.props.setUser(user);
     });
   };
 
@@ -50,7 +54,7 @@ class Profile extends React.Component {
 
   requestPasswordReset = () => {
     //reset error message
-    this.props.setSubmitError('');
+    this.props.setUserSubmitError('');
 
     //validate password + handle errors
     const form = document.getElementsByClassName('profile__change-password-modal__form')[0];
@@ -59,11 +63,11 @@ class Profile extends React.Component {
     const newPasswordCheck = form.elements.newPasswordCheck.value;
 
     if (currentPassword !== this.props.user.password) { //this will need to be checked by hash later
-      return this.props.setSubmitError('Incorrect password.');
+      return this.props.setUserSubmitError('Incorrect password.');
     };
 
-    if (newPassword.length < 6) return this.props.setSubmitError('Password must be at least 6 characters long.');
-    if (newPassword !== newPasswordCheck) return this.props.setSubmitError('Passwords do not match.');
+    if (newPassword.length < 6) return this.props.setUserSubmitError('Password must be at least 6 characters long.');
+    if (newPassword !== newPasswordCheck) return this.props.setUserSubmitError('Passwords do not match.');
 
     const updatedUser = {
       ...this.props.user,
@@ -75,7 +79,7 @@ class Profile extends React.Component {
 
   requestEmailReset = () => {
     //reset error message
-    this.props.setSubmitError('');
+    this.props.setUserSubmitError('');
 
     //validate password + handle errors
     const form = document.getElementsByClassName('profile__change-email-modal__form')[0];
@@ -84,13 +88,13 @@ class Profile extends React.Component {
     const newEmailCheck = form.elements.newEmailCheck.value;
 
     if (password !== this.props.user.password) { //this will need to be checked by hash later
-      return this.props.setSubmitError('Incorrect password.');
+      return this.props.setUserSubmitError('Incorrect password.');
     };
 
-    if (!validator.isEmail(newEmail)) return this.props.setSubmitError('Please enter a valid email address.');
+    if (!validator.isEmail(newEmail)) return this.props.setUserSubmitError('Please enter a valid email address.');
     //this should send a verification email later - for password too
 
-    if (newEmail !== newEmailCheck) return this.props.setSubmitError('Emails do not match.');
+    if (newEmail !== newEmailCheck) return this.props.setUserSubmitError('Emails do not match.');
 
     const updatedUser = {
       ...this.props.user,
@@ -115,10 +119,10 @@ class Profile extends React.Component {
     //update to db
     this.props.socket.emit('updateUser', updatedUser, (err, res) => {
       if (err) {
-        this.props.setSubmitError(err);
+        this.props.setUserSubmitError(err);
       } else {
         this.props.socket.emit('setCurrentUser', res, () => {
-          this.props.setSubmitSuccess(successMessage);
+          this.props.setUserSubmitSuccess(successMessage);
           //update redux state
           this.props.setUser(res);
           this.closeModal();
@@ -132,10 +136,10 @@ class Profile extends React.Component {
 
     this.props.socket.emit('deleteUser', this.props.user._id, (err, res) => {
       if (err) {
-        this.props.setSubmitError(err);
+        this.props.setUserSubmitError(err);
       } else {
         this.props.socket.emit('setCurrentUser', null, () => {
-          this.props.setSubmitSuccess('Your profile was succesfully deleted.');//never seen :/
+          this.props.setUserSubmitSuccess('Your profile was succesfully deleted.');//never seen :/
           //update redux state
           this.props.setUser({});
           this.closeModal();
@@ -254,8 +258,8 @@ const mapStateToProps = (reduxStore) => ({
 
 const mapDispatchToProps = {
   setUser,
-  setSubmitError,
-  setSubmitSuccess,
+  setUserSubmitError,
+  setUserSubmitSuccess,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

@@ -1,8 +1,9 @@
-Set up password verification email when password is changed
-
 Make sure that when a user joins an event it removes their myEvent (and warns them).
 
 Age range should only be changed every 5 years.
+
+Hosted event needs to persist between sessions - good in db but not in redux.
+
 
 Maybe I should make location the last slide. I'll make it the 3rd. X
 Wire up user account creation on landing page X

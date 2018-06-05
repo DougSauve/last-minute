@@ -7,7 +7,7 @@ import { setMyEvent } from '../../../redux/myEvent';
 class HandleDelete extends React.Component {
 
   deleteEvent = () => {
-    this.props.socket.emit ('deleteEvent', this.props.event_id, (err, res) => {
+    this.props.socket.emit ('deleteEvent', this.props.user, this.props.event_id, (err, res) => {
       if (err) {
         this.props.setSubmitError({ submitError: err });
       } else {
@@ -61,6 +61,8 @@ const mapStateToProps = ((reduxState) => ({
   socket: reduxState.socketReducer.socket,
   mode: reduxState.eventsReducer.mode,
   submitError: reduxState.eventsReducer.submitError,
+
+  user: reduxState.userReducer.user,
 
   eventTitle: reduxState.myEventReducer.myEvent.title,
   event_id: reduxState.myEventReducer.myEvent._id,

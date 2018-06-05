@@ -213,12 +213,27 @@ class EventsForm extends React.Component {
      }));
   };
 
-  submitSlide4 = () => {
+  submitSlide4 = async () => {
 
     this.addEventProperties(
       "events__create-event-modal__slide4__form",
       "notes",
     );
+
+    //add createdBy
+    await this.setState((prevState) => ({
+      eventUnderConstruction: {
+        ...prevState.eventUnderConstruction,
+        createdBy: {
+          _id: this.props.user._id,
+          name: this.props.user.name,
+          ageRange: this.props.user.ageRange,
+          gender: this.props.user.gender,
+        },
+      }
+     }));
+
+     console.log(this.state.eventUnderConstruction, 'foo');
 
     this.submitEvent();
   };
@@ -235,21 +250,22 @@ class EventsForm extends React.Component {
        }));
     }
 
-    this.props.socket.emit ('submitEvent', this.state.eventUnderConstruction, (err, successMessage, res) => {
+    this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, successMessage, res) => {
       if (err) {
         this.props.setSubmitError({ submitError: err });
       } else {
         this.props.setSubmitSuccess({ submitSuccess: successMessage });
+
         //get the _id and add it to redux myEvent
         const myEvent = {
           ...this.state.eventUnderConstruction,
           _id: res._id,
         };
-
         this.props.setMyEvent(myEvent);
+
         this.props.setCurrentSlide("1");
 
-        //add myEvent to persistState (be sure to get it in didmount!)
+        //add myEvent to persistState (be sure to get it back on each page in componentDidMount!)
         this.props.socket.emit('setMyEvent', myEvent);
 
         this.setState(() => ({
@@ -323,6 +339,7 @@ const mapStateToProps = ((reduxState) => ({
   submitError: reduxState.eventsReducer.submitError,
 
   myEvent: reduxState.myEventReducer.myEvent,
+  user: reduxState.userReducer.user,
 
   expiresAtError: reduxState.eventsFormErrorsReducer.expiresAtError,
   titleError: reduxState.eventsFormErrorsReducer.titleError,

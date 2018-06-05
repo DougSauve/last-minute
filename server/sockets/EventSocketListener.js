@@ -1,21 +1,19 @@
-const db = require('../db/crud/_crud_Events');
+const db = require('../db/crud_Events/_crud_Events');
+const user_db = require('../db/crud_Users/_crud_Users');
 
 const EventSocketListener = (socket) => {
 
-  socket.on('createEvent', async (event, acknowledge) => {
-
+  socket.on('readEvent', async (_id, acknowledge) => {
     let err;
-    let result;
+    let res;
 
-    // add event to DB
-    result = await db.createEvent(event);
-    if(!result) err = "An error occured during event creation.";
-    acknowledge(err, result);
+    res = await db.readEvent(_id);
 
-    if (result) {
-        socket.emit('eventCreated', result);
-    }
+    if (!res) err = 'Could not find event';
+
+    acknowledge(err, res);
   });
+
   //this will change to 'read all events in user's area. Checking for age will become part of this.'
   socket.on('readAllEvents', async (acknowledge) => {
     let err;
@@ -23,27 +21,17 @@ const EventSocketListener = (socket) => {
 
     result = await db.readAllEvents();
 
-    if (!result) err = `Could not find any blog posts.`;
+    if (!result) err = `Could not find any events.`;
 
     acknowledge(err, result);
   });
 
-  socket.on('updateEvent', async (event, acknowledge) => {
-    let err;
-    let result;
-    if (!await db.readEvent(event._id)) {
-      err = `Could not find that event.`;
-    } else {
-      result = await db.updateEvent(event);
-    }
-    acknowledge(err, result);
-  });
-
-  socket.on('deleteEvent', async (_id, acknowledge) => {
+  socket.on('deleteEvent', async (user, _id, acknowledge) => {
     let err;
     let result;
 
     result = await db.deleteEvent(_id);
+    user_db.removeHostedEventFromUser(user, result);
 
     if (!result) err = `Could not find the event to delete.`;
 
@@ -62,7 +50,7 @@ const EventSocketListener = (socket) => {
     acknowledge(err, result);
   });
 
-  socket.on('submitEvent', async (event, acknowledge) => {
+  socket.on('submitEvent', async ({user, event}, acknowledge) => {
 
     let err;
     let successMessage;
@@ -76,6 +64,10 @@ const EventSocketListener = (socket) => {
         err = "An error occured during event creation.";
       } else {
         successMessage = `${result.title} has been added.`;
+
+        //add event to user's attendingEvents list and hostedEvents list.
+        user_db.addEventToUser(user, result);
+        user_db.addHostedEventToUser(user, result);
       }
 
     } else {

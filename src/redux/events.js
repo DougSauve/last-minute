@@ -4,9 +4,14 @@ const setMode = ( mode ) => ({
   mode
 });
 
-const setEvents = ({ events }) => ({
+const setEvents = ( events ) => ({
   type: 'SET_EVENTS',
   events
+});
+
+const addEvent = (event) => ({
+  type: 'ADD_EVENT',
+  event
 });
 
 const setSubmitError = ({ submitError }) => ({
@@ -35,6 +40,8 @@ const eventsReducer = (state = eventsReducerDefaultState, action) => {
     return { ...state, mode: action.mode };
     case 'SET_EVENTS':
     return { ...state, events: action.events };
+    case 'ADD_EVENTS':
+    return { ...state, events: events.concat(action.event) };
     case 'SET_SUBMIT_ERROR':
     return {
       ...state,
@@ -55,6 +62,7 @@ const eventsReducer = (state = eventsReducerDefaultState, action) => {
 export {
   eventsReducer as default,
   setEvents,
+  addEvent,
   setSubmitError,
   setSubmitSuccess,
   setMode,

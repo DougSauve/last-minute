@@ -1,16 +1,24 @@
 const mongoose = require('mongoose');
 
 const Event = mongoose.model('Event', {
-  // creator: {
-  //   id: {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     required: true,
-  //   },
-  //   name: {
-  //     type: String,
-  //     required: true,
-  //   }
-  // },
+  createdBy: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    ageRange: {
+      type: Number,
+      required: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+    },
+  },
   location: {
     lat: {
       type: Number,
@@ -58,11 +66,24 @@ const Event = mongoose.model('Event', {
     type: String,
     required: true,
   },
-  // attendees: {
-  //   //each entry contains an object: { User _id, name }
-  //   type: Array,
-  //   required: true,
-  // },
+  attendees: [{
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    ageRange: {
+      type: Number,
+      required: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+    },
+  }],
   minimumPeople: {
     type: Number,
     required: true,

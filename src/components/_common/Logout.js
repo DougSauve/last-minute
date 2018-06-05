@@ -1,12 +1,31 @@
 import React from 'react';
 
-const Logout = () => (
+import { connect } from 'react-redux';
+import { setMyEvent } from '../../redux/myEvent';
+import { setUser } from '../../redux/user';
+
+const Logout = (props) => (
   <div
     className = "logout"
-    onClick = {() => {alert('log out')}}
+    onClick = {() => {
+      props.socket.emit('setMyEvent', null);
+      props.socket.emit('setCurrentUser', null, () => {
+        window.location.pathname = '/';
+      });
+
+    }}
   >
       Log Out
   </div>
 );
 
-export { Logout as default };
+const mapStateToProps = (reduxStore) => ({
+  socket: reduxStore.socketReducer.socket,
+});
+
+const mapDispatchToProps = {
+  setMyEvent,
+  setUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Logout);

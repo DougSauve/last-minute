@@ -24,7 +24,9 @@ const Slide3 = (props) => (
 
     <form className = "events__create-event-modal__slide3__form">
 
-      <span className = "form-heading">
+      <span
+        className = "form-heading"
+      >
         Name of meeting place:
       </span>
       <br />
@@ -39,7 +41,7 @@ const Slide3 = (props) => (
       <input
         type = "text"
         name = "place"
-        // defaultValue = {(props.place) && props.place}
+        defaultValue = {(props.place) && props.place}
       />
       <br />
 

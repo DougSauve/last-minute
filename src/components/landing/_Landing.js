@@ -9,11 +9,11 @@ import {
   setPasswordCheckError,
   clearErrors,
 } from '../../redux/landingFormErrors';
-import { setUser, setSubmitError, setSubmitSuccess } from '../../redux/user';
+import { setUser, setUserSubmitError, setUserSubmitSuccess } from '../../redux/user';
 
 
 import TitleBar from '../_common/TitleBar';
-import EventsList from '../_common/EventsList';
+import EventsList from './EventsList';
 import Footer from '../_common/Footer';
 import { blacklist } from '../../../utils/sanitize';
 
@@ -130,7 +130,24 @@ class Landing extends React.Component {
   };
 
   logIn = () => {
-    alert('log in working');
+    const form = document.getElementsByClassName('landing__logIn-form')[0];
+    const creds = {
+      email: form.elements.email.value,
+      password: form.elements.password.value,
+    };
+
+
+    this.props.socket.emit('validateUser', creds, (err, user) => {
+      if (err) {
+        this.props.setUserSubmitError(err);
+      } else {
+        this.props.setUser(user);
+        this.props.socket.emit('setCurrentUser', user, () => {
+          this.closeModal();
+          window.location.pathname = '/index';
+        });
+      };
+    });
   };
 
   closeModal = () => {
@@ -141,6 +158,8 @@ class Landing extends React.Component {
     };
 
     this.setState(() => ({ ...stateToChange }));
+    this.props.clearErrors();
+    this.props.setUserSubmitError('');
   };
 
   render() {
@@ -149,7 +168,7 @@ class Landing extends React.Component {
 
         <TitleBar
           showLogin = {true}
-          logIn = {this.logIn}
+          logIn = {this.setShowLogInModal}
         />
 
         <EntryButtonContainer
@@ -158,7 +177,6 @@ class Landing extends React.Component {
         />
 
         <EventsList
-          firstWordOfClass = "landing"
           limited = {true}
         />
 
@@ -182,7 +200,10 @@ class Landing extends React.Component {
           <Modal>
             <LogInModal
               logIn = {this.logIn}
-              closeModal = {this.closeModal}/>
+              closeModal = {this.closeModal}
+
+              submitError = {this.props.submitError}
+            />
           </Modal>
         }
 
@@ -213,8 +234,8 @@ const mapDispatchToProps = {
   clearErrors,
 
   setUser,
-  setSubmitError,
-  setSubmitSuccess,
+  setUserSubmitError,
+  setUserSubmitSuccess,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);
