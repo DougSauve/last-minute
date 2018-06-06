@@ -14,9 +14,13 @@ class MeetingPlace extends React.Component {
   // }
 
   state = {
-    previousMeetingPlacesExist: true,
-    showCreateMeetingPlace: true,
+    previousMeetingPlacesExist: (!!this.props.user.meetingPlaces[0]),
+    showCreateMeetingPlace: false,
   }
+
+  setShowCreateMeetingPlace = (value) => {
+    this.setState(() => ({ showCreateMeetingPlace: value }))
+  };
 
   render() {
     return (
@@ -24,17 +28,33 @@ class MeetingPlace extends React.Component {
         {/* if there are previous meeting places, suggest those in a list: MeetingPlaceList should render. Otherwise, createMeetingPlace should render. */}
 
         {(this.state.previousMeetingPlacesExist) &&
-          <MeetingPlaceList />
+          <MeetingPlaceList
+            meetingPlacesList = {this.props.user.meetingPlaces}
+            submitSlide3 = {this.props.submitSlide3}
+          />
+        }
+
+        {
+          <div
+            className = "events__meeting-place__create-new-meeting-place-button"
+            onClick = {this.setShowCreateMeetingPlace.bind(this, true)}
+          >
+            New meeting place
+          </div>
         }
 
         {(this.state.showCreateMeetingPlace) &&
           <CreateMeetingPlace
             submitSlide3 = {this.props.submitSlide3}
+            setShowCreateMeetingPlace = {this.setShowCreateMeetingPlace}
 
             lat = {this.props.lat}
             lng = {this.props.lng}
             address = {this.props.address}
             setCurrentAddress = {this.props.setCurrentAddress}
+
+            place = {this.props.place}
+            placeError = {this.props.placeError}
           />
         }
 
@@ -44,6 +64,10 @@ class MeetingPlace extends React.Component {
 };
 
 const mapStateToProps = (reduxState) => ({
+  user: reduxState.userReducer.user,
+  myEvent: reduxState.myEventReducer.myEvent,
+  placeError: reduxState.eventsFormErrorsReducer.placeError,
+
   lat: reduxState.currentLocationReducer.lat,
   lng: reduxState.currentLocationReducer.lng,
   address: reduxState.currentLocationReducer.address,

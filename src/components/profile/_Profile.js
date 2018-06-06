@@ -3,6 +3,10 @@ import validator from 'validator';
 
 import { connect } from 'react-redux';
 import { setUser, setUserSubmitError, setUserSubmitSuccess } from '../../redux/user';
+import { setMyEvent } from '../../redux/myEvent';
+import { setEvents } from '../../redux/events';
+
+import { loadState } from '../_common/loadState';
 
 import TitleBar from '../_common/TitleBar';
 import Footer from '../_common/Footer';
@@ -29,13 +33,10 @@ class Profile extends React.Component {
     showVerifyDeleteModal: false,
   };
 
-  componentDidMount() {
-    this.props.socket.emit('getMyEvent', (event) => {
-      this.props.setMyEvent(event);
-    });
-    this.props.socket.emit('getCurrentUser', (user) => {
-      if (!user) return window.location.pathname = '/';
-      this.props.setUser(user);
+  componentWillMount() {
+    loadState(this.props.socket, this.props.setUser, this.props.setMyEvent, this.props.setEvents,)
+    .then(async () => {
+      await this.setState(() => ({ stateLoaded: true }));
     });
   };
 
@@ -132,8 +133,6 @@ class Profile extends React.Component {
   };
 
   deleteProfile = () => {
-    console.log('delete profile');
-
     this.props.socket.emit('deleteUser', this.props.user._id, (err, res) => {
       if (err) {
         this.props.setUserSubmitError(err);
@@ -251,6 +250,8 @@ class Profile extends React.Component {
 };
 
 const mapStateToProps = (reduxStore) => ({
+  socket: reduxStore.socketReducer.socket,
+
   user: reduxStore.userReducer.user,
   submitError: reduxStore.userReducer.submitError,
   submitSuccess: reduxStore.userReducer.submitSuccess,
@@ -258,6 +259,8 @@ const mapStateToProps = (reduxStore) => ({
 
 const mapDispatchToProps = {
   setUser,
+  setEvents,
+  setMyEvent,
   setUserSubmitError,
   setUserSubmitSuccess,
 };

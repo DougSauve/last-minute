@@ -80,14 +80,15 @@ class CreateMeetingPlace extends React.Component {
 
   submitLocation = () => {
     console.log('writing to db:', this.props.address, this.props.lat, this.props.lng);
-    console.log(this.props.submitSlide3);
     this.props.submitSlide3(
       {
         lat: this.props.lat,
         lng: this.props.lng,
       },
-      this.props.address 
+      this.props.address
     );
+
+    this.props.setShowCreateMeetingPlace.bind(this, false);
   };
 
   render() {
@@ -108,6 +109,7 @@ class CreateMeetingPlace extends React.Component {
               autoFocus
             />
           </form>
+
           {/* find on map button */}
           <div
             className = "create-meeting-place-address__find-button"
@@ -132,6 +134,34 @@ class CreateMeetingPlace extends React.Component {
               />
 
             </Map>
+
+            <form className = "events__create-event-modal__slide3__form">
+
+              <span
+                className = "form-heading"
+              >
+                Name of meeting place:
+              </span>
+              <br />
+
+              <span className = "events__form__error">{this.props.placeError}</span>
+
+              <span className = "form-secondary-text">
+                For safety, please choose a public place close to your event, and go to your event's location from there.
+              </span>
+              <br />
+
+              <input
+                type = "text"
+                name = "place"
+                defaultValue = {(this.props.place) && this.props.place}
+              />
+              <br />
+
+              {/* <span className = "events__form__error">{props.placeError}</span> */}
+              <br />
+
+            </form>
 
             {/* use this place button */}
             <div

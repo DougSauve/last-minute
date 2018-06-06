@@ -17,7 +17,7 @@ const AttendingEventsList = (props) => (
                 <div>Hosted by: {event.createdBy.name} {event.createdBy.gender} {event.createdBy.ageRange}</div>
                 <div>When: {event.expiresAtHour}:{event.expiresAtMinute} {event.expiresAtAM}</div>
                 <div className = "events__attending-events-list__cancel-join-button"
-                  onClick = {props.cancelJoin.bind(this, event)}
+                  onClick = {props.cancelJoinEvent.bind(this, event)}
                 >
                   I can't attend anymore
                 </div>

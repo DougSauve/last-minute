@@ -5,6 +5,8 @@ import { setMode, setEvents, addEvent } from '../../redux/events';
 import { setMyEvent } from '../../redux/myEvent';
 import { setUser, setUserSubmitError, setUserSubmitSuccess } from '../../redux/user';
 
+import { loadState, getAllEventsFromDB } from '../_common/loadState';
+
 import TitleBar from '../_common/TitleBar';
 import Footer from '../_common/Footer';
 
@@ -20,63 +22,56 @@ import AttendingEventsList from './AttendingEventsList';
 class Events extends React.Component {
 
   state = {
-    showMyEventsList: false,
+    stateLoaded: false,
   };
 
   componentWillMount() {
-    this.props.socket.emit('getCurrentUser', async (user) => {
-      if (!user) return window.location.pathname = '/';
-      await this.props.setUser(user);
+    loadState(this.props.socket, this.props.setUser, this.props.setMyEvent, this.props.setEvents,)
+    .then(async () => {
+      await this.setState(() => ({ stateLoaded: true }));
+    });
+  };
 
-      //get myEvent and user from db variable and set them to redux state
-      this.props.socket.emit('getMyEvent', (event) => {
-        if (event) {
-          this.props.setMyEvent(event);
-        } else {
-          this.props.socket.emit('readUser', user._id, async (err, userForHostedEvent) => {
-            await (() => {
-              if (err) {
-                console.log(err);
-              } else {
-                if (userForHostedEvent.hostedEvents[0]) {
-                  this.props.setMyEvent(userForHostedEvent.hostedEvents[0]);
-                  this.props.setUser(userForHostedEvent);
-                }
-              };
-            })();
-
-            console.log('all done loading');
-            this.setState(() => ({ showMyEventsList: true }));
-
-          })
-        }
+  removeUserFromEvent = (user, event) => {
+    return new Promise((resolve, reject) => {
+      this.props.socket.emit('removeUserFromEvent', {user, event}, (err, res) => {
+        if (err) return this.props.setUserSubmitError(err);
+        resolve(res);
       });
     });
   };
 
-  cancelJoin = (event) => {
-    this.props.socket.emit('removeEventFromUser', {user: this.props.user, event}, async (err, res) => {
-      if (err) {
-        this.props.setUserSubmitError(err);
-      } else {
-        this.props.socket.emit('removeUserFromEvent', {user: this.props.user, event}, async (err2, res2) => {
-          if (err2) {
-            this.props.setUserSubmitError(err2);
-          } else {
-            await this.props.setUser(res);
-            await this.props.socket.emit('readAllEvents', (err, res) => {
-              if (err) {
-                console.log(err);
-              } else {
-                this.props.setEvents(res);
-              }
-            });
-            console.log('You have unjoined this event. Result:', res2);
-          }
-        });
-      }
+  removeEventFromUser = (user, event) => {
+    return new Promise((resolve, reject) => {
+      this.props.socket.emit('removeEventFromUser', {user, event}, (err, res) => {
+        if (err) return this.props.setUserSubmitError(err);
+        resolve(res);
+      });
+    })
+  };
+
+  cancelJoinEvent = async (event) => {
+    let user = this.props.user;
+
+    const removeUserFromEventResult = await this.removeUserFromEvent(user, event);
+    if (removeUserFromEventResult === null) return console.log('could not remove user from event.');
+
+    const removeEventFromUserResult = await this.removeEventFromUser(user, event);
+    if (removeEventFromUserResult === null) return console.log('could not remove event from user.');
+
+    console.log('resetting user to: ', removeEventFromUserResult);
+
+    Promise.all([
+      //reset user in session storage
+      this.props.socket.emit('setCurrentUser', removeEventFromUserResult, () => console.log('session user updated.')),
+      //reset user in redux
+      this.props.setUser(removeEventFromUserResult),
+      //reset events from db to redux
+      getAllEventsFromDB(this.props.socket, this.props.setEvents)
+    ]).then(() => {
+      console.log('You have left this event.');
     });
-  }
+  };
 
   render() {
     return (
@@ -108,10 +103,10 @@ class Events extends React.Component {
         }
 
         {
-          (this.state.showMyEventsList) &&
+          (this.state.stateLoaded) && // this is using old state.
           <AttendingEventsList
           events = {this.props.user.attendingEvents}
-          cancelJoin = {this.cancelJoin}
+          cancelJoinEvent = {this.cancelJoinEvent}
           />
         }
 

@@ -13,6 +13,7 @@ class HandleDelete extends React.Component {
       } else {
         this.props.setSubmitSuccess({ submitSuccess: `${res.title} has been removed.` });
 
+        
         //set myEvent to undefined
         this.props.setMyEvent();
 

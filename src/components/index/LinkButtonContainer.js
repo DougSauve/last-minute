@@ -9,7 +9,7 @@ const LinkButtonContainer = () => (
       className = "index__to-events-button-link"
       onClick = {() => window.location.pathname = '/events'}
     >
-      My Event
+      My Events
     </div>
 
     {/* Link to /profile */}

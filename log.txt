@@ -39,7 +39,7 @@ Sunday 20th: (6:30)
 3. Implemented moment.js: no need to convert to timestamps, moment.js can compare dates in regular format. V
 4. got EventList component working, which completes /index (1:30) V
 
-Monday 21st:
+Monday 21st: (0:30)
 *1. reworked inputs on /profile form (0:30)
 
 Tuesday 22nd: (6:30)
@@ -52,7 +52,7 @@ Wednesday 23rd: (3:45)
 3. /events only show available actions; remove reject modals (0:15) V
 4. /index change wording to 'my event' V
 
-Thursday 24th:
+Thursday 24th: (5:00)
 
 1. Make location the 3rd slide. (0:15) V
 2. Cleaned up minor bugs in /events, removed console.logs (1:00) V
@@ -102,13 +102,13 @@ Wednesday 30th (3:15)
 5. Set up login (1:45) V
 
 Thursday 31st (2:45)
-1. Add CreateBy field to events (0:40) V
+1. Add createdBy field to events (0:40) V
 2. Clean up bits and pieces, get createdBy rendering in /index page (1:00) V
 3. Planning (0:20) V
 4. Reorganized crud (0:05) V
 5. Wire up join events in /index (0:40)
 
-Friday 1st
+Friday 1st (1:20)
 1. Wire up join events in /index (1:20)
 
 Saturday 2nd (2:30)
@@ -119,8 +119,19 @@ Saturday 2nd (2:30)
 Sunday 3rd (0:15)
 1. Get myEvent persisting between logins (0:15)
 
-Monday 4th 12:45
+Monday 4th (9:30)
+1. Worked on getting join and unjoin working. Didn't finish. Learned a lot about async stuff.
+2. Made a loadState function that enables persisting session data
 
+Tuesday 5th (1:30)
+1. Solve the join and unjoin problem (0:10) V I love figuring things out at random non-programming times.
+2. Refactor unjoin calls to be more readable and get loadState on all pages (0:20) V
+3. Add event location to user's meetingPlaces on create or update event (0:15)
+4. Get sidetracked by the organization of the db, begin reworking it (0:30)
+5. Can reorganization of the db, finish #3 (0:20) V
+
+
+Wednesday 6th 
 
 Next steps:
 

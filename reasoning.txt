@@ -1,0 +1,10 @@
+user is being set properly on join and unjoin in state from /index.
+
+event is set correctly in redux from join on /events, but still isn't showing up. Component must be rendering too quickly, with old info.
+
+on cancel join from /events, redux updates correctly.
+The database updates correctly after a logout, but not before.
+
+I think /events is just loading with old state - that is possibly the whole problem.
+
+it updates the user - pushing the cancel button from /events updates the user. But the list is being loaded from... where? The user. Is it updating events in redux?

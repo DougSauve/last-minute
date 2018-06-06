@@ -24,7 +24,7 @@ const DetailsModal = (props) => (
       <div className = "profile__change-email-modal__submit-button"
         onClick = {props.cancelJoinEvent}
       >
-        Cancel Join
+        Leave event
       </div> :
       <div className = "profile__change-email-modal__submit-button"
         onClick = {props.joinEvent}

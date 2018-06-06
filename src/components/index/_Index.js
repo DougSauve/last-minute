@@ -7,7 +7,7 @@ import { setEvents } from '../../redux/events';
 import { setMyEvent } from '../../redux/myEvent';
 import { setUser } from '../../redux/user';
 
-// import loadState from '../_common/loadState';
+import { loadState, getAllEventsFromDB } from '../_common/loadState';
 
 import TitleBar from '../_common/TitleBar';
 import EventsList from './EventsList';
@@ -30,70 +30,8 @@ class Index extends React.Component {
   };
 
   componentWillMount() {
-    this.loadState();
-  };
-
-  loadState = () => {
-    let user;
-    let myEvent;
-
-    Promise.all([
-      // this.getAllEventsFromDB(),
-      this.getUserFromSession(),
-      this.getMyEventFromSession(),
-      this.getAllEventsFromDB()
-    ])
-    .then( async (res) => {
-      user = res[0];
-      myEvent = res[1];
-
-      if (myEvent === null) {
-        myEvent = await this.getMyEventFromDB(user);
-      };
-
-      this.setState(() => ({ stateLoaded: true }));
-    });
-  };
-
-  getUserFromSession = () => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('getCurrentUser', async (userFromSession) => {
-        if (!userFromSession) reject(window.location.pathname = '/');
-        await this.props.setUser(userFromSession);
-        resolve(userFromSession);
-      });
-    });
-  };
-  getMyEventFromSession = () => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('getMyEvent', async (myEvent) => {
-        if (!myEvent) resolve(null);
-        await this.props.setMyEvent(myEvent);
-        resolve(myEvent);
-      });
-    });
-  };
-  getMyEventFromDB = (sessionUser) => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('readUser', sessionUser._id, async (err, user) => {
-        if (err) resolve(err);
-        if (user.hostedEvents[0]) {
-          await this.props.setMyEvent(user.hostedEvents[0]);
-          resolve(user.hostedEvents[0]);
-        } else {
-          resolve(null);
-        }
-      });
-    });
-  };
-  getAllEventsFromDB = () => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('readAllEvents', async (err, res) => {
-        if (err) resolve(err)
-        await this.props.setEvents(res);
-        resolve(true);
-      });
-    });
+    loadState(this.props.socket, this.props.setUser, this.props.setMyEvent, this.props.setEvents,)
+    .then(() => this.setState(() => ({ stateLoaded: true })));
   };
 
   showDetailsModal = async (event) => {
@@ -105,45 +43,90 @@ class Index extends React.Component {
     else return min + ' - ' + max;
   };
 
-  joinEvent = () => {
-    //add event to user's attendingEvents list (do this on event creation too!)
-    this.props.socket.emit('addUserToEvent', {user: this.props.user, event: this.state.detailsEvent}, async (err, res) => {
-      if (err) {
-        this.props.setUserSubmitError(err);
-      } else {
-        this.props.socket.emit('addEventToUser', {user: this.props.user, event: this.state.detailsEvent}, async (err2, res2) => {
-          if (err2) {
-            this.props.setUserSubmitError(err2);
-          } else {
-            console.log('resetting user to: ', res2);
-            await this.props.setUser(res2);
-            await this.getAllEventsFromDB();
-            console.log('You have joined this event. Result:', res);
-            this.closeModal();
-          }
-        });
-      }
+  addUserToEvent = (user, event) => {
+    return new Promise((resolve, reject) => {
+      this.props.socket.emit('addUserToEvent', {user, event}, (err, res) => {
+        if (err) return this.props.setUserSubmitError(err);
+        resolve(res);
+      });
     });
   };
 
-  cancelJoinEvent = () => {
-    this.props.socket.emit('removeEventFromUser', {user: this.props.user, event: this.state.detailsEvent}, async (err, res) => {
-      if (err) {
-        this.props.setUserSubmitError(err);
-      } else {
-        this.props.socket.emit('removeUserFromEvent', {user: this.props.user, event: this.state.detailsEvent}, async (err2, res2) => {
-          if (err2) {
-            this.props.setUserSubmitError(err2);
-          } else {
-            await this.props.setUser(res);
-            await this.getAllEventsFromDB();
-            console.log('You have unjoined this event. Result:', res2);
-            this.closeModal();
-          }
-        });
-      }
-    });
+  addEventToUser = (user, event) => {
+    return new Promise((resolve, reject) => {
+      this.props.socket.emit('addEventToUser', {user, event}, (err, res) => {
+        if (err) return this.props.setUserSubmitError(err);
+        resolve(res);
+      });
+    })
+  };
 
+  removeUserFromEvent = (user, event) => {
+    return new Promise((resolve, reject) => {
+      this.props.socket.emit('removeUserFromEvent', {user, event}, (err, res) => {
+        if (err) return this.props.setUserSubmitError(err);
+        resolve(res);
+      });
+    });
+  };
+
+  removeEventFromUser = (user, event) => {
+    return new Promise((resolve, reject) => {
+      this.props.socket.emit('removeEventFromUser', {user, event}, (err, res) => {
+        if (err) return this.props.setUserSubmitError(err);
+        resolve(res);
+      });
+    })
+  };
+
+  joinEvent = async () => {
+    let user = this.props.user;
+    let event = this.state.detailsEvent;
+
+    const addUserToEventResult = await this.addUserToEvent(user, event);
+    if (addUserToEventResult === null) return;
+
+    const addEventToUserResult = await this.addEventToUser(user, event);
+    if (addEventToUserResult === null) return;
+
+    console.log('resetting user to: ', addEventToUserResult);
+
+    Promise.all([
+      //reset user in session storage
+      this.props.socket.emit('setCurrentUser', addEventToUserResult, () => console.log('session user updated.')),
+      //reset user in redux
+      this.props.setUser(addEventToUserResult),
+      //reset events from db to redux
+      getAllEventsFromDB(this.props.socket, this.props.setEvents)
+    ]).then(() => {
+      console.log('You have joined this event.');
+      this.closeModal();
+    });
+  };
+
+  cancelJoinEvent = async () => {
+    let user = this.props.user;
+    let event = this.state.detailsEvent;
+
+    const removeUserFromEventResult = await this.removeUserFromEvent(user, event);
+    if (removeUserFromEventResult === null) return;
+
+    const removeEventFromUserResult = await this.removeEventFromUser(user, event);
+    if (removeEventFromUserResult === null) return;
+
+    console.log('resetting user to: ', removeEventFromUserResult);
+
+    Promise.all([
+      //reset user in session storage
+      this.props.socket.emit('setCurrentUser', removeEventFromUserResult, () => console.log('session user updated.')),
+      //reset user in redux
+      this.props.setUser(removeEventFromUserResult),
+      //reset events from db to redux
+      getAllEventsFromDB(this.props.socket, this.props.setEvents)
+    ]).then(() => {
+      console.log('You have left this event.');
+      this.closeModal();
+    });
   };
 
   userHasJoinedEvent = () => {
@@ -160,7 +143,7 @@ class Index extends React.Component {
     const stateToChange = this.state;
 
     for (let item in stateToChange) {
-        stateToChange[item] = false;
+        if (item !== 'stateLoaded') stateToChange[item] = false;
     };
 
     this.setState(() => ({ ...stateToChange }));

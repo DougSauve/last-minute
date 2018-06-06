@@ -15,6 +15,7 @@ import {
   clearErrors,
 } from '../../../../redux/eventsFormErrors';
 import { setMyEvent } from '../../../../redux/myEvent';
+import { setUser } from '../../../../redux/user';
 
 import Slide1 from './Slide1';
 import Slide2 from './Slide2';
@@ -250,7 +251,7 @@ class EventsForm extends React.Component {
        }));
     }
 
-    this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, successMessage, res) => {
+    this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, successMessage, res, updatedUser) => {
       if (err) {
         this.props.setSubmitError({ submitError: err });
       } else {
@@ -262,11 +263,15 @@ class EventsForm extends React.Component {
           _id: res._id,
         };
         this.props.setMyEvent(myEvent);
+        //add the user to redux as well
+        console.log('updatedUser:', updatedUser);
+        this.props.setUser(updatedUser);
 
         this.props.setCurrentSlide("1");
 
-        //add myEvent to persistState (be sure to get it back on each page in componentDidMount!)
+        //add myEvent and user to persisting state
         this.props.socket.emit('setMyEvent', myEvent);
+        this.props.socket.emit('setCurrentUser', updatedUser, () => {console.log('user updated.')});
 
         this.setState(() => ({
           eventUnderConstruction: {}
@@ -286,15 +291,17 @@ class EventsForm extends React.Component {
     return (
       <div className = "create-event-modal__form">
 
-        {(this.props.currentSlide === "1") && <Slide1
+        {(this.props.currentSlide === "1") &&
+        <Slide1
+
           title = {this.props.myEvent.title}
-          titleError = {this.props.titleError}
-
           minimumPeople = {this.props.myEvent.minimumPeople}
-          minimumPeopleError = {this.props.minimumPeopleError}
-
           maximumPeople = {this.props.myEvent.maximumPeople}
+
+          titleError = {this.props.titleError}
+          minimumPeopleError = {this.props.minimumPeopleError}
           maximumPeopleError = {this.props.maximumPeopleError}
+
 
           submitSlide1 = {this.submitSlide1}
           closeModal = {this.closeModal}
@@ -366,6 +373,8 @@ const mapDispatchToProps = {
   clearErrors,
 
   setMyEvent,
+
+  setUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsForm);

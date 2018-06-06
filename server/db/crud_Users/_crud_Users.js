@@ -2,8 +2,16 @@ const { createUser } = require('./createUser');
 const { readUser, readAllUsers } = require('./readUser');
 const { updateUser } = require('./updateUser');
 const { deleteUser } = require('./deleteUser');
+
 const { validateUser } = require('./validateUser');
-const { addEventToUser, addHostedEventToUser, addUserToEvent, removeEventFromUser, removeHostedEventFromUser, removeUserFromEvent } = require('./joinEvent');
+
+const { addAttendingEventToUser } = require('./attendingEvents/addAttendingEventToUser');
+const { updateAttendingEventOnUser } = require('./attendingEvents/updateAttendingEventOnUser');
+const { removeAttendingEventFromUser } = require('./attendingEvents/removeAttendingEventFromUser');
+
+const { addHostedEventToUser } = require('./hostedEvents/addHostedEventToUser');
+const { updateHostedEventOnUser } = require('./hostedEvents/updateHostedEventOnUser');
+const { removeHostedEventFromUser } = require('./hostedEvents/removeHostedEventFromUser');
 
 module.exports = {
   createUser,
@@ -11,11 +19,14 @@ module.exports = {
   readAllUsers,
   updateUser,
   deleteUser,
+
   validateUser,
-  addEventToUser,
+
+  addAttendingEventToUser,
+  updateAttendingEventOnUser,
+  removeAttendingEventFromUser,
+
   addHostedEventToUser,
-  addUserToEvent,
-  removeEventFromUser,
+  updateHostedEventOnUser,
   removeHostedEventFromUser,
-  removeUserFromEvent,
 };
