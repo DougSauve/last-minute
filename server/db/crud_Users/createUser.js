@@ -1,9 +1,11 @@
-const mongoose = require('../mongoose.js');
+const mongoose = (process.env.NODE_ENV === 'test') ? require('../mongoose_testing') : require('../mongoose');
 const moment = require('moment');
 
 const { User } = require('../../models/User.js');
 
-const createUser = async (user) => {
+
+// returns Promise: {err, res}
+const createUser = (user) => {
 
   const newUser = new User({
     name: user.name,
@@ -18,15 +20,13 @@ const createUser = async (user) => {
     tokens: [],
   });
 
-  let res = newUser;
-  await newUser.save((err) => {
-    if (err) {
-      console.log(err);
-      res = false;
-    }
-  })
+  let res = undefined;
+  let err = undefined;
 
-  return res;
+  return new Promise((resolve, reject) => {
+    newUser.save().then((res) => resolve({ err: null, res }))
+    .catch((err) => resolve({ err, res: null }));
+  });
 }
 
 module.exports = {

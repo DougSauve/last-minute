@@ -4,7 +4,7 @@
   "description": "connect to others nearby for last-minute hanging out",
   "main": "webpack.prod.js",
   "scripts": {
-    "test": "jest --config jest.config.json --watchAll",
+    "test": "jest --config jest.config.json",
     "start": "node server/server.js",
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js --mode development && node server/server.js"

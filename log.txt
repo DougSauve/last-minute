@@ -1,7 +1,7 @@
 Progress:
-Saturday night. 8:30 into project. Got create route working to db, redux store set up simply but not in use yet.
+Saturday night, May 14th. 8:30 into project. Got create route working to db, redux store set up simply but not in use yet.
 
-Sunday:
+Sunday 15th:
 
 (6:00)
 1. Wired up redux store (lots of learning here.)
@@ -9,27 +9,27 @@ Sunday:
 3. Got /read route working from DB.
 *4. Restructured the directory to be less deep. Learning/developing best practices time here too. (0:45?)
 
-Monday:
+Monday 16th:
 
 *1. Reworked form to host update as well as create, and button to handle dynamic actions.(4:00)
 Also added myEvent reducer to redux store.
 Spent a lot of time learning ins and outs of redux and socket.io.
 
-Tuesday:
+Tuesday 17th:
 1. Got update route working (0:30) V
 2. Added cancel button to modal (0:30) V
 3. Added a modal container component (0:30) V
 4. Added a reusable submit button component (0:30) V
 *5. reworked redux store to include mode, learned to use setDispatchToProps (5:00) V
 
-Wednesday:
+Wednesday 18th:
 
 1. Got /events functioning properly (0:45) V
 *2. Restructure the /events folder (0:20) V
 3. Add form validation (1:30)
 4. Create a capitalize /util function (0:05) V
 
-Thursday:
+Thursday 19th:
 1. Continue form validation (1:30)
 
 
@@ -131,7 +131,20 @@ Tuesday 5th (1:30)
 5. Can reorganization of the db, finish #3 (0:20) V
 
 
-Wednesday 6th 
+Wednesday 6th (1:00)
+1. Rework organization of the db - sidetracked by need for a test suite (0:30)
+2. Work on Jest server-side suite (0:30)
+
+Thursday 7th (3:00)
+1. Work on Jest server-side suite (3:00) - fighting with a db problem that turned out to be an async problem.
+
+~away in Missouri for weekend, very busy~
+
+Tuesday 12th
+1. Solve problem (1:00) V
+
+Wednesday 13th
+
 
 Next steps:
 
@@ -139,7 +152,6 @@ I need to get new events being pushed to the screen with sockets. They get added
 
 
 3. Get cleanup for old events
-4. Implement users in events and user validation
 5. If user's location is available, show distance to events. Might have to ask for location, user has to search, if it's not available.
 
 Further features:
@@ -148,6 +160,3 @@ Further features:
 
 So, going forward - just the websocket issue for now. I'll leave that till later as a minor bug.
 Got this figured out - one socket per app! :)
-
-
-ok. I have myEvent showing to the screen properly.

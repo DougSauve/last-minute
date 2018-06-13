@@ -1,31 +1,30 @@
-const mongoose = require('../mongoose.js');
+const mongoose = (process.env.NODE_ENV === 'test') ? require('../mongoose_testing') : require('../mongoose');
 const moment = require('moment');
 
 const { User } = require('../../models/User.js');
 
-const updateUser = async (user) => {
+// returns Promise: {err, res}
+const updateUser = (user) => {
 
-  const result = await User.findOneAndUpdate(
-    { _id: user._id },
-    {
-      $set: {
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        ageRange: user.ageRange,
-        gender: user.gender,
+  const userWithChanges = {
+    name: user.name,
+    email: user.email,
+    password: user.password,
+    ageRange: user.ageRange,
+    gender: user.gender,
 
-        accountCreatedAt: user.accountCreateAt,
-        meetingPlaces: user.meetingPlaces,
-        flags: user.flags,
-        tokens: user.tokens,
-      }
-    },
-    { new: true }
-  );
-  if (!result) return false;
-  return result;
-}
+    accountCreatedAt: user.accountCreateAt,
+    meetingPlaces: user.meetingPlaces,
+    flags: user.flags,
+    tokens: user.tokens,
+  };
+
+  return new Promise((resolve, reject) => {
+    User.findByIdAndUpdate(user._id, {$set: userWithChanges}, { new: true }).then((res) => {
+      resolve({ err: null, res });
+    }).catch((err) => resolve({ err, res: null }));
+  });
+};
 
 module.exports = {
   updateUser

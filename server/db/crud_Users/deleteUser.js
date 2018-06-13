@@ -1,11 +1,13 @@
-const mongoose = require('../mongoose.js');
+const mongoose = (process.env.NODE_ENV === 'test') ? require('../mongoose_testing') : require('../mongoose');
 const { User } = require('../../models/User.js');
 
-const deleteUser = async (_id) => {
-  const res = await User.findOneAndRemove({_id});
-  if (!res) return false;
-  return res;
-}
+const deleteUser = (_id) => {
+  return new Promise ((resolve, reject) => {
+    User.findOneAndRemove({_id}).then((res) => {
+      resolve({ err: null, res });
+    }).catch((err) => resolve({ err, res: null }));
+  });
+};
 
 module.exports = {
   deleteUser,

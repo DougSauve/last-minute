@@ -4,59 +4,36 @@ const UserSocketListener = (socket) => {
 
   socket.on('createUser', async (user, acknowledge) => {
 
-    let err;
-    let result;
     // add event to DB
-    result = await db.createUser(user);
-
-    if(!result) err = "An error occured during user creation.";
-    acknowledge(err, result);
+    const {err, res} = await db.createUser(user);
+    acknowledge(err, res);
   });
 
   socket.on('readUser', async (_id, acknowledge) => {
-    let err;
-    let result;
 
-    result = await db.readUser(_id);
-    console.log('result in readUser:', result);
-
-    if (!result) err = `Could not find the specified user.`;
-
-    acknowledge(err, result);
+    const {err, res} = await db.readUser(_id);
+    acknowledge(err, res);
   });
 
   socket.on('readAllUsers', async (acknowledge) => {
-    let err;
-    let result;
 
-    result = await db.readAllUsers();
-
-    if (!result) err = `Could not find any users.`;
-
+    const {err, res} = await db.readAllUsers();
     acknowledge(err, result);
   });
 
   socket.on('updateUser', async (user, acknowledge) => {
-    let err;
-    let result;
-
+  let err, res;
     if (!await db.readUser(user._id)) {
       err = 'Could not find the specified user.';
     } else {
-      result = await db.updateUser(user);
+      const {err, res} = await db.updateUser(user);
     }
-    acknowledge(err, result);
+    acknowledge(err, res);
   });
 
   socket.on('deleteUser', async (_id, acknowledge) => {
-    let err;
-    let result;
-
-    result = await db.deleteUser(_id);
-
-    if (!result) err = `Could not find the user to delete.`;
-
-    acknowledge(err, result);
+    const {err, res} = await db.deleteUser(_id);
+    acknowledge(err, res);
   });
 
   socket.on('validateUser', async (creds, acknowledge) => {
