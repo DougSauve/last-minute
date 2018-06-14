@@ -1,12 +1,13 @@
 const mongoose = require('../mongoose_testing');
 const { User } = require('../../models/User.js');
+const {getSeedUserWithoutID} = require('../seed/seed');
 const {createUser} = require('./createUser');
 const {readUser} = require('./readUser');
+const {validateUser} = require('./validateUser');
 const {updateUser} = require('./updateUser');
 const {deleteUser} = require('./deleteUser');
-const {userToCreate} = require('../seed/seed_user');
 
-jest.setTimeout(10000);
+const userToCreate = getSeedUserWithoutID();
 
 const invalidUserToCreate = { ...userToCreate, password: '' };
 //gets set in createUser test
@@ -66,6 +67,30 @@ describe('readUser', () => {
     expect(err).toBeTruthy();
     expect(res).toBeFalsy();
     done();
+  });
+});
+
+describe('validateUser', () => {
+  expect.assertions(2);
+
+  test('should validate a user with correct credentials', async (done) => {
+    const creds = { email: user.email, password: user.password };
+
+    validateUser(creds).then(({ err, user }) => {
+      expect(user.name).toBe('test');
+      expect(err).toBeFalsy();
+      done();
+    });
+  });
+
+  test('should not validate a user with incorrect credentials', async (done) => {
+    const creds = { email: user.email, password: 'password' };
+
+    validateUser(creds).then(({ err, user }) => {
+      expect(user).toBeFalsy();
+      expect(err).toBe('incorrect password.');
+      done();
+    });
   });
 });
 

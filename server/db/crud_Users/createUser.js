@@ -8,6 +8,7 @@ const { User } = require('../../models/User.js');
 const createUser = (user) => {
 
   const newUser = new User({
+    _id: (user._id) && user._id,
     name: user.name,
     email: user.email,
     password: user.password,
@@ -25,7 +26,10 @@ const createUser = (user) => {
 
   return new Promise((resolve, reject) => {
     newUser.save().then((res) => resolve({ err: null, res }))
-    .catch((err) => resolve({ err, res: null }));
+    .catch((err) => {
+      // console.log('error in creation: ', err.message);
+      resolve({ err, res: null });
+    });
   });
 }
 

@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const { User } = require('../../models/User');
 
-const validateUser = async (creds) => {
+//finds a user by the email and checks if the specified password is a match. Returns the user if it is.
+const validateUser = (creds) => {
 
-  const user = await User.findOne({ email: creds.email });
-
-  if (!user) return {err: 'user could not be found.', user: undefined}
-  if (user.password === creds.password) return {err: '', user};
-  return {err: 'incorrect password.', user: undefined};
+  return new Promise(async (resolve, reject) => {
+    User.findOne({ email: creds.email }).then((user) => {
+      if (user.password === creds.password) resolve({ err: '', user });
+      resolve({ err: 'incorrect password.', user: null });
+    }).catch((err) => resolve({ err, user: null }))
+  });
 };
 
 module.exports = { validateUser };
