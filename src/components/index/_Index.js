@@ -43,36 +43,36 @@ class Index extends React.Component {
     else return min + ' - ' + max;
   };
 
-  addUserToEvent = (user, event) => {
+  addAttendeeToEvent = (attendee, event) => {
     return new Promise((resolve, reject) => {
-      this.props.socket.emit('addUserToEvent', {user, event}, (err, res) => {
+      this.props.socket.emit('addAttendeeToEvent', {attendee, event}, (err, res) => {
         if (err) return this.props.setUserSubmitError(err);
         resolve(res);
       });
     });
   };
 
-  addEventToUser = (user, event) => {
+  addAttendingEventToUser = (user, event) => {
     return new Promise((resolve, reject) => {
-      this.props.socket.emit('addEventToUser', {user, event}, (err, res) => {
+      this.props.socket.emit('addAttendingEventToUser', {user, event}, (err, res) => {
         if (err) return this.props.setUserSubmitError(err);
         resolve(res);
       });
     })
   };
 
-  removeUserFromEvent = (user, event) => {
+  deleteAttendeeFromEvent = (attendee, event) => {
     return new Promise((resolve, reject) => {
-      this.props.socket.emit('removeUserFromEvent', {user, event}, (err, res) => {
+      this.props.socket.emit('DeleteAttendeeFromEvent', {attendee, event}, (err, res) => {
         if (err) return this.props.setUserSubmitError(err);
         resolve(res);
       });
     });
   };
 
-  removeEventFromUser = (user, event) => {
+  deleteAttendingEventFromUser = (user, event) => {
     return new Promise((resolve, reject) => {
-      this.props.socket.emit('removeEventFromUser', {user, event}, (err, res) => {
+      this.props.socket.emit('deleteAttendingEventFromUser', {user, event}, (err, res) => {
         if (err) return this.props.setUserSubmitError(err);
         resolve(res);
       });
@@ -83,19 +83,19 @@ class Index extends React.Component {
     let user = this.props.user;
     let event = this.state.detailsEvent;
 
-    const addUserToEventResult = await this.addUserToEvent(user, event);
-    if (addUserToEventResult === null) return;
+    const addAttendeeToEventResult = await this.addAttendeeToEvent(user, event);
+    if (addAttendeeToEventResult === null) return;
 
-    const addEventToUserResult = await this.addEventToUser(user, event);
-    if (addEventToUserResult === null) return;
+    const addAttendingEventToUserResult = await this.addAttendingEventToUser(user, event);
+    if (addAttendingEventToUserResult === null) return;
 
-    console.log('resetting user to: ', addEventToUserResult);
+    console.log('resetting user to: ', addAttendingEventToUserResult);
 
     Promise.all([
       //reset user in session storage
-      this.props.socket.emit('setCurrentUser', addEventToUserResult, () => console.log('session user updated.')),
+      this.props.socket.emit('setCurrentUser', addAttendingEventToUserResult, () => console.log('session user updated.')),
       //reset user in redux
-      this.props.setUser(addEventToUserResult),
+      this.props.setUser(addAttendingEventToUserResult),
       //reset events from db to redux
       getAllEventsFromDB(this.props.socket, this.props.setEvents)
     ]).then(() => {
@@ -108,19 +108,19 @@ class Index extends React.Component {
     let user = this.props.user;
     let event = this.state.detailsEvent;
 
-    const removeUserFromEventResult = await this.removeUserFromEvent(user, event);
-    if (removeUserFromEventResult === null) return;
+    const deleteAttendeeFromEventResult = await this.deleteAttendeeFromEvent(user, event);
+    if (deleteAttendeeFromEventResult === null) return;
 
-    const removeEventFromUserResult = await this.removeEventFromUser(user, event);
-    if (removeEventFromUserResult === null) return;
+    const deleteEventFromUserResult = await this.deleteEventFromUser(user, event);
+    if (deleteEventFromUserResult === null) return;
 
-    console.log('resetting user to: ', removeEventFromUserResult);
+    console.log('resetting user to: ', deleteEventFromUserResult);
 
     Promise.all([
       //reset user in session storage
-      this.props.socket.emit('setCurrentUser', removeEventFromUserResult, () => console.log('session user updated.')),
+      this.props.socket.emit('setCurrentUser', deleteEventFromUserResult, () => console.log('session user updated.')),
       //reset user in redux
-      this.props.setUser(removeEventFromUserResult),
+      this.props.setUser(deleteEventFromUserResult),
       //reset events from db to redux
       getAllEventsFromDB(this.props.socket, this.props.setEvents)
     ]).then(() => {

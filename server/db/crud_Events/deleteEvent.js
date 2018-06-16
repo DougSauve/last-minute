@@ -1,10 +1,12 @@
-const mongoose = require('../mongoose.js');
+const mongoose = (process.env.NODE_ENV === 'test') ? require('../mongoose_testing') : require('../mongoose');
 const {Event} = require('../../models/Event.js');
 
 const deleteEvent = async (_id) => {
-  const res = await Event.findOneAndRemove({_id});
-  if (!res) return false;
-  return res;
+  return new Promise((resolve, reject) => {
+    Event.findOneAndRemove({_id}).then((res) => {
+      resolve({ err: null, res });
+    }).catch((err) => resolve({ err, res: null }));
+  });
 };
 
 module.exports = {

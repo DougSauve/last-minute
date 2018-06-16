@@ -4,7 +4,7 @@ const { updateEvent } = require('./updateEvent');
 const { deleteEvent } = require('./deleteEvent');
 
 const { addAttendeeToEvent } = require('./attendees/addAttendeeToEvent');
-const { removeAttendeeFromEvent } = require('./attendees/removeAttendeeFromEvent');
+const { deleteAttendeeFromEvent } = require('./attendees/deleteAttendeeFromEvent');
 
 module.exports = {
   createEvent,
@@ -14,5 +14,5 @@ module.exports = {
   deleteEvent,
 
   addAttendeeToEvent,
-  removeAttendeeFromEvent,
+  deleteAttendeeFromEvent,
 };

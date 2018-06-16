@@ -1,54 +1,23 @@
 const db = require('../db/crud_Events/_crud_Events');
-const user_db = require('../db/crud_Users/_crud_Users');
 
 const EventSocketListener = (socket) => {
 
   socket.on('submitEvent', async ({user, event}, acknowledge) => {
 
-    let err;
-    let successMessage;
-    let result;
-    let updatedUser;
+    const readEventResult = await db.readEvent(event._id);
+    const eventExists = readEventResult.res;
 
-    if (!await db.readEvent(event._id)) {
-
-      result = await db.createEvent(event);
-
-      if(!result) {
-        err = "An error occured during event creation.";
-      } else {
-        successMessage = `${result.title} has been added.`;
-
-        //add event to user's attendingEvents list and hostedEvents list.
-        user_db.addEventToUser(user, result);
-        updatedUser = user_db.addHostedEventToUser(user, result); //this also adds the location to their meetingPlaces
-      }
-
+    if (!eventExists) {
+      const {err, res} = await db.createEvent(event);
+      acknowledge(err, res);
     } else {
-
-      result = await db.updateEvent(event);
-
-      if (!result) {
-        err = "event update failed.";
-      } else {
-        successMessage = `${result.title} has been updated.`;
-
-        //update event onto user's attendingEvents list and hostedEvents list.
-        user_db.updateEventOnUser(user, result);
-        updatedUser = user_db.updateHostedEventOnUser(user, result); //this also adds the location to their meetingPlaces
-      }
-    }
-    acknowledge(err, successMessage, result, updatedUser);
+      const {err, res} = await db.updateEvent(event);
+      acknowledge(err, res);
+    };
   });
 
   socket.on('readEvent', async (_id, acknowledge) => {
-    let err;
-    let res;
-
-    res = await db.readEvent(_id);
-
-    if (!res) err = 'Could not find event';
-
+    const {err, res} = await db.readEvent(_id);
     acknowledge(err, res);
   });
 
@@ -64,16 +33,9 @@ const EventSocketListener = (socket) => {
     acknowledge(err, result);
   });
 
-  socket.on('deleteEvent', async (user, _id, acknowledge) => {
-    let err;
-    let result;
-
-    result = await db.deleteEvent(_id);
-
-    if (!result) err = `Could not find the event to delete.`;
-    user_db.removeHostedEventFromUser(user, result);
-
-    acknowledge(err, result);
+  socket.on('deleteEvent', async (_id, acknowledge) => {
+    const {err, res} = await db.deleteEvent(_id);
+    acknowledge(err, res);
   });
 
   socket.on('deleteAllEvents', async (password, acknowledge) => {

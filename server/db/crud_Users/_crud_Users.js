@@ -7,11 +7,17 @@ const { validateUser } = require('./validateUser');
 
 const { addAttendingEventToUser } = require('./attendingEvents/addAttendingEventToUser');
 const { updateAttendingEventOnUser } = require('./attendingEvents/updateAttendingEventOnUser');
-const { removeAttendingEventFromUser } = require('./attendingEvents/removeAttendingEventFromUser');
+const { deleteAttendingEventFromUser } = require('./attendingEvents/deleteAttendingEventFromUser');
 
 const { addHostedEventToUser } = require('./hostedEvents/addHostedEventToUser');
 const { updateHostedEventOnUser } = require('./hostedEvents/updateHostedEventOnUser');
-const { removeHostedEventFromUser } = require('./hostedEvents/removeHostedEventFromUser');
+const { deleteHostedEventFromUser } = require('./hostedEvents/deleteHostedEventFromUser');
+
+const { addMeetingPlaceToUser } = require('./meetingPlaces/addMeetingPlaceToUser');
+const { deleteMeetingPlaceFromUser } = require('./meetingPlaces/deleteMeetingPlaceFromUser');
+
+const { addHomeLocationToUser } = require('./homeLocations/addHomeLocationToUser');
+const { deleteHomeLocationFromUser } = require('./homeLocations/deleteHomeLocationFromUser');
 
 module.exports = {
   createUser,
@@ -24,9 +30,15 @@ module.exports = {
 
   addAttendingEventToUser,
   updateAttendingEventOnUser,
-  removeAttendingEventFromUser,
+  deleteAttendingEventFromUser,
 
   addHostedEventToUser,
   updateHostedEventOnUser,
-  removeHostedEventFromUser,
+  deleteHostedEventFromUser,
+
+  addMeetingPlaceToUser,
+  deleteMeetingPlaceFromUser,
+
+  addHomeLocationToUser,
+  deleteHomeLocationFromUser,
 };

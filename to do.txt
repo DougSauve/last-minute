@@ -4,6 +4,9 @@ Age range should only be changed every 5 years.
 
 Hosted event needs to persist between sessions - good in db but not in redux.
 
+duplicate sign up can't reach setSubmitError
+submitEvent not working
+
 
 Maybe I should make location the last slide. I'll make it the 3rd. X
 Wire up user account creation on landing page X

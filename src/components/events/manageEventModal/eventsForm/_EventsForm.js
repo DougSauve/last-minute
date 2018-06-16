@@ -241,44 +241,72 @@ class EventsForm extends React.Component {
 
   submitEvent = async () => {
     if (this.props.myEvent._id) {
-
-      //get _id put it into the state object as well
+      //get _id put it into the state eventUnderConstruction object
       await this.setState((prevState) => ({
         eventUnderConstruction: {
           ...prevState.eventUnderConstruction,
           _id: this.props.myEvent._id,
         }
        }));
-    }
+    };
 
-    this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, successMessage, res, updatedUser) => {
-      if (err) {
-        this.props.setSubmitError({ submitError: err });
-      } else {
-        this.props.setSubmitSuccess({ submitSuccess: successMessage });
-
-        //get the _id and add it to redux myEvent
-        const myEvent = {
-          ...this.state.eventUnderConstruction,
-          _id: res._id,
+    //submit event > createEvent, which also adds the user as createdBy, completing the event.
+    const submittedEvent = await new Promise((resolve, reject) => {
+      this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, res) => {
+        if (err) {
+          console.log('_EventsForm.js submitEvent error:', err);
+          this.props.setSubmitError({ submitError: 'An error occurred while creating the event.' });
+          reject(null);
+        } else {
+          this.props.setSubmitSuccess({ submitSuccess: `${res.title} was created.` });
+          resolve(res);
         };
-        this.props.setMyEvent(myEvent);
-        //add the user to redux as well
-        console.log('updatedUser:', updatedUser);
-        this.props.setUser(updatedUser);
-
-        this.props.setCurrentSlide("1");
-
-        //add myEvent and user to persisting state
-        this.props.socket.emit('setMyEvent', myEvent);
-        this.props.socket.emit('setCurrentUser', updatedUser, () => {console.log('user updated.')});
-
-        this.setState(() => ({
-          eventUnderConstruction: {}
-        }));
-        this.closeModal();
-      }
+      });
     });
+
+    if(!submittedEvent) return;
+
+    //also need to update the user: add the new event to attendingEvents...
+    const addAttendingEventToUserResult = await new Promise((resolve, reject) => {
+      this.props.socket.emit('addAttendingEventToUser', {user: this.props.user, event: submittedEvent}, (err, res) => {
+        if (err) {
+          reject(null);
+        }else{
+          resolve(res);
+        };
+      });
+    });
+
+    if(!addAttendingEventToUserResult) return console.log('addAttendingEventToUser call failed.');
+
+    //...and hostedEvents.
+    const addHostedEventToUserResult = await new Promise((resolve, reject) => {
+      this.props.socket.emit('addHostedEventToUser', {user: this.props.user, event: addAttendingEventToUserResult}, (err, res) => {
+        if (err) {
+          reject(null);
+        }else{
+          resolve(res);
+        };
+      });
+    });
+
+    if(!addHostedEventToUserResult) return console.log('addHostedEventToUser call failed.');
+
+    //all three calls went well, now redux and session state need to be updated.
+
+    //set redux.myEvent to eventUnderConstruction and session state
+    const myEvent = { ...this.state.eventUnderConstruction, _id: addHostedEventToUserResult._id };
+    this.props.setMyEvent(myEvent);
+    this.props.socket.emit('setMyEvent', myEvent);
+
+    //add the user to redux as well
+    this.props.setUser(addHostedEventToUserResult);
+    this.props.socket.emit('setCurrentUser', addHostedEventToUserResult,
+    () => {console.log('event created and user updated.')});
+
+    this.props.setCurrentSlide("1");
+    this.setState(() => ({ eventUnderConstruction: {} }));
+    this.closeModal();
   };
 
   closeModal = () => {

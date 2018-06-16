@@ -143,7 +143,25 @@ Thursday 7th (3:00)
 Tuesday 12th
 1. Solve problem (1:00) V
 
-Wednesday 13th
+Wednesday 13th (7:30)
+1. Work on Jest server-side suite:
+ a) user crud ops V (5:00)
+ b) user.attendingEvents crud ops V (2:30)
+
+Thursday 14th (5:30)
+1. Work on Jest server-side suite:
+ a) user.hostedEvents, user.homeLocations, user.MeetingPlaces (1:00) V
+ b) events crud ops (3:30) V
+ c) events.attendees crud ops (1:00)
+
+Friday 15th 3:00
+1. events.attendees crud ops (0:20) V
+2. turn seed data into a class and create instances so tests don't overrun each other (0:20) V
+~Back-end Test Suite Finished. :)
+
+3. 
+
+
 
 
 Next steps:

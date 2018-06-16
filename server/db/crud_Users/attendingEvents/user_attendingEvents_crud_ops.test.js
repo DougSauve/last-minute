@@ -15,9 +15,11 @@ const {updateAttendingEventOnUser} = require('./updateAttendingEventOnUser');
 const {deleteAttendingEventFromUser} = require('./deleteAttendingEventFromUser');
 
 let self, friend;
-const event = getSeedEvent();
+let event;
 
 beforeAll(async () => {
+  resetSeedData();
+  event = getSeedEvent();
   const result1 = await createUser(getSeedUser());
   self = result1.res;
   resetSeedData();

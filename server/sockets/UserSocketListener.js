@@ -43,24 +43,24 @@ const UserSocketListener = (socket) => {
 
   });
 
-  socket.on('addEventToUser', async ({user, event}, acknowledge) => {
-    const {err, res} = await db.addEventToUser(user, event);
+  socket.on('addAttendingEventToUser', async ({user, event}, acknowledge) => {
+    const {err, res} = await db.addAttendingEventToUser(user, event);
     acknowledge(err, res);
   });
 
-  socket.on('addUserToEvent', async ({user, event}, acknowledge) => {
-    const {err, res} = await db.addUserToEvent(user, event);
+  socket.on('addAttendeeToEvent', async ({user, event}, acknowledge) => {
+    const {err, res} = await db.addAttendeeToEvent(user, event);
     acknowledge(err, res);
   });
 
-  socket.on('removeEventFromUser', async ({user, event}, acknowledge) => {
-    const {err, res} = await db.removeEventFromUser(user, event);
+  socket.on('deleteAttendingEventFromUser', async ({user, event}, acknowledge) => {
+    const {err, res} = await db.deleteAttendingEventFromUser(user, event);
     console.log('1:', err, res);
     acknowledge(err, res);
   });
 
-  socket.on('removeUserFromEvent', async ({user, event}, acknowledge) => {
-    const {err, res} = await db.removeUserFromEvent(user, event);
+  socket.on('deleteAttendeeFromEvent', async ({user, event}, acknowledge) => {
+    const {err, res} = await db.deleteAttendeeFromEvent(user, event);
     console.log('2:', err, res);
     acknowledge(err, res);
   });

@@ -1,12 +1,13 @@
-const mongoose = require('../mongoose.js');
+const mongoose = (process.env.NODE_ENV === 'test') ? require('../mongoose_testing') : require('../mongoose');
 const moment = require('moment');
 const { Event } = require('../../models/Event.js');
 
-const readEvent = async ( _id ) => {
-  const res = await Event.findOne({ _id });
-
-  if (!res) return false;
-  return res;
+const readEvent = ( _id ) => {
+  return new Promise((resolve, reject) => {
+    Event.findOne({ _id }).then((res) => {
+      resolve({ err: null, res });
+    }).catch((err) => resolve({ err, res: null }));
+  });
 };
 
 const readAllEvents = async () => {

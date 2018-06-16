@@ -26,10 +26,10 @@ const updateAttendingEventOnUser = (user, event) => {
         attendingEvents: user.attendingEvents.map((attendingEvent) => {
           if (attendingEvent._id.equals(event._id)) {
             foundAMatch = true;
-            console.log('match');
+            // console.log('match');
             return event;
           } else {
-            console.log('no match');
+            // console.log('no match');
             return attendingEvent;
           }
         })

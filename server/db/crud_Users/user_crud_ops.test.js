@@ -1,13 +1,18 @@
 const mongoose = require('../mongoose_testing');
-const { User } = require('../../models/User.js');
-const {getSeedUserWithoutID} = require('../seed/seed');
+const { User } = require('../../models/User');
+const {resetSeedData, getSeedUserWithoutID} = require('../seed/seed');
 const {createUser} = require('./createUser');
 const {readUser} = require('./readUser');
 const {validateUser} = require('./validateUser');
 const {updateUser} = require('./updateUser');
 const {deleteUser} = require('./deleteUser');
 
-const userToCreate = getSeedUserWithoutID();
+let userToCreate = getSeedUserWithoutID();
+//
+// beforeAll(() => {
+//   resetSeedData();
+//   userToCreate  = getSeedUserWithoutID();
+// });
 
 const invalidUserToCreate = { ...userToCreate, password: '' };
 //gets set in createUser test
