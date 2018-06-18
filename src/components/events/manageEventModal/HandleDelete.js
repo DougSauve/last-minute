@@ -9,7 +9,7 @@ class HandleDelete extends React.Component {
 
   deleteEvent = () => {
     //remove event from database
-
+    
     this.props.socket.emit ('deleteEvent', this.props.myEvent._id, (err, res) => {
       console.log('res1', res);
       if (err) {

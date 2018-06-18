@@ -4,7 +4,7 @@ import './_Index.scss';
 
 import { connect } from 'react-redux';
 import { setEvents } from '../../redux/events';
-import { setMyEvent } from '../../redux/myEvent';
+import { setMyEvent, setSubmitError, setSubmitSuccess } from '../../redux/myEvent';
 import { setUser } from '../../redux/user';
 
 import { loadState, getAllEventsFromDB } from '../_common/loadState';
@@ -71,8 +71,10 @@ class Index extends React.Component {
   };
 
   deleteAttendeeFromEvent = (attendee, event) => {
+
     return new Promise((resolve, reject) => {
-      this.props.socket.emit('DeleteAttendeeFromEvent', {attendee, event}, (err, res) => {
+      this.props.socket.emit('deleteAttendeeFromEvent', {attendee, event}, (err, res) => {
+
         if (err) return this.props.setUserSubmitError(err);
         resolve(res);
       });
@@ -80,8 +82,10 @@ class Index extends React.Component {
   };
 
   deleteAttendingEventFromUser = (user, event) => {
+
     return new Promise((resolve, reject) => {
       this.props.socket.emit('deleteAttendingEventFromUser', {user, event}, (err, res) => {
+
         if (err) return this.props.setUserSubmitError(err);
         resolve(res);
       });
@@ -120,7 +124,7 @@ class Index extends React.Component {
     const deleteAttendeeFromEventResult = await this.deleteAttendeeFromEvent(user, event);
     if (deleteAttendeeFromEventResult === null) return;
 
-    const deleteEventFromUserResult = await this.deleteEventFromUser(user, event);
+    const deleteEventFromUserResult = await this.deleteAttendingEventFromUser(user, event);
     if (deleteEventFromUserResult === null) return;
 
     console.log('resetting user to: ', deleteEventFromUserResult);
@@ -135,6 +139,52 @@ class Index extends React.Component {
     ]).then(() => {
       console.log('You have left this event.');
       this.closeModal();
+    });
+  };
+
+  deleteEvent = () => {
+    this.props.socket.emit ('deleteEvent', this.props.detailsEvent._id, (err, res) => {
+      console.log('res1', res);
+      if (err) {
+        this.props.setSubmitError({ submitError: err });
+      } else {
+        const eventBeingDeleted = res;
+        //remove event from user's attendingEvents...
+        this.props.socket.emit('deleteAttendingEventFromUser', {user: this.props.user, event: eventBeingDeleted}, (err2, res2) => {
+          console.log('res2', res2);
+          if (err2) {
+            console.log('failed at deleteAttendingEventFromUser:', err2);
+          } else {
+            // ...and hostedEvents
+            this.props.socket.emit('deleteHostedEventFromUser', {user: res2, event: eventBeingDeleted}, (err3, res3) => {
+              console.log('res3', res3);
+              const updatedUser = res3;
+              if (err3) {
+                console.log('failed at deleteHostedEventFromUser:', err3);
+              } else {
+                //reset user in redux
+                this.props.setUser(updatedUser);
+
+                //reset user and myEvent in persisting state
+                this.props.socket.emit('setCurrentUser', updatedUser, () => {
+                  console.log('persisting user updated.');
+                });
+                this.props.socket.emit('setMyEvent', {}, () => {
+                  console.log('persisting myEvent updated.');
+                });
+
+                //set myEvent to undefined
+                this.props.setMyEvent({});
+
+                //close the modal
+                this.closeModal();
+                this.props.setSubmitSuccess({ submitSuccess: `${eventBeingDeleted.title} has been removed.` });
+                console.log('hosted and attending events successfully removed from user.');
+              };
+            });
+          };
+        });
+      }
     });
   };
 
@@ -184,7 +234,9 @@ class Index extends React.Component {
               getUserFriendlyMaxMinPeople = {this.getUserFriendlyMaxMinPeople}
               joinEvent = {this.joinEvent}
               userHasJoinedEvent = {this.userHasJoinedEvent}
+              user = {this.props.user}
               cancelJoinEvent = {this.cancelJoinEvent}
+              deleteEvent = {this.deleteEvent}
               closeModal = {this.closeModal}
 
               setShowOnMap = {this.setShowOnMap}
@@ -212,6 +264,8 @@ const mapDispatchToProps = {
   setEvents,
   setMyEvent,
   setUser,
+  setSubmitError,
+  setSubmitSuccess,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Index);

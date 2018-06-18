@@ -217,13 +217,12 @@ class EventsForm extends React.Component {
     //set redux.myEvent and session state to eventUnderConstruction
     const myEvent = { ...this.state.eventUnderConstruction, _id: submittedEvent._id };
     this.props.setMyEvent(myEvent);
-    this.props.socket.emit('setMyEvent', myEvent)
+    this.props.socket.emit('setMyEvent', myEvent);
 
     // //add event to redux.events
     // this.props.setEvents(this.props.events.concat(myEvent));
     console.log('events:', this.props.events);
     console.log('myEvent', myEvent);
-
 
     //add the user to redux as well
     this.props.setUser(addMeetingPlaceToUserResult);

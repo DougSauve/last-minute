@@ -25,8 +25,6 @@ const createUser = (user) => {
   return new Promise((resolve, reject) => {
     newUser.save().then((res) => resolve({ err: null, res }))
     .catch((err) => {
-      console.log(err);
-      console.log(err.message);
       if (err.message.includes('duplicate key error') && err.message.includes('email')) {
         resolve({ err: 'Email already in use. Please use a different email address.'})
       };
