@@ -14,6 +14,7 @@ let ioServer;
 
 let user, user2;
 let event, event2;
+let attendee;
 
 /**
  * Setup WS & HTTP servers
@@ -32,7 +33,8 @@ beforeAll(async (done) => {
   resetSeedData();
   user2 = getSeedUser();
   event2 = getSeedEvent();
-
+  resetSeedData();
+  attendee = getSeedUser();
   done();
 });
 
@@ -133,6 +135,57 @@ describe('deleteEvent', () => {
           done();
         });
       });
+    });
+  });
+});
+
+describe('addAttendeeToEvent', () => {
+  test('should add an attendee to an event', (done) => {
+    expect.assertions(3);
+
+    socket.emit('addAttendeeToEvent', {attendee, event}, (err, res) => {
+      expect(err).toBeFalsy();
+      expect(res.attendees[1].createdAt).toBe(attendee.createdAt);
+
+      //check database
+      Event.findById(event._id).then((res) => {
+        expect(res.attendees).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              name: attendee.name
+            })
+          ])
+        );
+
+        done();
+      })
+    });
+
+
+  });
+});
+
+describe('deleteAttendeeFromEvent', () => {
+  test('should delete an attendee from an event', (done) => {
+    expect.assertions(3);
+
+    socket.emit('deleteAttendeeFromEvent', {attendee, event}, (err, res) => {
+      expect(err).toBeFalsy();
+      expect(res.attendees[0]).toBeTruthy();
+      expect(res.attendees[1]).toBeFalsy();
+
+      //check database
+      Event.findById(event._id).then((res) => {
+        expect(res.attendees).not.toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              name: attendee.name
+            })
+          ])
+        );
+      });
+
+      done();
     });
   });
 });

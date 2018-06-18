@@ -18,9 +18,10 @@ const addHostedEventToUser = (user, event) => {
     maximumPeople: event.maximumPeople,
     notes: event.notes,
   };
-
   return new Promise((resolve, reject) => {
-    User.findOneAndUpdate({ _id: user._id }, { $set: { hostedEvents: user.hostedEvents.concat(eventToAdd) } }, { new: true }).then((res) => {
+    User.findOneAndUpdate({ _id: user._id }, { $set: { ...user,
+      hostedEvents: user.hostedEvents.concat(eventToAdd),
+     } }, { new: true }).then((res) => {
       resolve({ err: null, res });
     }).catch((err) => resolve({ err, res: null }));
   });

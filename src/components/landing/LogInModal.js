@@ -13,7 +13,9 @@ const LogInModal = (props) => (
     </div>
 
     <form className = "landing__logIn-form">
-      <span className = "landing__form__error">{props.submitError}</span>
+      <span className = "landing__form__error">
+        {props.submitError}
+      </span>
 
       <span>Email address:</span>
       <input
@@ -21,7 +23,9 @@ const LogInModal = (props) => (
         type = "email"
         name = "email"
       />
-      <span className = "landing__form__error">{props.emailError}</span>
+      {/* <span className = "landing__form__error">
+        {props.emailError}
+      </span> */}
       <br />
 
       <span>Password:</span>
@@ -30,7 +34,9 @@ const LogInModal = (props) => (
         type = "password"
         name = "password"
       />
-      <span className = "landing__form__error">{props.passwordError}</span>
+      {/* <span className = "landing__form__error">
+        {props.passwordError}
+      </span> */}
       <br />
     </form>
 

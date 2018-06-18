@@ -79,8 +79,10 @@ class CreateMeetingPlace extends React.Component {
   };
 
   submitLocation = () => {
-    console.log('writing to db:', this.props.address, this.props.lat, this.props.lng);
+    const place = document.getElementsByClassName("events__create-event-modal__slide3__form")[0].elements.place.value;
+
     this.props.submitSlide3(
+      place,
       {
         lat: this.props.lat,
         lng: this.props.lng,
@@ -96,7 +98,7 @@ class CreateMeetingPlace extends React.Component {
       <div className = "create-meeting-place">
         {(this.state.readyForMap) &&
 
-          <div>
+          <div className = "create-meeting-place-wrapper">
 
           {/* //input bar */}
           <form className = "create-meeting-place-address">

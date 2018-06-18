@@ -8,3 +8,43 @@ The database updates correctly after a logout, but not before.
 I think /events is just loading with old state - that is possibly the whole problem.
 
 it updates the user - pushing the cancel button from /events updates the user. But the list is being loaded from... where? The user. Is it updating events in redux?
+
+
+
+
+
+on create new event:
+
+Redux:
+user.hostedEvents[0].attendees = [], _id 9036 (own user _id).
+user.attendingEvents = [].
+
+event not in Redux (on myEvents page).
+
+myEvent is empty (on myEvents page).
+
+on  /index page, myEvent is there but has the user _id (9036).
+                user is still messed up, but consistent with db.
+                event looks good and has the correct id.
+
+
+DB:
+user the same as in Redux.
+
+event looks good.
+
+
+Event: DB: V
+      /events: needs to get into redux on current page (nope)
+      myEvent: needs to get into redux on current page X, needs to have the correct ID X
+
+User: DB: hostedEvents messed up, attendingEvents missing.X
+      Redux: same.X
+
+
+Links: hostedEvent and myEvent both have same wrong ID.
+
+So:
+1. make sure myEvent gets the right ID.
+2. get event into redux on current page
+3. Figure out user - after events.

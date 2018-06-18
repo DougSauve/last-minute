@@ -1,15 +1,38 @@
-Make sure that when a user joins an event it removes their myEvent (and warns them).
-
-Age range should only be changed every 5 years.
-
-Hosted event needs to persist between sessions - good in db but not in redux.
-
-duplicate sign up can't reach setSubmitError
-submitEvent not working
-
-
 Maybe I should make location the last slide. I'll make it the 3rd. X
 Wire up user account creation on landing page X
 Landing page needs a filtered list of events X
 Reorganize /events form to have 4 slides instead of its current layout X
 Figure out how to make a geolocation map show up X
+Hosted event needs to persist between sessions - good in db but not in redux. X
+
+submitEvent not working X
+incorrect login freaks out X
+duplicate sign up doesn't do anything X
+/myEvents edit event says it created event - just the wording is wrong. X
+wire up meetingPlaces X
+duplicate meetingPlaces don't get made X
+
+
+
+updating events is adding new events to hosted and attending. Needs to update the existing one instead.
+- subset, I think: delete event is removing event from db, but not from redux/session. *This is because of hosted events.
+-subset, I think: updating events updates myEvent; it creates new /events in redux.
+
+
+add 'internet required' modals for online actions - got createEvent,
+
+/events / can't attend anymore doesn't do anything.
+
+/index / see details - map hangs.
+
+Age range should only be changed once every 5 years.
+
+create 'remove event' option that shows instead of join/unjoin on own event in /index
+
+are join/unjoin working?
+
+Make sure that when a user joins an event (or a second one) it reminds them their myEvent first.
+
+I need to get new events being pushed to the screen with sockets. They get added to the db immediately - just need to broadcast these to redux state for all users.
+
+Need to get redux.events updating on createEvent. myEvent does, but not events.

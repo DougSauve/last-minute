@@ -93,7 +93,7 @@ describe('validateUser', () => {
 
     validateUser(creds).then(({ err, user }) => {
       expect(user).toBeFalsy();
-      expect(err).toBe('incorrect password.');
+      expect(err).toBe('Incorrect password.');
       done();
     });
   });

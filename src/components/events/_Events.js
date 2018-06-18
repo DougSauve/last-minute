@@ -73,6 +73,10 @@ class Events extends React.Component {
     });
   };
 
+  showNoInternetAlert = () => {
+    alert('Please connect to the internet to make a new event!');
+  };
+
   render() {
     return (
       <div className = "events">
@@ -93,6 +97,7 @@ class Events extends React.Component {
         <ActionButtonContainer
           myEventExists = {(!!this.props.myEvent.title)}
           setMode = {this.props.setMode}
+          showNoInternetAlert = {this.showNoInternetAlert}
         />
 
         {

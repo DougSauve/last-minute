@@ -4,7 +4,7 @@ import moment from 'moment';
 import './_EventsForm.scss';
 
 import { connect } from 'react-redux';
-import { setMode, setSubmitError, setSubmitSuccess } from '../../../../redux/events';
+import { setMode, setEvents, setSubmitError, setSubmitSuccess } from '../../../../redux/events';
 import { setCurrentSlide } from '../../../../redux/eventsForm';
 import {
   setExpiresAtError,
@@ -31,57 +31,23 @@ class EventsForm extends React.Component {
     eventUnderConstruction: {}
   }
 
-  addEventProperties (formClassName) {
-
-    if (arguments.length < 2) return;
-
-    const form = document.getElementsByClassName(formClassName)[0];
-
-    //put args into an array - const formInputFields
-    const formInputFields = [];
-
-    for (let a = 1; a < arguments.length; a++) {
-      formInputFields[a - 1] = arguments[a];
-    };
-
-    const eventUnderConstruction = this.state.eventUnderConstruction;
-
-    //forEach the array
-    formInputFields.forEach((field) => {
-      eventUnderConstruction[field] = form.elements[field].value;
-    });
-
-    //set the object in state
-    this.setState((prevState) => ({
-      eventUnderConstruction: {
-        ...prevState.eventUnderConstruction,
-        ...eventUnderConstruction
-      }
-     }));
-  }
-
   submitSlide1 = () => {
-    //check if there are any errors
-    if (this.setSlide1Errors()) return; //not catching anything, or at least not tripping
-
-    //if no errors
-    this.addEventProperties(
-      "events__create-event-modal__slide1__form",
-      "title",
-      "minimumPeople",
-      "maximumPeople"
-    );
-
-    this.props.setCurrentSlide("2");
-  };
-
-  setSlide1Errors = () => {
-    this.props.clearErrors();
-
-    const form = document.getElementsByClassName("events__create-event-modal__slide1__form")[0];
+    //get info from Slide1 form
+    const form = document.getElementsByClassName('events__create-event-modal__slide1__form')[0];
     const title = form.elements.title.value;
     const minimumPeople = form.elements.minimumPeople.value;
     const maximumPeople = form.elements.maximumPeople.value;
+
+    //check if there are any errors
+    if (this.setSlide1Errors(title, minimumPeople, maximumPeople)) return;
+
+    //if no errors, set to state
+    this.setState(() => ({ eventUnderConstruction: { title, minimumPeople, maximumPeople } }));
+
+    this.props.setCurrentSlide("2");
+  };
+  setSlide1Errors = (title, minimumPeople, maximumPeople) => {
+    this.props.clearErrors();
 
     let errorsPresent = false;
 
@@ -92,47 +58,41 @@ class EventsForm extends React.Component {
 
     if (parseInt(minimumPeople) < 1) {
       errorsPresent = true;
-      this.props.setMinimumPeopleError('Please enter a minimum number of people.');
+      this.props.setMinPeopleError('Please enter a minimum number of people.');
     }
 
     if (parseInt(maximumPeople) < parseInt(minimumPeople)) {
       errorsPresent = true;
-      this.props.setMaximumPeopleError('The maximum number of people can\'t be less than the minimum!');
+      this.props.setMaxPeopleError('The maximum number of people can\'t be less than the minimum!');
     };
 
     return errorsPresent;
   };
 
   submitSlide2 = () => {
+    //get info from Slide2 form
+    const form = document.getElementsByClassName("events__create-event-modal__slide2__form")[0];
+    const expiresAtHour = form.elements.expiresAtHour.value;
+    const expiresAtMinute = form.elements.expiresAtMinute.value;
+    const expiresAtAM = form.elements.expiresAtAM.value;
+
     //check if there are any errors
-    if (this.setSlide2Errors()) return; //not catching anything, or at least not tripping
+    if (this.setSlide2Errors(expiresAtHour, expiresAtMinute, expiresAtAM)) return;
 
-    //if no errors
-    this.addEventProperties(
-      "events__create-event-modal__slide2__form",
-      "expiresAtHour",
-      "expiresAtMinute",
-      "expiresAtAM",
-    );
-
-    //assemble ExpiresAt and put it into the state object as well
     this.setState((prevState) => ({
       eventUnderConstruction: {
         ...prevState.eventUnderConstruction,
-        expiresAt: this.assembleExpiresAt(),
+        expiresAtHour,
+        expiresAtMinute,
+        expiresAtAM,
+        expiresAt: this.assembleExpiresAt(expiresAtHour, expiresAtMinute, expiresAtAM),
       }
      }));
 
     this.props.setCurrentSlide("3");
   };
-
-  setSlide2Errors = () => {
+  setSlide2Errors = (expiresAtHour, expiresAtMinute, expiresAtAM) => {
     this.props.clearErrors();
-
-    const form = document.getElementsByClassName("events__create-event-modal__slide2__form")[0];
-    const expiresAtHour = form.elements.expiresAtHour.value;
-    const expiresAtMinute = form.elements.expiresAtMinute.value;
-    const expiresAtAM = form.elements.expiresAtAM.value;
 
     let errorsPresent = false;
 
@@ -143,12 +103,7 @@ class EventsForm extends React.Component {
 
     return errorsPresent;
   };
-
-  assembleExpiresAt = () => {
-
-    let hour = this.state.eventUnderConstruction.expiresAtHour;
-    const minute = this.state.eventUnderConstruction.expiresAtMinute;
-    const am = this.state.eventUnderConstruction.expiresAtAM;
+  assembleExpiresAt = (hour, minute, am) => {
 
     if (am === "PM") {
       hour = (parseInt(hour) + 12).toString();
@@ -164,34 +119,24 @@ class EventsForm extends React.Component {
     return expiresAt;
   };
 
-  submitSlide3 = (location, address) => {
-    //check if there are any errors
-    if (this.setSlide3Errors()) return;
+  submitSlide3 = (place, location, address) => {
 
-    //if no errors
-    this.addEventProperties(
-      "events__create-event-modal__slide3__form",
-      "place",
-    );
+    //check if there are any errors
+    if (this.setSlide3Errors(place)) return;
 
     this.setState((prevState) => ({
       eventUnderConstruction: {
         ...prevState.eventUnderConstruction,
         location,
         address,
+        place,
       }
      }));
 
     this.props.setCurrentSlide("4");
   };
-
-  setSlide3Errors = () => {
+  setSlide3Errors = (place) => {
     this.props.clearErrors();
-
-    const form = document.getElementsByClassName("events__create-event-modal__slide3__form")[0];
-    const place = form.elements.place.value;
-
-
 
     let errorsPresent = false;
 
@@ -203,52 +148,32 @@ class EventsForm extends React.Component {
     return errorsPresent;
   };
 
-  setLocationAndAddress = (location, address) => {
-
-    this.setState((prevState) => ({
-      eventUnderConstruction: {
-        ...prevState.eventUnderConstruction,
-        location,
-        address
-      }
-     }));
-  };
-
   submitSlide4 = async () => {
 
-    this.addEventProperties(
-      "events__create-event-modal__slide4__form",
-      "notes",
-    );
+    const notes = document.getElementsByClassName(
+      "events__create-event-modal__slide4__form")[0].elements.notes.value;
 
-    //add createdBy
+
+    //add notes and createdBy, and myEvent's _id (only there if this is an update)
     await this.setState((prevState) => ({
       eventUnderConstruction: {
         ...prevState.eventUnderConstruction,
+        notes,
         createdBy: {
           _id: this.props.user._id,
           name: this.props.user.name,
           ageRange: this.props.user.ageRange,
           gender: this.props.user.gender,
         },
+        _id: (this.props.myEvent._id) && this.props.myEvent._id,
       }
      }));
-
-     console.log(this.state.eventUnderConstruction, 'foo');
 
     this.submitEvent();
   };
 
+
   submitEvent = async () => {
-    if (this.props.myEvent._id) {
-      //get _id put it into the state eventUnderConstruction object
-      await this.setState((prevState) => ({
-        eventUnderConstruction: {
-          ...prevState.eventUnderConstruction,
-          _id: this.props.myEvent._id,
-        }
-       }));
-    };
 
     //submit event > createEvent, which also adds the user as createdBy, completing the event.
     const submittedEvent = await new Promise((resolve, reject) => {
@@ -258,50 +183,51 @@ class EventsForm extends React.Component {
           this.props.setSubmitError({ submitError: 'An error occurred while creating the event.' });
           reject(null);
         } else {
-          this.props.setSubmitSuccess({ submitSuccess: `${res.title} was created.` });
+          this.props.setSubmitSuccess({ submitSuccess: `${res.title} was ${this.props.mode}d.` });
           resolve(res);
         };
       });
     });
 
-    if(!submittedEvent) return;
+    console.log('submittedEvent', submittedEvent);
 
-    //also need to update the user: add the new event to attendingEvents...
-    const addAttendingEventToUserResult = await new Promise((resolve, reject) => {
-      this.props.socket.emit('addAttendingEventToUser', {user: this.props.user, event: submittedEvent}, (err, res) => {
-        if (err) {
-          reject(null);
-        }else{
-          resolve(res);
-        };
-      });
-    });
+    if(!submittedEvent) return console.log('no submitted Event');
+
+    //also need to update the user: add the new event to user/attendingEvents...
+    const addAttendingEventToUserResult = await this.createOrUpdateAttendingEvents(
+      this.props.user, submittedEvent);
 
     if(!addAttendingEventToUserResult) return console.log('addAttendingEventToUser call failed.');
 
-    //...and hostedEvents.
-    const addHostedEventToUserResult = await new Promise((resolve, reject) => {
-      this.props.socket.emit('addHostedEventToUser', {user: this.props.user, event: addAttendingEventToUserResult}, (err, res) => {
-        if (err) {
-          reject(null);
-        }else{
-          resolve(res);
-        };
-      });
-    });
+    //...and hostedEvents...
+    const addHostedEventToUserResult = await this.createOrUpdateHostedEvents(
+      addAttendingEventToUserResult, submittedEvent);
 
     if(!addHostedEventToUserResult) return console.log('addHostedEventToUser call failed.');
 
-    //all three calls went well, now redux and session state need to be updated.
+    //...and add the location to meetingPlaces, if it doesn't exist.
+    const addMeetingPlaceToUserResult = await this.createOrUpdateMeetingPlace(
+      addHostedEventToUserResult, submittedEvent);
 
-    //set redux.myEvent to eventUnderConstruction and session state
-    const myEvent = { ...this.state.eventUnderConstruction, _id: addHostedEventToUserResult._id };
+    if(!addMeetingPlaceToUserResult) return console.log('addMeetingPlaceToUser call failed.');
+
+    //all four calls went well, now redux and session state need to be updated.
+    console.log('submittedEvent', submittedEvent)
+    console.log('addMeetingPlaceToUserResult', addMeetingPlaceToUserResult);
+    //set redux.myEvent and session state to eventUnderConstruction
+    const myEvent = { ...this.state.eventUnderConstruction, _id: submittedEvent._id };
     this.props.setMyEvent(myEvent);
-    this.props.socket.emit('setMyEvent', myEvent);
+    this.props.socket.emit('setMyEvent', myEvent)
+
+    // //add event to redux.events
+    // this.props.setEvents(this.props.events.concat(myEvent));
+    console.log('events:', this.props.events);
+    console.log('myEvent', myEvent);
+
 
     //add the user to redux as well
-    this.props.setUser(addHostedEventToUserResult);
-    this.props.socket.emit('setCurrentUser', addHostedEventToUserResult,
+    this.props.setUser(addMeetingPlaceToUserResult);
+    this.props.socket.emit('setCurrentUser', addMeetingPlaceToUserResult,
     () => {console.log('event created and user updated.')});
 
     this.props.setCurrentSlide("1");
@@ -309,11 +235,120 @@ class EventsForm extends React.Component {
     this.closeModal();
   };
 
+  createOrUpdateAttendingEvents = async (user, submittedEvent) => {
+
+    if (this.doesAttendingEventExist(submittedEvent._id)) {
+
+      console.log('attending event already exists.');
+      return user;
+    } else {
+      const addAttendingEventToUserResult = await new Promise((resolve, reject) => {
+        this.props.socket.emit('addAttendingEventToUser', {
+          user,
+          event: submittedEvent
+        }, (err, res) => {
+          if (err) {
+            reject(null);
+          }else{
+            resolve(res);
+          };
+        });
+      });
+      return addAttendingEventToUserResult;
+    };
+  };
+
+  createOrUpdateHostedEvents = async (addAttendingEventToUserResult, submittedEvent) => {
+    let addHostedEventToUserResult;
+
+    if (this.doesHostedEventExist(submittedEvent._id)) {
+
+      console.log('hosted event already exists.');
+      addHostedEventToUserResult = addAttendingEventToUserResult;
+
+    } else {
+
+      addHostedEventToUserResult = await new Promise((resolve, reject) => {
+        this.props.socket.emit('addHostedEventToUser', {
+          user: addAttendingEventToUserResult,
+          event: submittedEvent
+        }, (err, res) => {
+          if (err) {
+            reject(null);
+          }else{
+            resolve(res);
+          };
+        });
+      });
+    };
+    return addHostedEventToUserResult;
+  };
+
+  createOrUpdateMeetingPlace = async (addHostedEventToUserResult, submittedEvent) => {
+    let addMeetingPlaceToUserResult;
+
+    if (this.doesMeetingPlaceExist(submittedEvent.place)) {
+
+      console.log('meeting place already exists.');
+      addMeetingPlaceToUserResult = addHostedEventToUserResult;
+
+    } else {
+
+      addMeetingPlaceToUserResult = await new Promise((resolve, reject) => {
+        this.props.socket.emit('addMeetingPlaceToUser', {
+          user: addHostedEventToUserResult,
+          meetingPlace: {
+            name: submittedEvent.place,
+            location: submittedEvent.location,
+            address: submittedEvent.address,
+          },
+        }, (err, res) => {
+          if (err) {
+            reject(null);
+          }else{
+            resolve(res);
+          };
+        });
+      });
+    };
+    return addMeetingPlaceToUserResult;
+  };
+
+  doesAttendingEventExist(submittedEventID){
+    let attendingEventExists = false;
+
+    this.props.user.attendingEvents.map((currentAttendingEvent) => {
+      if ( JSON.stringify(currentAttendingEvent._id) === JSON.stringify(submittedEventID)) attendingEventExists = true;
+    });
+
+    return attendingEventExists;
+  };
+
+  doesHostedEventExist(submittedEventID){
+    let hostedEventExists = false;
+
+    this.props.user.hostedEvents.map((currentHostedEvent) => {
+      if ( JSON.stringify(currentHostedEvent._id) === JSON.stringify(submittedEventID)) hostedEventExists = true;
+    });
+
+    return hostedEventExists;
+  };
+
+  doesMeetingPlaceExist(place){
+    let meetingPlaceExists = false;
+
+    this.props.user.meetingPlaces.map((currentMeetingPlace) => {
+      if (currentMeetingPlace.name === place) meetingPlaceExists = true;
+    });
+
+    return meetingPlaceExists;
+  };
+
   closeModal = () => {
     this.props.setMode(undefined);
     this.props.clearErrors();
     this.props.setCurrentSlide("1");
-  }
+  };
 
   render() {
     return (
@@ -349,7 +384,6 @@ class EventsForm extends React.Component {
           place = {this.props.myEvent.place}
           placeError = {this.props.placeError}
 
-          setLocationAndAddress = {this.setLocationAndAddress}
           submitSlide3 = {this.submitSlide3}
           closeModal = {this.closeModal}
         />}
@@ -371,6 +405,8 @@ class EventsForm extends React.Component {
 const mapStateToProps = ((reduxState) => ({
   socket: reduxState.socketReducer.socket,
 
+  mode: reduxState.eventsReducer.mode,
+  events: reduxState.eventsReducer.events,
   submitError: reduxState.eventsReducer.submitError,
 
   myEvent: reduxState.myEventReducer.myEvent,
@@ -388,8 +424,9 @@ const mapStateToProps = ((reduxState) => ({
 
 const mapDispatchToProps = {
   setCurrentSlide,
-  setMode,
 
+  setMode,
+  setEvents,
   setSubmitError,
   setSubmitSuccess,
 

@@ -25,6 +25,7 @@ class Index extends React.Component {
 
   state = {
     showDetailsModal: false,
+    showOnMap: false,
     detailsEvent: undefined,
     stateLoaded: false,
   };
@@ -36,6 +37,14 @@ class Index extends React.Component {
 
   showDetailsModal = async (event) => {
     await this.setState(() => ({ showDetailsModal: true, detailsEvent: event }));
+  };
+
+  setShowOnMap = (value) => {
+    this.setState(() => ({ showOnMap: value }));
+  };
+
+  showNoInternetAlert = () => {
+    alert('Please connect to the internet to see the map.');
   };
 
   getUserFriendlyMaxMinPeople = (min, max) => {
@@ -177,6 +186,10 @@ class Index extends React.Component {
               userHasJoinedEvent = {this.userHasJoinedEvent}
               cancelJoinEvent = {this.cancelJoinEvent}
               closeModal = {this.closeModal}
+
+              setShowOnMap = {this.setShowOnMap}
+              showOnMap = {this.state.showOnMap}
+              showNoInternetAlert = {this.showNoInternetAlert}
             />
           </Modal>
 

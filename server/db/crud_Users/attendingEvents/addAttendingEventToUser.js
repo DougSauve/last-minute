@@ -20,7 +20,7 @@ const addAttendingEventToUser = (user, event) => {
   };
 
   return new Promise((resolve, reject) => {
-    User.findOneAndUpdate({ _id: user._id }, { $set: { attendingEvents: user.attendingEvents.concat(eventToAdd) } }, { new: true }).then((res) => {
+    User.findOneAndUpdate({ _id: user._id }, { $set: { ...user, attendingEvents: user.attendingEvents.concat(eventToAdd) } }, { new: true }).then((res) => {
       resolve({ err: null, res });
     }).catch((err) => resolve({ err, res: null }));
   });

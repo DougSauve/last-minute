@@ -3,6 +3,7 @@ import React from 'react';
 const MeetingPlaceList = (props) => (
   // props: {
   //   meetingPlacesList = {this.props.user.meetingPlaces}
+  //   submitSlide3 (function)
   // }
 
   <div className = "meeting-place-list">
@@ -14,7 +15,7 @@ const MeetingPlaceList = (props) => (
           <div
             key = {Math.random()}
             className = "previous-meeting-place__list__choice-button"
-            onClick = {this.props.submitSlide3(meetingPlace.location, meetingPlace.address)}
+            onClick = {props.submitSlide3.bind(this, meetingPlace.name, meetingPlace.location, meetingPlace.address)}
             >
             {meetingPlace.name}
           </div>

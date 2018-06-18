@@ -1,17 +1,18 @@
 const mongoose = (process.env.NODE_ENV === 'test') ? require('../../mongoose_testing') : require('../../mongoose');
 const { Event } = require('../../../models/Event');
 
-const addAttendeeToEvent = async (user, event) => {
+const addAttendeeToEvent = async (attendee, event) => {
   return new Promise((resolve, reject) => {
     Event.findOneAndUpdate(
       { _id: event._id },
       {
         $set: {
+          ...event,
           attendees: event.attendees.concat({
-            _id: user._id,
-            name: user.name,
-            ageRange: user.ageRange,
-            gender: user.gender,
+            _id: attendee._id,
+            name: attendee.name,
+            ageRange: attendee.ageRange,
+            gender: attendee.gender,
           })
         }
       },

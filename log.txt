@@ -154,27 +154,17 @@ Thursday 14th (5:30)
  b) events crud ops (3:30) V
  c) events.attendees crud ops (1:00)
 
-Friday 15th 3:00
-1. events.attendees crud ops (0:20) V
+Friday 15th (9:00)
+1. events.attendees crud ops tests (0:20) V
 2. turn seed data into a class and create instances so tests don't overrun each other (0:20) V
-~Back-end Test Suite Finished. :)
+3. make test suites for the websocket files, fix errors along the way (8:20)
 
-3. 
+Saturday 16th (6:00)
+1. finish troubleshooting test suites. Test suites completed. (0:30)V
+Goal: Get the app running properly again - many bugs from changing the back end.
+2. Get createEvent working properly and adding all of the necessary fields to user and event objects. (3:00) V
+3. Write a to do list of non-functional things in app (0:20) V
+4. Begin working through to do list (4 items down) (2:15)
 
-
-
-
-Next steps:
-
-I need to get new events being pushed to the screen with sockets. They get added to the db immediately - just need to broadcast these to redux state for all users.
-
-
-3. Get cleanup for old events
-5. If user's location is available, show distance to events. Might have to ask for location, user has to search, if it's not available.
-
-Further features:
-1. Implement flags
-2. Implement questions and answers, forum style
-
-So, going forward - just the websocket issue for now. I'll leave that till later as a minor bug.
-Got this figured out - one socket per app! :)
+Sunday 17th 8:00
+1. Work through to-do list (6:00)

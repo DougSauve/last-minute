@@ -6,6 +6,7 @@ const ActionButtonContainer = (props) => (
   // props: {
   //   setMode (function)
   //   myEventExists (boolean)
+  //   showNoInternetAlert (function)
   // }
 
   <div className = "event__action-button-container">
@@ -14,7 +15,14 @@ const ActionButtonContainer = (props) => (
     {(!props.myEventExists) &&
       <div
         className = "event__create-button"
-        onClick = {() => {props.setMode("create")}}
+        onClick = {() => {
+          //check for internet connection
+          if (window.navigator.onLine) {
+            props.setMode("create");
+          }else{
+            props.showNoInternetAlert();
+          }
+        }}
       >
         Make an event
       </div>

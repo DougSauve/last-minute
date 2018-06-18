@@ -22,6 +22,10 @@ class MeetingPlace extends React.Component {
     this.setState(() => ({ showCreateMeetingPlace: value }))
   };
 
+  showNoInternetAlert = () => {
+    alert('Please connect to the internet to choose a new meeting place, or use a previous one.');
+  };
+
   render() {
     return (
       <div className = "meeting-place">
@@ -37,7 +41,14 @@ class MeetingPlace extends React.Component {
         {
           <div
             className = "events__meeting-place__create-new-meeting-place-button"
-            onClick = {this.setShowCreateMeetingPlace.bind(this, true)}
+            onClick = {() => {
+              //check for internet access
+              if (window.navigator.onLine) {
+                this.setShowCreateMeetingPlace(true);
+              }else{
+                this.showNoInternetAlert();
+              }
+            }}
           >
             New meeting place
           </div>

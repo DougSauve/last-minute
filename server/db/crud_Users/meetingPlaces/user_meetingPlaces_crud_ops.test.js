@@ -56,36 +56,38 @@ describe('deleteMeetingPlaceFromUser', () => {
 
     //add a second meetingPlace to user
     resetSeedData();
-    await addMeetingPlaceToUser(user, getSeedMeetingPlace()).then(({ err, res }) => {
+    const meetingPlace2 = getSeedMeetingPlace();
+
+    await addMeetingPlaceToUser(user, meetingPlace2).then(({ err, res }) => {
       user = res;
     });
 
-    deleteMeetingPlaceFromUser(user, meetingPlace).then(async ({ err, res }) => {
+    deleteMeetingPlaceFromUser(user, meetingPlace2._id).then(async ({ err, res }) => {
       expect(err).toBeFalsy();
 
       //check database
       let meetingPlaces;
       await User.findById(res._id).then((res) => {
         meetingPlaces = res.meetingPlaces;
-      });
 
-      expect(meetingPlaces)
-      .not.toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-             _id: meetingPlace._id
-           })
-         ])
-       );
-      expect(meetingPlaces)
-      .toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            _id: expect.any(Object)
-          })
-        ])
-      );
-      done();
+        expect(meetingPlaces)
+        .not.toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              _id: meetingPlace2._id
+            })
+          ])
+        );
+        expect(meetingPlaces)
+        .toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              _id: expect.any(Object)
+            })
+          ])
+        );
+        done();
+      });
     });
   });
 

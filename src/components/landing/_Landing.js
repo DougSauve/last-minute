@@ -9,7 +9,8 @@ import {
   setPasswordCheckError,
   clearErrors,
 } from '../../redux/landingFormErrors';
-import { setUser, setUserSubmitError, setUserSubmitSuccess } from '../../redux/user';
+import { setUser } from '../../redux/user';
+import { setSubmitError } from '../../redux/events';
 
 
 import TitleBar from '../_common/TitleBar';
@@ -58,7 +59,7 @@ class Landing extends React.Component {
     //write user to db
     this.props.socket.emit('createUser', newUser, (err, res) => {
       if (err) {
-        this.props.setSubmitError(err);
+        this.props.setSubmitError({submitError: err});
       } else {
         this.props.socket.emit('setCurrentUser', res, () => {
           window.location.pathname = "/index";
@@ -99,7 +100,7 @@ class Landing extends React.Component {
     } else if (!validator.isEmail(user.email)) {
       this.props.setEmailError('Please enter a valid email address.');
       errorsPresent = true;
-    };
+    }; // else if () //email is already in use
 
     const validatePassword = blacklist(user.password, '<', '>', '/', '\\', '&', '\'', '"');
 
@@ -136,10 +137,9 @@ class Landing extends React.Component {
       password: form.elements.password.value,
     };
 
-
     this.props.socket.emit('validateUser', creds, (err, user) => {
       if (err) {
-        this.props.setUserSubmitError(err);
+        this.props.setSubmitError({submitError: err});
       } else {
         this.props.setUser(user);
         this.props.socket.emit('setCurrentUser', user, () => {
@@ -159,7 +159,7 @@ class Landing extends React.Component {
 
     this.setState(() => ({ ...stateToChange }));
     this.props.clearErrors();
-    this.props.setUserSubmitError('');
+    this.props.setSubmitError('');
   };
 
   render() {
@@ -201,7 +201,6 @@ class Landing extends React.Component {
             <LogInModal
               logIn = {this.logIn}
               closeModal = {this.closeModal}
-
               submitError = {this.props.submitError}
             />
           </Modal>
@@ -220,8 +219,7 @@ const mapStateToProps = (reduxStore) => ({
   passwordError: reduxStore.landingFormErrorsReducer.passwordError,
   passwordCheckError: reduxStore.landingFormErrorsReducer.passwordCheckError,
 
-  submitSuccess: reduxStore.userReducer.submitSuccess,
-  submitError: reduxStore.userReducer.submitError,
+  submitError: reduxStore.eventsReducer.submitError,
   user: reduxStore.userReducer.user,
 
 });
@@ -234,8 +232,8 @@ const mapDispatchToProps = {
   clearErrors,
 
   setUser,
-  setUserSubmitError,
-  setUserSubmitSuccess,
+
+  setSubmitError,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

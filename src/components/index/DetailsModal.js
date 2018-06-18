@@ -1,11 +1,19 @@
 import React from 'react';
-import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
+
+import DetailsMap from './DetailsMap';
 
 const DetailsModal = (props) => (
   // props: {
   //   event = {this.state.detailsEvent}
-  //   closeModal = {this.closeModal}
-  //   getUserFriendlyMaxMinPeople = {this.getUserFriendlyMaxMinPeople}
+  // getUserFriendlyMaxMinPeople = {this.getUserFriendlyMaxMinPeople}
+  // joinEvent = {this.joinEvent}
+  // userHasJoinedEvent = {this.userHasJoinedEvent}
+  // cancelJoinEvent = {this.cancelJoinEvent}
+  // closeModal = {this.closeModal}
+  //
+  // setShowOnMap = {this.setShowOnMap}
+  // showOnMap = {this.state.showOnMap}
+  // showNoInternetAlert = {this.showNoInternetAlert}
   // }
 
   <div className = "index__details-modal">
@@ -28,29 +36,39 @@ const DetailsModal = (props) => (
       </div> :
       <div className = "profile__change-email-modal__submit-button"
         onClick = {props.joinEvent}
-        >
-          Join
-        </div>
+      >
+        Join
+      </div>
     }
 
       <div className = "profile__change-email-modal__cancel-button"
         onClick = {props.closeModal}
-        >
-          Close
-        </div>
-
-    <Map
-      google = {props.google}
-      initialCenter = {props.event.location}
-      zoom = {15}
-      style = {{position: 'fixed', top: '500px', width: '50%', height: '50%'}}
       >
-      <Marker position = {props.event.location} />
-    </Map>
+        Close
+      </div>
+
+      <div className = "profile__change-email-modal__show-on-map-button"
+        onClick = {() => {
+          //check for internet access
+          if (window.navigator.onLine) {
+            (props.showOnMap) ? props.setShowOnMap(false) : props.setShowOnMap(true);
+          }else{
+            props.showNoInternetAlert();
+          }
+        }}
+      >
+        {props.showOnMap ? <span>Hide map</span> : <span>Show map</span>}
+      </div>
+
+      {(props.showOnMap) &&
+        <DetailsMap
+          event = {props.event}
+        />
+      }
 
 
   </div>
 );
 
 
-export default GoogleApiWrapper({ apiKey: 'AIzaSyDA9D9WAez1LHMwXWEiOsPF_G5Iwgk6RQs' })(DetailsModal);
+export default DetailsModal;

@@ -49,6 +49,16 @@ const EventSocketListener = (socket) => {
 
     acknowledge(err, result);
   });
+
+  socket.on('addAttendeeToEvent', async ({attendee, event}, acknowledge) => {
+    const {err, res} = await db.addAttendeeToEvent(attendee, event);
+    acknowledge(err, res);
+  });
+
+  socket.on('deleteAttendeeFromEvent', async ({attendee, event}, acknowledge) => {
+    const {err, res} = await db.deleteAttendeeFromEvent(attendee, event);
+    acknowledge(err, res);
+  });
 };
 
 module.exports = {

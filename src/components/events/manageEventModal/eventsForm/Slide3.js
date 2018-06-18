@@ -7,7 +7,6 @@ const Slide3 = (props) => (
   // place = {this.props.myEvent.place}
   // placeError = {this.props.placeError}
   //
-  // setLocationAndAddress = {this.setLocationAndAddress}
   // submitSlide3 = {this.submitSlide3}
   // closeModal = {this.closeModal}
   // }

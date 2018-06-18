@@ -1,7 +1,7 @@
 const mongoose = (process.env.NODE_ENV === 'test') ? require('../../mongoose_testing') : require('../../mongoose');
 const { User } = require('../../../models/User');
 
-const deleteMeetingPlaceFromUser = (user, meetingPlaceToDelete) => {
+const deleteMeetingPlaceFromUser = (user, _id) => {
 
   let foundAMatch = false;
 
@@ -9,7 +9,7 @@ const deleteMeetingPlaceFromUser = (user, meetingPlaceToDelete) => {
     User.findOneAndUpdate({ _id: user._id }, {
       $set: {
         meetingPlaces: user.meetingPlaces.filter((meetingPlace) => {
-          if (meetingPlace._id.equals(meetingPlaceToDelete._id)) {
+          if (JSON.stringify(meetingPlace._id) ===  JSON.stringify(_id)) {
             foundAMatch = true;
             // console.log('match');
             return false;

@@ -24,7 +24,7 @@ const updateAttendingEventOnUser = (user, event) => {
     User.findOneAndUpdate({ _id: user._id }, {
       $set: {
         attendingEvents: user.attendingEvents.map((attendingEvent) => {
-          if (attendingEvent._id.equals(event._id)) {
+          if (JSON.stringify(attendingEvent._id) === JSON.stringify(event._id)) {
             foundAMatch = true;
             // console.log('match');
             return event;
