@@ -1,11 +1,13 @@
 import React from 'react';
 
+import './Login.scss';
+
 const Login = (props) => (
   // props: {
   //   logIn = {props.logIn}
   // }
   <div
-    className = "login"
+    className = "log-in"
     onClick = {props.logIn}
   >
       Log in

@@ -10,14 +10,13 @@ body {
   min-height: 100vh;
   width: 100vw;
 
-  background: white;
+  background: $back1;
 
-  font-family: Times, serif;
+  font-family: Arial, sans-serif;
+  color: $text1;
   font-size: 1rem;
-}
+};
 
-//for development
-* {
-  font-size: 1.2rem;
-  padding: 10px;
-}
+[class $= "error"] {
+  color: red;
+};

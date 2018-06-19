@@ -166,5 +166,13 @@ Goal: Get the app running properly again - many bugs from changing the back end.
 3. Write a to do list of non-functional things in app (0:20) V
 4. Begin working through to do list (4 items down) (2:15)
 
-Sunday 17th 8:00
-1. Work through to-do list (6:00)
+Sunday 17th (9:00)
+1. Work through to-do list
+...wire up meetingPlaces, fix unjoin, and remove event buttons for own events, and internet required modals, etc.
+
+Monday 18th
+1. Styling /landing main page (7:30)
+2. Styling /landing signup modal (1:00)
+
+Tuesday 19th
+1. Styling /landing page and modal (1:00) V

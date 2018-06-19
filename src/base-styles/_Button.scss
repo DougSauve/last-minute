@@ -1,10 +1,8 @@
 [ class $= "button" ] {
-  padding: 1rem;
-  background: darken(white, 5%);
-  border-radius: 1rem;
+  padding: .6rem;
+  border-radius: .6rem;
   box-shadow: 0 2px 4px grey;
-}
+};
 [ class $= "button" ]:hover {
   cursor: pointer;
-  background: darken(white, 10%);
-}
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import './SignUpModal.scss';
 
 import SignUpForm from './SignUpForm';
 
@@ -13,8 +14,9 @@ const SignUpModal = (props) => (
   // }
   <div className = "landing__sign-up-modal">
 
-    <div className = "landing__sign-up-modal">
-      Welcome to LastMinute! Sign up here.
+    <div className = "landing__sign-up-modal__greeting">
+      Welcome to LastMinute.<br />
+      Let's get you connected.
     </div>
 
     <SignUpForm
@@ -26,16 +28,18 @@ const SignUpModal = (props) => (
       submitError = {props.submitError}
      />
 
-    <div className = "landing__sign-up-modal__submit-button"
-      onClick = {props.signUp}
-    >
-      Sign up
-    </div>
+    <div className = "landing__sign-up-modal__button-container">
+      <div className = "landing__sign-up-modal__button green-color"
+        onClick = {props.signUp}
+      >
+        Sign up
+      </div>
 
-    <div className = "landing__sign-up-modal__cancel-button"
-      onClick = {props.closeModal}
-    >
-      Cancel
+      <div className = "landing__sign-up-modal__button blue-color"
+        onClick = {props.closeModal}
+      >
+        Cancel
+      </div>
     </div>
 
   </div>

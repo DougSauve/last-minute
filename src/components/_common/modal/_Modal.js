@@ -3,8 +3,10 @@ import React from 'react';
 import './_Modal.scss';
 
 const Modal = (props) => (
-<div>
-  <div className = "backdrop" />
+<div className = "modal-container">
+  <div className = "backdrop"
+    onClick = {props.close}
+  />
 
   <div className = "modal">
     {props.children}

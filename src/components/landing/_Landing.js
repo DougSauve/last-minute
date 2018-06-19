@@ -14,14 +14,13 @@ import { setSubmitError } from '../../redux/events';
 
 
 import TitleBar from '../_common/TitleBar';
-import EventsList from './EventsList';
+import SampleEvents from './SampleEvents';
 import Footer from '../_common/Footer';
 import { blacklist } from '../../../utils/sanitize';
 
-import EntryButtonContainer from './EntryButtonContainer';
 import Modal from '../_common/modal/_Modal';
 import SignUpModal from './SignUpModal';
-import LogInModal from './LogInModal';
+import LoginForm from './LoginForm';
 
 import './_Landing.scss';
 
@@ -37,6 +36,9 @@ class Landing extends React.Component {
 
   setShowSignUpModal = () => {
     this.setState(() => ({ showSignUpModal: true }));
+  };
+  closeSignUpModal = () => {
+    this.setState(() => ({ showSignUpModal: false }));
   };
   setShowLogInModal = () => {
     this.setState(() => ({ showLogInModal: true }));
@@ -67,7 +69,6 @@ class Landing extends React.Component {
       };
     });
   };
-
   checkForSignUpErrors = (user) => {
 
     this.props.clearErrors();
@@ -131,7 +132,7 @@ class Landing extends React.Component {
   };
 
   logIn = () => {
-    const form = document.getElementsByClassName('landing__logIn-form')[0];
+    const form = document.getElementsByClassName('landing__log-in-form')[0];
     const creds = {
       email: form.elements.email.value,
       password: form.elements.password.value,
@@ -166,22 +167,33 @@ class Landing extends React.Component {
     return (
       <div className = "landing">
 
-        <TitleBar
-          showLogin = {true}
-          logIn = {this.setShowLogInModal}
-        />
+        <TitleBar />
 
-        <EntryButtonContainer
-          setShowSignUpModal = {this.setShowSignUpModal}
-          setShowLogInModal = {this.setShowLogInModal}
-        />
+        <div className = "landing__left-box">
+          <div className = "landing__left-box__description">
+            <SampleEvents />
+          </div>
+        </div>
 
-        <EventsList
-          limited = {true}
-        />
+        <div className = "landing__right-box">
+          <div className = "landing__title-box">
+            <div className = "landing__title-box__title">LastMinute</div>
+            <div className = "landing__title-box__phrase">Forgot to make plans? No problem.</div>
+          </div>
+
+          <div className = "landing__entry-box">
+            <LoginForm
+              submitError = {this.props.submitError}
+              setShowSignUpModal = {this.setShowSignUpModal}
+              logIn = {this.logIn}
+            />
+          </div>
+        </div>
 
         {(this.state.showSignUpModal) &&
-          <Modal>
+          <Modal
+            close = {this.closeSignUpModal}
+          >
             <SignUpModal
               signUp = {this.signUp}
               closeModal = {this.closeModal}

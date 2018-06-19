@@ -1,4 +1,5 @@
 import React from 'react';
+import './TitleBar.scss';
 
 import BackToIndex from './BackToIndex';
 import Login from './Login';
@@ -20,6 +21,7 @@ const TitleBar = (props) => (
     <div className = {props.titleClass}>
       {props.title}
     </div>
+    <div className = "TitleBar__spacer" />
     {(props.showLogout) && <Logout />}
     {(props.showLogin) && <Login logIn = {props.logIn} />}
   </div>

@@ -1,0 +1,32 @@
+@import '../../base-styles/Settings';
+
+.landing__sign-up-modal{
+  padding: 5rem 10rem;
+};
+.landing__sign-up-modal__greeting{
+  font-size: 2rem;
+  color: $accent1;
+  text-align: center;
+};
+.landing__sign-up-modal__button-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+};
+
+.landing__sign-up-modal__button{
+  margin: 1rem 2rem;
+
+  padding: .6rem;
+
+  color: $accent-text;
+  font-size: 1.3rem;
+
+  border-radius: .6rem;
+};
+.green-color{
+  background: green;
+};
+.blue-color{
+  background: blue;
+};

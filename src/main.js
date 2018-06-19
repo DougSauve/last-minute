@@ -6,7 +6,7 @@ import 'normalize.css/normalize.css';
 
 import './base-styles/_Hub.scss';
 
-import Maintenance from './components/maintenance/maintenance';
+// import Maintenance from './components/maintenance/maintenance';
 import NotFound from './components/notFound/notFound';
 import createStore, { setSocket } from './redux/store';
 const store = createStore();
