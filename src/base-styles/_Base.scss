@@ -1,5 +1,5 @@
 html {
-  min-height: 100%;
+  height: 100vh;
 }
 
 body {
@@ -7,16 +7,71 @@ body {
 
   box-sizing: border-box;
   padding: 0;
-  min-height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 
   background: $back1;
 
   font-family: Arial, sans-serif;
   color: $text1;
-  font-size: 1rem;
+  font-size: 1.2rem;
+};
+.error {
+  color: red;
 };
 
-[class $= "error"] {
-  color: red;
+//spacing
+.rem-before{
+  padding-left: 1rem;
+};
+
+//colors
+.color-accent {
+  color: $accent1;
+};
+
+//backgrounds
+.background-blue {
+  background: blue;
+  color: white;
+};
+.background-green {
+  background: green;
+  color: white;
+};
+.background-red {
+  background: red;
+  color: white;
+};
+.background-none {
+  background: white;
+  border: solid 1px $accent1;
+};
+.background-accent {
+  background: $accent1;
+  color: white;
+};
+
+//widths
+.width-fit {
+  display: inline;
+};
+.width10 {
+  width: 10rem;
+};
+.width15 {
+  width: 15rem;
+};
+.width25 {
+  width: 25rem;
+};
+
+//flex
+.unsquishable {
+  flex-shrink: 0;
+};
+
+//text
+.italic {
+  font-style: italic;
 };

@@ -1,4 +1,6 @@
 import React from 'react';
+import './_Profile.scss';
+
 import validator from 'validator';
 
 import { connect } from 'react-redux';
@@ -177,9 +179,7 @@ class Profile extends React.Component {
       <div className = "profile">
 
         <TitleBar
-          showBackToIndex = {true}
-          title = "Your Profile"
-          titleClass = "profile__title"
+          links = {['index']}
           showLogout = {true}
         />
 

@@ -6,7 +6,7 @@ import 'normalize.css/normalize.css';
 
 import './base-styles/_Hub.scss';
 
-// import Maintenance from './components/maintenance/maintenance';
+import Maintenance from './components/maintenance/maintenance';
 import NotFound from './components/notFound/notFound';
 import createStore, { setSocket } from './redux/store';
 const store = createStore();
@@ -18,8 +18,6 @@ import Landing from './components/landing/_Landing';
 import Index from './components/index/_Index';
 import Profile from './components/profile/_Profile';
 import Events from './components/events/_Events';
-
-// import Slide3 from './components/events/manageEventModal/eventsForm/Slide3';
 
 
 //router

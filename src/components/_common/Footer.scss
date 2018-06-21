@@ -1,9 +1,12 @@
+@import '../../base-styles/Settings.scss';
+
 .footer {
   position: absolute;
   bottom: 0; left: 0;
 
-  width: 100vw;
+  height: 2rem;
+  width: 100%;
   text-align: center;
 
-  color: white;
+  color: $text1;
 }

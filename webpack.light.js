@@ -13,8 +13,10 @@ module.exports = {
         test: /\.js$/,
         exclude: [
           path.join(__dirname, '/node_modules'),
+
           path.join(__dirname, '/server'),
-          path.join(__dirname, '/utils'),
+          // path.join(__dirname, '/utils'),
+          // path.join(__dirname, '/src/components/landing'),
           path.join(__dirname, '/src/components/events'),
           path.join(__dirname, '/src/components/index'),
           path.join(__dirname, '/src/components/profile'),

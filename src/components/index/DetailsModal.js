@@ -1,4 +1,5 @@
 import React from 'react';
+import './DetailsModal.scss';
 
 import DetailsMap from './DetailsMap';
 
@@ -18,24 +19,75 @@ const DetailsModal = (props) => (
   // showNoInternetAlert = {this.showNoInternetAlert}
   // }
 
-  <div className = "index__details-modal">
-    <div>What's happening: {props.event.title}</div>
-    <div>When: {props.event.expiresAtHour}:{props.event.expiresAtMinute} {props.event.expiresAtAM}</div>
-    <div>
-      How many people: {props.getUserFriendlyMaxMinPeople(props.event.minimumPeople, props.event.maximumPeople)}
+  <div className = "details-modal">
+
+    <div className = "event-container">
+
+      <div className = "title">{props.event.title}</div>
+      <div className = "distance">5.8 miles away</div>
+
+      <div className = "property">
+        <div className = "key">Host:</div>
+        {(props.event.createdBy._id === props.user._id) ?
+          <div className = "value">You</div> :
+          <div className = "value">
+            {props.event.createdBy.name}
+            <div className = "secondary-text">{props.event.createdBy.gender},
+              age {props.event.createdBy.ageRange}
+            </div>
+          </div>
+        }
+      </div>
+
+      <div className = "property">
+        <div className = "key">Meet at:</div>
+        <div className = "value property">
+          <div>{props.event.place}
+            <div className = "secondary-text">{props.event.address}</div>
+          </div>
+
+          <div className = "link color-accent rem-before unsquishable"
+            onClick = {() => {
+              //check for internet access
+              if (window.navigator.onLine) {
+                (props.showOnMap) ? props.setShowOnMap(false) : props.setShowOnMap(true);
+              }else{
+                props.showNoInternetAlert();
+              }
+            }}
+          >
+            {props.showOnMap ? <span>Hide map</span> : <span>Show map</span>}
+          </div>
+
+        </div>
+      </div>
+
+      <div className = "property">
+        <div className = "key">When:</div>
+        <div className = "value">
+          {props.event.expiresAtHour}:{props.event.expiresAtMinute} {props.event.expiresAtAM}
+        </div>
+      </div>
+
+      <div className = "property">
+        <div className = "key">People:</div>
+        <div className = "value">{props.event.minimumPeople}-{props.event.maximumPeople} (currently {props.event.attendees.length})</div>
+      </div>
+
+      {(props.event.notes) &&
+        <div className = "property">
+          <div className = "key">Notes:</div>
+          <div className = "value">{props.event.notes}</div>
+        </div>
+      }
+
     </div>
-    <div>Who's hosting it: {(props.event.createdBy._id === props.user._id) ?
-      <span>You</span> :
-      <span>{props.event.createdBy.name}</span>
-    }</div>
-    <div>Who's going: </div>
-    <div>Where: {props.event.place}</div>
-    <div>Notes: {props.event.notes}</div>
+
 
     {/* show 'remove event' instead of join/unjoin if it's their own event */}
     {
       (props.event.createdBy._id === props.user._id) ?
-      <div className = "profile__details-modal__remove-event-button"
+      <div className = "button background-red"
         onClick = {props.deleteEvent}
       >
         Remove this event
@@ -44,12 +96,12 @@ const DetailsModal = (props) => (
         {/* show join or cancel join based on whether they're signed up or not */}
         {
           (props.userHasJoinedEvent()) ?
-          <div className = "profile__change-email-modal__submit-button"
+          <div className = "button background-red"
             onClick = {props.cancelJoinEvent}
           >
             Leave event
           </div> :
-          <div className = "profile__change-email-modal__submit-button"
+          <div className = "button background-blue"
             onClick = {props.joinEvent}
           >
             Join
@@ -59,23 +111,10 @@ const DetailsModal = (props) => (
     }
 
 
-    <div className = "profile__change-email-modal__cancel-button"
+    <div className = "button background-none"
       onClick = {props.closeModal}
     >
       Close
-    </div>
-
-    <div className = "profile__change-email-modal__show-on-map-button"
-      onClick = {() => {
-        //check for internet access
-        if (window.navigator.onLine) {
-          (props.showOnMap) ? props.setShowOnMap(false) : props.setShowOnMap(true);
-        }else{
-          props.showNoInternetAlert();
-        }
-      }}
-    >
-      {props.showOnMap ? <span>Hide map</span> : <span>Show map</span>}
     </div>
 
     {(props.showOnMap) &&

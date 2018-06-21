@@ -1,0 +1,19 @@
+.bar-link {
+  padding: 0 .3rem;
+  min-width: 4rem;
+
+  background: $accent1;
+  line-height: 2rem;
+  color: $back1;
+  text-align: center;
+
+  border-radius: 0.2rem;
+
+  font-size: 1.3rem;
+
+  box-shadow: 0 2px 4px $back1, 0 -2px 4px $back1;
+};
+.bar-link:hover {
+  cursor: pointer;
+  background: darken($accent1, 10%);
+};

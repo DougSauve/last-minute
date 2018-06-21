@@ -1,5 +1,44 @@
+@import '../../base-styles/Settings';
+
 [class $= "__events-list"] {
-  border: 5px solid blue;
   display: flex;
   flex-direction: column-reverse;
+};
+.index__events-list {
+  position: absolute;
+  left: 0; right: 0;
+  margin: 2rem auto;
+
+  flex-direction: column;
+  align-items: center;
+
+
+  width: 50%;
+  background: $back1;
+};
+.index__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 2rem;
+
+  div {
+    color: $accent1;
+    font-size: 3rem;
+  };
+};
+
+.index__list-event{
+  margin: 1rem 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: white;
+
+  padding: 1rem;
+  border: 1px solid $accent1;
+  border-radius: .6rem;
 }

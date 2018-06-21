@@ -1,0 +1,34 @@
+.event-container {
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6rem;
+};
+.property {
+  display: flex;
+  flex-direction: row;
+
+  margin-bottom: .5rem;
+};
+.title {
+  color: $text1;
+  font-weight: bold;
+};
+.distance {
+  color: $text1;
+  margin-bottom: 1rem;
+};
+
+.secondary-text {
+  color: rgba($text1, 0.7);
+};
+.key {
+  color: $text1;
+  font-style: italic;
+  width: 10rem;
+};
+.value {
+  color: $text1;
+  width: 25rem;
+};

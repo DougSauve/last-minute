@@ -16,16 +16,17 @@ const LoginForm = (props) => (
     <div>
       <span className = "landing__text-style">Email address:</span>
       <input
-        className = "landing__log-in__email-input landing__input"
+        className = "input width15"
         type = "email"
         name = "email"
+        autoFocus
       />
     </div>
 
     <div>
       <span className = "landing__text-style">Password:</span>
       <input
-        className = "landing__log-in__password-input landing__input"
+        className = "input width15"
         type = "password"
         name = "password"
       />
@@ -33,7 +34,7 @@ const LoginForm = (props) => (
 
     {/* Log in Button */}
     <div
-      className = "landing__log-in-button landing__button"
+      className = "button background-blue width15"
       onClick = {props.logIn}
     >
       Log in
@@ -41,7 +42,7 @@ const LoginForm = (props) => (
 
     {/* Sign up Button */}
     <div
-      className = "landing__sign-up-button landing__button"
+      className = "button background-green width15"
       onClick = {props.setShowSignUpModal}
     >
       Sign up

@@ -21,7 +21,7 @@
   align-items: center;
 
   background: $back1;
-  
+
   .landing__left-box__description{
 
     max-width: 30vw;
@@ -55,34 +55,7 @@
       font-size: 1.2rem;
       font-style: italic;
     };
+
+    //Login Form
   }
-};
-
-
-.landing__text-style{
-  color: $text1;
-  font-size: 1.3rem;
-};
-.landing__input{
-
-  width: 15vw;
-  min-width: 4rem;
-  padding: .6rem;
-
-  font-size: 1.3rem;
-  outline: none;
-
-  border-radius: .6rem;
-};
-.landing__button{
-  width: 15vw;
-  min-width: 4rem;
-  padding: .3rem;
-
-  font-size: 1.6rem;
-  text-align: center;
-
-  border-radius: .6rem;
-
-  color: white;
 };

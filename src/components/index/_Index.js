@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './_Index.scss';
 
 import { connect } from 'react-redux';
@@ -15,8 +14,7 @@ import Modal from '../_common/modal/_Modal';
 import DetailsModal from './DetailsModal';
 import Footer from '../_common/Footer';
 
-import LinkButtonContainer from './LinkButtonContainer';
-
+import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 
 // The index page shows a list of all open events within 10mi (can be changed). The user can respond to these by joining an event or by adding a question/comment. They can also flag open events or comments.
 // It also shows a link to the profile and events pages.
@@ -27,12 +25,34 @@ class Index extends React.Component {
     showDetailsModal: false,
     showOnMap: false,
     detailsEvent: undefined,
+
+      //sample event{
+    //   title: 'Baseball',
+    //   address: '900 16th St, Roanoke, VA',
+    //   expiresAtHour: '7',
+    //   expiresAtMinute: '30',
+    //   expiresAtAM: 'pm',
+    //   minimumPeople: '5',
+    //   maximumPeople: '15',
+    //   createdBy: {
+    //     name: 'Sam',
+    //     ageRange: '18-30',
+    //     gender: 'Male',
+    //   },
+    //   attendees: ['Joe', 'Parker'],
+    //   place: 'McKinley Park',
+    //   notes: 'Bring your own glove',
+    // },
     stateLoaded: false,
   };
 
   componentWillMount() {
     loadState(this.props.socket, this.props.setUser, this.props.setMyEvent, this.props.setEvents,)
     .then(() => this.setState(() => ({ stateLoaded: true })));
+  };
+
+  componentDidMount() {
+    document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.logIn], ['escape', this.closeModal]);
   };
 
   showDetailsModal = async (event) => {
@@ -213,22 +233,24 @@ class Index extends React.Component {
       <div className = "index">
 
         <TitleBar
-          title = "Open Events"
-          titleClass = "index__title"
+          links = {['events', 'profile']}
           showLogout = {true}
         />
 
-        <LinkButtonContainer />
+
 
         {(this.state.stateLoaded) &&
           <EventsList
             events = {this.props.events}
             showDetailsModal = {this.showDetailsModal}
+            user = {this.props.user}
           />
         }
 
         {(this.state.showDetailsModal) &&
-          <Modal>
+          <Modal
+            close = {this.closeModal}
+          >
             <DetailsModal
               event = {this.state.detailsEvent}
               getUserFriendlyMaxMinPeople = {this.getUserFriendlyMaxMinPeople}

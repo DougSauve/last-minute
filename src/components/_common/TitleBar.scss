@@ -7,7 +7,7 @@
 
   height: 2rem;
   line-height: 2rem;
-  width: 100vw;
+  width: 100%;
 
   display: flex;
   flex-direction: row;
@@ -17,6 +17,7 @@
   color: $back1;
   background: $accent1;
 };
+
 .TitleBar__spacer{
   flex-grow: 1;
 };

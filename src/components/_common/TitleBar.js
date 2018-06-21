@@ -1,29 +1,46 @@
 import React from 'react';
 import './TitleBar.scss';
 
-import BackToIndex from './BackToIndex';
-import Login from './Login';
 import Logout from './Logout';
 
 const TitleBar = (props) => (
   // props: {
-  //   showBackToIndex (boolean)
-  //   title (string)
-  //   titleClass (string)
-  //   showLogin (boolean)
-  //   logIn (function)
+  //   links (component)
   //   showLogout (boolean)
   // }
 
 
   <div className = "TitleBar">
     {(props.showBackToIndex) && <BackToIndex />}
-    <div className = {props.titleClass}>
-      {props.title}
-    </div>
+
+    {(props.links) && (props.links.includes('events') &&
+      <div
+        className = "bar-link"
+        onClick = {() => window.location.pathname = '/events'}
+      >
+        My Events
+      </div>
+    )}
+    {(props.links) && (props.links.includes('profile') &&
+      <div
+        className = "bar-link"
+        onClick = {() => window.location.pathname = '/profile'}
+      >
+        My Profile
+      </div>
+    )}
+    {(props.links) && (props.links.includes('index') &&
+      <div
+        className = "bar-link"
+        onClick = {() => window.location.pathname = '/index'}
+      >
+        {'< Back to Open Events'}
+      </div>
+    )}
+
     <div className = "TitleBar__spacer" />
+
     {(props.showLogout) && <Logout />}
-    {(props.showLogin) && <Login logIn = {props.logIn} />}
   </div>
 );
 

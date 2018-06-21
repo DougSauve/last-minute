@@ -28,14 +28,14 @@ const SignUpModal = (props) => (
       submitError = {props.submitError}
      />
 
-    <div className = "landing__sign-up-modal__button-container">
-      <div className = "landing__sign-up-modal__button green-color"
+    <div className = "button-container">
+      <div className = "button background-green width15"
         onClick = {props.signUp}
       >
         Sign up
       </div>
 
-      <div className = "landing__sign-up-modal__button blue-color"
+      <div className = "button background-blue width15"
         onClick = {props.closeModal}
       >
         Cancel

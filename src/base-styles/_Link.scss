@@ -1,8 +1,10 @@
-[ class $= "link" ] {
-  color: blue;
-  text-decoration: underline;
-}
-[ class $= "link" ]:hover {
+.link {
+  display: inline;
+  margin: 0 .6rem;
+
+  color: $accent1;
+};
+.link:hover {
   cursor: pointer;
-  color: darken(blue, 10%);
-}
+  color: darken($accent1, 10%);
+};

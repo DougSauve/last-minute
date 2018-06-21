@@ -170,9 +170,21 @@ Sunday 17th (9:00)
 1. Work through to-do list
 ...wire up meetingPlaces, fix unjoin, and remove event buttons for own events, and internet required modals, etc.
 
-Monday 18th
+Monday 18th (8:30)
 1. Styling /landing main page (7:30)
 2. Styling /landing signup modal (1:00)
 
-Tuesday 19th
+Tuesday 19th (8:00)
 1. Styling /landing page and modal (1:00) V
+2. Styling TitleBar, creating base styles, styling details modal (7:00)
+
+Wednesday 20th (4:00)
+1. Renaming classes in /landing, styling /index (2:00) V
+2. Fixing other small styling boinks (1:00) V
+3. Create keyboard bindings for forms and closing modals (1:00) V
+
+Next: prevent scrolling while modal is open
+in /index.detailsModal, have 'show map' open its own modal with the address and place name on it, and a close button.
+create an actual 'no internet' modal, not a pop-up. Create new meeting place should do the same thing.
+/landing.signupmodal keys need line-height or flex adjusted.
+in sign up, choose homelocation. Enter address or postal code, and explain why - 'used to find events near you'

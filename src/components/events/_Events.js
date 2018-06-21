@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './_Events.scss';
 
 import { connect } from 'react-redux';
 import { setMode, setEvents, addEvent } from '../../redux/events';
@@ -148,9 +149,7 @@ class Events extends React.Component {
       <div className = "events">
 
         <TitleBar
-          showBackToIndex = {true}
-          title = "Events"
-          titleClass = "events__title"
+          links = {['index']}
           showLogout = {true}
         />
 

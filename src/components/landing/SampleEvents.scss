@@ -6,39 +6,7 @@
   justify-content: space-evenly;
   font-size: 1rem;
 };
-.sample__event {
-  padding: 1rem;
 
-  display: flex;
-  flex-direction: column;
-};
-.sample__property {
-  display: flex;
-  flex-direction: row;
-
-  margin-bottom: .5rem;
-};
-.sample__title {
-  color: $text1;
-  font-weight: bold;
-};
-.sample__distance {
-  color: $text1;
-  margin-bottom: 1rem;
-};
-
-.sample__secondary-text {
-  color: rgba($text1, 0.7);
-};
-.sample__key {
-  color: $text1;
-  font-style: italic;
-  width: 10rem;
-};
-.sample__value {
-  color: $text1;
-  width: 25rem;
-};
 .sample__see-details{
   background: blue;
   color: $back1;

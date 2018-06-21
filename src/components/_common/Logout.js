@@ -6,7 +6,7 @@ import { setUser } from '../../redux/user';
 
 const Logout = (props) => (
   <div
-    className = "logout"
+    className = "log-out bar-link"
     onClick = {() => {
       props.socket.emit('setMyEvent', null);
       props.socket.emit('setCurrentUser', null, () => {

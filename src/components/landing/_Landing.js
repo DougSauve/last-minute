@@ -12,7 +12,6 @@ import {
 import { setUser } from '../../redux/user';
 import { setSubmitError } from '../../redux/events';
 
-
 import TitleBar from '../_common/TitleBar';
 import SampleEvents from './SampleEvents';
 import Footer from '../_common/Footer';
@@ -21,6 +20,8 @@ import { blacklist } from '../../../utils/sanitize';
 import Modal from '../_common/modal/_Modal';
 import SignUpModal from './SignUpModal';
 import LoginForm from './LoginForm';
+
+import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 
 import './_Landing.scss';
 
@@ -32,6 +33,10 @@ class Landing extends React.Component {
   state = {
     showSignUpModal: false,
     showLogInModal: false,
+  };
+
+  componentDidMount() {
+    document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.logIn], ['escape', this.closeModal]);
   };
 
   setShowSignUpModal = () => {
