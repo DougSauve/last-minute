@@ -9,12 +9,12 @@ const ActionButtonContainer = (props) => (
   //   showNoInternetAlert (function)
   // }
 
-  <div className = "event__action-button-container">
+  <div className = "button-container">
 
     {/* Create Button */}
     {(!props.myEventExists) &&
       <div
-        className = "event__create-button"
+        className = "button background-green width15"
         onClick = {() => {
           //check for internet connection
           if (window.navigator.onLine) {
@@ -32,7 +32,7 @@ const ActionButtonContainer = (props) => (
     {/* Update Button */}
     {(props.myEventExists) &&
       <div
-        className = "event__update-button"
+        className = "button background-blue width15"
         onClick = {() => {props.setMode("update")}}
         >
           Edit your event
@@ -42,7 +42,7 @@ const ActionButtonContainer = (props) => (
     {/* Delete Button */}
     {(props.myEventExists) &&
       <div
-        className = "event__delete-button"
+        className = "button background-red width15"
         onClick = {() => {props.setMode("delete")}}
         >
           Remove your event

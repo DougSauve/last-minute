@@ -6,24 +6,24 @@ const VerifyDeleteModal = (props) => (
   // deleteProfile = {this.deleteProfile}
   // closeModal = {this.closeModal}
   // }
-  <div className = "profile__verify-delete-modal">
+  <div className = "modal-padding center">
 
-    <div className = "profile__verify-delete-modal__message">
-      Are you sure you want to delete your profile? This cannot be undone.
-    </div>
+    <div className = "warning">Are you sure you want to delete your profile? This cannot be undone.</div>
 
-    <span className = "form__error">{props.submitError}</span>
+    <span className = "error">{props.submitError}</span>
 
-    <div className = "profile__verify-delete-modal__submit-button"
-      onClick = {props.deleteProfile}
-    >
-      Delete
-    </div>
+    <div className = "button-container">
+      <div className = "button width15 background-red"
+        onClick = {props.deleteProfile}
+      >
+        Delete
+      </div>
 
-    <div className = "profile__verify-delete-modal__cancel-button"
-      onClick = {props.closeModal}
-    >
-      Cancel
+      <div className = "button width15 background-none"
+        onClick = {props.closeModal}
+      >
+        Cancel
+      </div>
     </div>
 
   </div>

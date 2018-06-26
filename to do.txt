@@ -25,12 +25,29 @@ implement this on /events attending events list as well X
 
 
 
+Next steps:
+
+style /events, including the map modal; then implement that into /index maps
+implement homeLocations
+
+add sign-up greeting/orientation modal
+in /index.detailsModal, have 'show map' open its own modal with the address and place name on it, and a close button.
+create an actual 'no internet' modal, not a pop-up.
+Create new meeting place should do the same thing.
+/landing.signupmodal keys need line-height or flex adjusted.
+in sign up, choose homelocation. Enter address or postal code, and mouseOver explain why - 'used to find events near you'
+make footer stop being stupid
+Next: prevent scrolling while modal is open
+
 
 Later on things:
 
 Major:
 
 Implement homeLocations and distance calculations to decide which events to show
+/events 'i can't attend anymore' can't show up on own event
+users shouldn't be able to join an event with the cap met
+show full date of event in /myevents/attendingEventsList
 
 Minor:
 

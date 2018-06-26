@@ -11,23 +11,20 @@ const Slide3 = (props) => (
   // closeModal = {this.closeModal}
   // }
 
-  <div className = "events__create-event-modal__slide3">
-    <span className = "form-heading">
-      Choose a meeting place
-    </span>
+  <div className = "modal-padding center">
+
+    <div className = "header-modal">
+      <div className = "size2">
+        Where?
+      </div>
+    </div>
+
     <br />
 
     <MeetingPlace
       submitSlide3 = {props.submitSlide3}
+      closeModal = {props.closeModal}
      />
-
-    <div
-      className = "events__create-event-modal__cancel-warn-button"
-      onClick = {props.closeModal}
-    >
-      Cancel
-    </div>
-
   </div>
 );
 

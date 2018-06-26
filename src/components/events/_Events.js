@@ -16,9 +16,8 @@ import ActionButtonContainer from './ActionButtonContainer';
 import ManageEventModal from './manageEventModal/_ManageEventModal';
 import AttendingEventsList from './AttendingEventsList';
 
-// this page displays all of a user's own events in OwnEventsList. It also provides buttons to create, edit, and delete their own events.
-// Event looks like:
-// Title / Content - Desktop only / Location / #min #now #max / Creator
+import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
+import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
 
 class Events extends React.Component {
 
@@ -31,6 +30,10 @@ class Events extends React.Component {
     .then(async () => {
       await this.setState(() => ({ stateLoaded: true }));
     });
+  };
+
+  componentDidMount() {
+    document.onkeydown = handleKeyboardEvents.bind(this, ['escape', this.closeModal]);
   };
 
   removeUserFromEvent = (user, event) => {
@@ -151,34 +154,71 @@ class Events extends React.Component {
         <TitleBar
           links = {['index']}
           showLogout = {true}
+          fixed = {true}
         />
 
-        <div className = "events__success-message">{this.props.submitSuccess}</div>
+        <div className = "success">{this.props.submitSuccess}</div>
 
-        <MyEvent
-          event = {this.props.myEvent}
-        />
+        <div className = "header--events">
+          Your events
+        </div>
 
-        <ActionButtonContainer
-          myEventExists = {(!!this.props.myEvent.title)}
-          setMode = {this.props.setMode}
-          showNoInternetAlert = {this.showNoInternetAlert}
-        />
+        <div className = "events-box">
+
+          <div className = "events__left-box--placeholder">
+            <div className = "events__left-box__background" />
+          </div>
+
+          <div className = "events__left-box background-accent center">
+
+            <div className = "header">
+              <div className = "size2--reverse-colors">
+                Hosting
+              </div>
+            </div>
+
+            <MyEvent
+              event = {this.props.myEvent}
+              makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
+            />
+
+            <ActionButtonContainer
+              myEventExists = {(!!this.props.myEvent.title)}
+              setMode = {this.props.setMode}
+              showNoInternetAlert = {this.showNoInternetAlert}
+            />
+
+          </div>
+          {/* ^ end left box */}
+
+          <div className = "events__right-box">
+
+            <div className = "header">
+              <div className = "size2">
+                Joined
+              </div>
+            </div>
+
+            {
+              (this.state.stateLoaded) &&
+              <AttendingEventsList
+                user = {this.props.user}
+                cancelJoinEvent = {this.cancelJoinEvent}
+                deleteEvent = {this.deleteEvent}
+                makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
+              />
+            }
+
+          </div>
+          {/* ^ end right box */}
+
+        </div>
+        {/* ^ end events-box */}
 
         {
           (this.props.mode) &&
           <ManageEventModal
             mode = {this.props.mode}
-          />
-        }
-
-        {
-          (this.state.stateLoaded) && // this is using old state.
-          <AttendingEventsList
-            user = {this.props.user}
-            events = {this.props.user.attendingEvents}
-            cancelJoinEvent = {this.cancelJoinEvent}
-            deleteEvent = {this.deleteEvent}
           />
         }
 

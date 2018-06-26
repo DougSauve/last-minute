@@ -1,5 +1,4 @@
 import React from 'react';
-import './EventsList.scss';
 
 class EventsList extends React.Component {
   // props: {
@@ -9,19 +8,14 @@ class EventsList extends React.Component {
   // }
   render() {
     return (
-      <div className = 'index__events-list'>
-        <div className = "index__title">
-          <div>
-            Open Events
-          </div>
-        </div>
+      <div className = 'list events-list width50_percent'>
 
         {
           (this.props.events[0]) ?
           this.props.events.map((event, index) => {
             return <div
               key = {event.createdAt}
-              className = "index__list-event event-container">
+              className = "list-item-container event-spacing">
 
               <div className = "title">{event.title}</div>
               <div className = "distance">5.8 miles away</div>
@@ -68,6 +62,7 @@ class EventsList extends React.Component {
             There are no events to display.
           </div>
         }
+
       </div>
     );
   };

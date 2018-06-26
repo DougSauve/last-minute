@@ -15,6 +15,7 @@ import DetailsModal from './DetailsModal';
 import Footer from '../_common/Footer';
 
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
+import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
 
 // The index page shows a list of all open events within 10mi (can be changed). The user can respond to these by joining an event or by adding a question/comment. They can also flag open events or comments.
 // It also shows a link to the profile and events pages.
@@ -25,24 +26,6 @@ class Index extends React.Component {
     showDetailsModal: false,
     showOnMap: false,
     detailsEvent: undefined,
-
-      //sample event{
-    //   title: 'Baseball',
-    //   address: '900 16th St, Roanoke, VA',
-    //   expiresAtHour: '7',
-    //   expiresAtMinute: '30',
-    //   expiresAtAM: 'pm',
-    //   minimumPeople: '5',
-    //   maximumPeople: '15',
-    //   createdBy: {
-    //     name: 'Sam',
-    //     ageRange: '18-30',
-    //     gender: 'Male',
-    //   },
-    //   attendees: ['Joe', 'Parker'],
-    //   place: 'McKinley Park',
-    //   notes: 'Bring your own glove',
-    // },
     stateLoaded: false,
   };
 
@@ -112,6 +95,42 @@ class Index extends React.Component {
     })
   };
 
+  updateAssociatedUsers_join(addAttendeeToEventResult) {
+    return new Promise((resolve, reject) => {
+
+      let attendeeWithFinalUpdates = 'none';
+
+      addAttendeeToEventResult.attendees.forEach((attendee, index) => {
+
+        //get actual user from attendee thing
+        this.props.socket.emit('readUser', attendee._id, (err, res) => {
+          if (err) console.log(err);
+
+          this.props.socket.emit('updateAttendingEventOnUser', {user: res, event: addAttendeeToEventResult}, (err2, res2) => {
+            if (err2) console.log(err2);
+
+            //update hostedEvent if this is the host
+            if (res2.hostedEvents[0] &&
+            JSON.stringify(res2.hostedEvents[0]._id) === JSON.stringify(addAttendeeToEventResult._id) ) {
+
+              this.props.socket.emit('updateHostedEventOnUser', {user: res2, event: addAttendeeToEventResult}, (err3, res3) => {
+                if(err3) console.log(err3);
+                console.log('updated host thing', res3);
+              });
+            };
+
+            //if this the current user, set the eventual resolve value to that user.
+            if (JSON.stringify(res2._id) === JSON.stringify(this.props.user._id)) attendeeWithFinalUpdates = res2;
+
+            //only return the resolve value when the forEach has gone through everything
+            if (index === addAttendeeToEventResult.attendees.length - 1) resolve(attendeeWithFinalUpdates);
+          });
+        });
+      });
+    });
+
+  };
+
   joinEvent = async () => {
     let user = this.props.user;
     let event = this.state.detailsEvent;
@@ -122,18 +141,41 @@ class Index extends React.Component {
     const addAttendingEventToUserResult = await this.addAttendingEventToUser(user, event);
     if (addAttendingEventToUserResult === null) return;
 
-    console.log('resetting user to: ', addAttendingEventToUserResult);
+    const attendeeWithFinalUpdates = await this.updateAssociatedUsers_join(addAttendeeToEventResult);
 
     Promise.all([
       //reset user in session storage
-      this.props.socket.emit('setCurrentUser', addAttendingEventToUserResult, () => console.log('session user updated.')),
+      this.props.socket.emit('setCurrentUser', attendeeWithFinalUpdates, () => console.log('session user updated.')),
       //reset user in redux
-      this.props.setUser(addAttendingEventToUserResult),
+      this.props.setUser(attendeeWithFinalUpdates),
       //reset events from db to redux
       getAllEventsFromDB(this.props.socket, this.props.setEvents)
     ]).then(() => {
       console.log('You have joined this event.');
       this.closeModal();
+    });
+  };
+
+  updateAssociatedUsers_leave(deleteAttendeeFromEventResult) {
+    deleteAttendeeFromEventResult.attendees.forEach((attendee) => {
+
+      //get actual user from attendee thing
+      this.props.socket.emit('readUser', attendee._id, (err, res) => {
+        if (err) console.log(err);
+
+        this.props.socket.emit('updateAttendingEventOnUser', {user: res, event: deleteAttendeeFromEventResult}, (err2, res2) => {
+          if (err2) console.log(err2);
+
+          //update hostedEvent if this is the host
+          if (res2.hostedEvents[0] &&
+            JSON.stringify(res2.hostedEvents[0]._id) === JSON.stringify(deleteAttendeeFromEventResult._id) ) {
+              this.props.socket.emit('updateHostedEventOnUser', {user: res2, event: deleteAttendeeFromEventResult}, (err3, res3) => {
+                if(err3) console.log(err3);
+                console.log('updated host thing', res3);
+              });
+            };
+        });
+      });
     });
   };
 
@@ -147,7 +189,7 @@ class Index extends React.Component {
     const deleteEventFromUserResult = await this.deleteAttendingEventFromUser(user, event);
     if (deleteEventFromUserResult === null) return;
 
-    console.log('resetting user to: ', deleteEventFromUserResult);
+    this.updateAssociatedUsers_leave(deleteAttendeeFromEventResult);
 
     Promise.all([
       //reset user in session storage
@@ -237,7 +279,13 @@ class Index extends React.Component {
           showLogout = {true}
         />
 
+        <div className = "success">{this.props.submitSuccess}</div>
 
+        <div className = "header">
+          <div className = "size3">
+            Open Events
+          </div>
+        </div>
 
         {(this.state.stateLoaded) &&
           <EventsList
@@ -264,6 +312,8 @@ class Index extends React.Component {
               setShowOnMap = {this.setShowOnMap}
               showOnMap = {this.state.showOnMap}
               showNoInternetAlert = {this.showNoInternetAlert}
+              userFriendlyAgeRange = {makeAgeRangeUserFriendly(this.state.detailsEvent.createdBy.ageRange)}
+              makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
             />
           </Modal>
 

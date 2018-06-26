@@ -1,0 +1,46 @@
+.property {
+  display: flex;
+  flex-direction: row;
+
+  margin-bottom: .5rem;
+};
+.title {
+  color: $text1;
+  font-weight: bold;
+};
+.distance {
+  color: $text1;
+  margin-bottom: 1rem;
+};
+
+.secondary-text {
+  color: rgba($text1, 0.7);
+};
+.key {
+  width: 10rem;
+
+  line-height: 1.6rem;
+
+  color: $text1;
+  font-style: italic;
+};
+.key--no-width {
+  line-height: 1.6rem;
+
+  color: $text1;
+  font-style: italic;
+};
+.value {
+  width: 25rem;
+
+  color: $text1;
+};
+.short-value {
+  width: 15rem;
+
+  color: $text1;
+};
+.value--no-width {
+
+  color: $text1;
+};

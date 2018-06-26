@@ -33,7 +33,7 @@ class EventsForm extends React.Component {
 
   submitSlide1 = () => {
     //get info from Slide1 form
-    const form = document.getElementsByClassName('events__create-event-modal__slide1__form')[0];
+    const form = document.getElementsByClassName('events__slide1__form')[0];
     const title = form.elements.title.value;
     const minimumPeople = form.elements.minimumPeople.value;
     const maximumPeople = form.elements.maximumPeople.value;
@@ -71,7 +71,7 @@ class EventsForm extends React.Component {
 
   submitSlide2 = () => {
     //get info from Slide2 form
-    const form = document.getElementsByClassName("events__create-event-modal__slide2__form")[0];
+    const form = document.getElementsByClassName("events__slide2__form")[0];
     const expiresAtHour = form.elements.expiresAtHour.value;
     const expiresAtMinute = form.elements.expiresAtMinute.value;
     const expiresAtAM = form.elements.expiresAtAM.value;
@@ -151,7 +151,7 @@ class EventsForm extends React.Component {
   submitSlide4 = async () => {
 
     const notes = document.getElementsByClassName(
-      "events__create-event-modal__slide4__form")[0].elements.notes.value;
+      "events__slide4__form")[0].elements.notes.value;
 
 
     //add notes and createdBy, and myEvent's _id (only there if this is an update)
@@ -214,15 +214,15 @@ class EventsForm extends React.Component {
     //all four calls went well, now redux and session state need to be updated.
     console.log('submittedEvent', submittedEvent)
     console.log('addMeetingPlaceToUserResult', addMeetingPlaceToUserResult);
+
     //set redux.myEvent and session state to eventUnderConstruction
-    const myEvent = { ...this.state.eventUnderConstruction, _id: submittedEvent._id };
-    this.props.setMyEvent(myEvent);
-    this.props.socket.emit('setMyEvent', myEvent);
+    this.props.setMyEvent(submittedEvent);
+    this.props.socket.emit('setMyEvent', submittedEvent);
 
     // //add event to redux.events
     // this.props.setEvents(this.props.events.concat(myEvent));
     console.log('events:', this.props.events);
-    console.log('myEvent', myEvent);
+    console.log('myEvent', submittedEvent);
 
     //add the user to redux as well
     this.props.setUser(addMeetingPlaceToUserResult);
@@ -351,7 +351,7 @@ class EventsForm extends React.Component {
 
   render() {
     return (
-      <div className = "create-event-modal__form">
+      <div>
 
         {(this.props.currentSlide === "1") &&
         <Slide1

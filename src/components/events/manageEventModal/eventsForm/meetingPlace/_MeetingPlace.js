@@ -28,8 +28,7 @@ class MeetingPlace extends React.Component {
 
   render() {
     return (
-      <div className = "meeting-place">
-        {/* if there are previous meeting places, suggest those in a list: MeetingPlaceList should render. Otherwise, createMeetingPlace should render. */}
+      <div className = "modal-item-container">
 
         {(this.state.previousMeetingPlacesExist) &&
           <MeetingPlaceList
@@ -40,7 +39,7 @@ class MeetingPlace extends React.Component {
 
         {
           <div
-            className = "events__meeting-place__create-new-meeting-place-button"
+            className = "button background-green width15"
             onClick = {() => {
               //check for internet access
               if (window.navigator.onLine) {
@@ -53,6 +52,13 @@ class MeetingPlace extends React.Component {
             New meeting place
           </div>
         }
+
+        <div
+          className = "button background-none width15"
+          onClick = {this.props.closeModal}
+          >
+            Cancel
+          </div>
 
         {(this.state.showCreateMeetingPlace) &&
           <CreateMeetingPlace

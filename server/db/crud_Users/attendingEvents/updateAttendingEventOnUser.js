@@ -26,10 +26,8 @@ const updateAttendingEventOnUser = (user, event) => {
         attendingEvents: user.attendingEvents.map((attendingEvent) => {
           if (JSON.stringify(attendingEvent._id) === JSON.stringify(event._id)) {
             foundAMatch = true;
-            // console.log('match');
             return event;
           } else {
-            // console.log('no match');
             return attendingEvent;
           }
         })
@@ -40,7 +38,7 @@ const updateAttendingEventOnUser = (user, event) => {
       } else {
         resolve({ err: 'That event could not be found', res });
       }
-    }).catch((err) => resolve({ err, res: null }));
+    }).catch((err) => resolve({ err: {err, user, event}, res: null }));
   });
 };
 

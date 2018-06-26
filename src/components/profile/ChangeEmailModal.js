@@ -6,47 +6,68 @@ const ChangeEmailModal = (props) => (
     // closeModal = {this.closeModal}
     // submitError = {this.props.submitError}
   // }
-  <div className = "profile__change-email-modal">
-    <form className = "profile__change-email-modal__form">
-
-      <span>Enter password:</span>
-      <input
-        className = "profile__change-email-modal__form__password"
-        type = "password"
-        name = "password"
-      />
-      <br />
-
-      <span>Enter new email address:</span>
-      <input
-        className = "profile__change-email-modal__form__newEmail"
-        type = "email"
-        name = "newEmail"
-      />
-      <br />
-
-      <span>Enter new email address again:</span>
-      <input
-        className = "profile__change-password-modal__form__newEmailCheck"
-        type = "email"
-        name = "newEmailCheck"
-
-      />
-    </form>
-
-    <span className = "form__error">{props.submitError}</span>
-
-    <div className = "profile__change-email-modal__submit-button"
-      onClick = {props.requestEmailReset}
-    >
-      Submit
+  <div className = "modal-padding center">
+    <div className = "header">
+      <div className = "size2">
+        Change your email address
+      </div>
     </div>
 
-    <div className = "profile__change-email-modal__cancel-button"
-      onClick = {props.closeModal}
-    >
-      Cancel
+    <div className = "modal-item-container">
+      <form className = "profile__change-email-modal__form profile-spacing">
+
+        <div className = "property">
+          <div className = "key--no-length width15">Password:</div>
+          <div className = "value">
+            <input
+              className = "input"
+              type = "password"
+              name = "password"
+            />
+          </div>
+        </div>
+
+        <div className = "property">
+          <div className = "key--no-length width15">New email address:</div>
+          <div className = "value">
+            <input
+              className = "input"
+              type = "email"
+              name = "newEmail"
+            />
+          </div>
+        </div>
+
+        <div className = "property">
+          <div className = "key--no-length width15">New email address again:</div>
+          <div className = "value">
+            <input
+              className = "input"
+              type = "email"
+              name = "newEmailCheck"
+            />
+          </div>
+        </div>
+      </form>
+
     </div>
+
+    <span className = "error">{props.submitError}</span>
+
+    <div className = "button-container">
+      <div className = "button width15 background-green"
+        onClick = {props.requestEmailReset}
+      >
+        Submit
+      </div>
+
+      <div className = "button width15 background-none"
+        onClick = {props.closeModal}
+      >
+        Cancel
+      </div>
+    </div>
+
   </div>
 );
 

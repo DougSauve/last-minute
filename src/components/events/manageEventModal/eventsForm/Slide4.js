@@ -8,43 +8,48 @@ const Slide4 = (props) => (
   //   closeModal = {this.closeModal}
   // }
 
-  <div className = "events__create-event-modal__slide4">
+  <div className = "modal-padding center">
 
-    <div className = "events__submit-error">
-      {props.submitError}
-    </div>
-
-    <form className = "events__create-event-modal__slide4__form">
-
-      <span className = "form-heading">
+    <div className = "header-modal">
+      <div className = "size2">
         Notes:
-      </span>
-      <br />
-
-      <textarea
-        type = "text"
-        name = "notes"
-        rows = "4"
-        cols = "50"
-        defaultValue = {(props.notes) && props.notes}
-      />
-
-    </form>
-
-    <div
-      className = "events__create-event-modal__continue-button"
-      onClick = {props.submitSlide4}
-    >
-      Submit Event
+      </div>
     </div>
 
-    <div
-      className = "events__create-event-modal__cancel-warn-button"
-      onClick = {props.closeModal}
-    >
-      Cancel
-    </div>
+    <div className = "modal-item-container">
 
+      <div className = "error">
+        {props.submitError}
+      </div>
+
+      <form className = "events__slide4__form">
+
+        <textarea
+          className = "input"
+          type = "text"
+          name = "notes"
+          rows = "4"
+          cols = "50"
+          defaultValue = {(props.notes) && props.notes}
+        />
+
+      </form>
+
+      <div
+        className = "button background-green width15"
+        onClick = {props.submitSlide4}
+      >
+        Submit Event
+      </div>
+
+      <div
+        className = "button background-none width15"
+        onClick = {props.closeModal}
+      >
+        Cancel
+      </div>
+
+    </div>
   </div>
 );
 

@@ -2,51 +2,115 @@ import React from 'react';
 
 const AttendingEventsList = (props) => (
   // props: {
-  //   events = {this.props.user.attendingEvents}
-  //   cancelJoinEvent = {this.cancelJoinEvent}
-  //   user = {this.props.user
+  // user = {this.props.user}
+  // cancelJoinEvent = {this.cancelJoinEvent}
+  // deleteEvent = {this.deleteEvent}
+  // makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
   // }
-
-  <div className = "events__attending-events-list">
+  <div className = "list events-list width100_percent">
 
     {
-      props.events[0] ?
+      (props.user.attendingEvents[0]) ?
+      props.user.attendingEvents.map((event, index) => {
+        return <div
+          key = {index}
+          className = "list-item-container event-spacing">
 
-      props.events.map((event) => {
-        return (
-          <div
-            className = "events__attending-events-list__event"
-            key = {event._id}
-          >
-            <div>Event: {event.title}</div>
-            <div>Where: {event.place} ({event.address})</div>
-            <div>Hosted by: {(event.createdBy._id === props.user._id) ?
-              <span>You</span> :
-              <span>{event.createdBy.name} {event.createdBy.gender} {event.createdBy.ageRange}</span>
-            }
-            </div>
+          <div className = "title">{event.title}</div>
+          <div className = "distance">5.8 miles away</div>
 
-            <div>When: {event.expiresAtHour}:{event.expiresAtMinute} {event.expiresAtAM}</div>
-            {
-              (event.createdBy._id === props.user._id) ?
-              <div className = "events__attending-events-list__cancel-join-button"
-                onClick = {props.deleteEvent.bind(this, event)}
-              >
-                Remove your event
-              </div> :
-              <div className = "events__attending-events-list__cancel-join-button"
-                onClick = {props.cancelJoinEvent.bind(this, event)}
-              >
-                I can't attend anymore
+          <div className = "property">
+            <div className = "key">Host:</div>
+            {(event.createdBy._id === props.user._id) ?
+              <div className = "value">You</div> :
+              <div className = "value">
+                {event.createdBy.name}
+                <div className = "secondary-text">{event.createdBy.gender},
+                  age {props.makeAgeRangeUserFriendly(event.createdBy.ageRange)}
+                </div>
               </div>
             }
           </div>
-        )
-      }) :
-      <span>You aren't planning to attend any events.</span>
-    }
-  </div>
 
+          <div className = "property">
+            <div className = "key">Meet at:</div>
+            <div className = "value property">
+              <div>{event.place}
+                <div className = "secondary-text">{event.address}</div>
+              </div>
+
+              <div className = "link color-accent rem-before unsquishable"
+                // onClick = {() => {
+                //   //check for internet access
+                //   if (window.navigator.onLine) {
+                //     (props.showOnMap) ? props.setShowOnMap(false) : props.setShowOnMap(true);
+                //   }else{
+                //     props.showNoInternetAlert();
+                //   }
+                // }}
+              >
+                map link
+                {/* {props.showOnMap ? <span>Hide map</span> : <span>Show map</span>} */}
+              </div>
+
+            </div>
+          </div>
+
+          <div className = "property">
+            <div className = "key">When:</div>
+            <div className = "value">
+              {event.expiresAtHour}:{event.expiresAtMinute} {event.expiresAtAM}
+            </div>
+          </div>
+
+          <div className = "property">
+            <div className = "key">People:</div>
+            <div className = "value">
+              <div>
+                {event.minimumPeople}-{event.maximumPeople} (currently {event.attendees.length})
+              </div>
+              <div className = "center">
+                {
+                  event.attendees.map((attendee, index)=> {
+                    return (
+                      <span
+                        key = {index}
+                        className = "secondary-text"
+                      >
+                        {attendee.gender}, {props.makeAgeRangeUserFriendly(attendee.ageRange)} {'  '}
+                      </span>
+                    )
+                  })
+                }
+              </div>
+            </div>
+          </div>
+
+          {(event.notes) &&
+            <div className = "property">
+              <div className = "key">Notes:</div>
+              <div className = "value">{event.notes}</div>
+            </div>
+          }
+
+          {/* leave event button */}
+          <div className = "property center">
+            <div
+              className = "button background-none width15"
+              onClick = {props.cancelJoinEvent}
+            >
+              Leave this event
+            </div>
+          </div>
+
+        </div>
+      }) :
+      <div className = "message">
+        There are no events to display.
+      </div>
+    }
+
+  </div>
 );
 
 

@@ -2,57 +2,92 @@ import React from 'react';
 
 const UserProfileForm = (props) => (
   // props: {
-  //   user = {this.props.user}
-    // setShowChangePasswordModal = {this.setShowChangePasswordModal}
-    // setShowChangeEmailModal = {this.setShowChangeEmailModal}
-    // setShowChangeAgeRangeModal = {this.setShowChangeAgeRangeModal}
+  // user = {this.props.user}
+  // userFriendlyAgeRange = {this.makeAgeRangeUserFriendly()}
+  // setShowChangePasswordModal = {this.setShowChangePasswordModal}
+  // setShowChangeEmailModal = {this.setShowChangeEmailModal}
+  // setShowChangeAgeRangeModal = {this.setShowChangeAgeRangeModal}
+  // setShowVerifyDeleteModal = {this.setShowVerifyDeleteModal}
   // }
-  <div className = "profile__info">
+  <div className = "list">
 
-    <div className = "profile__info__name">
-    <span>Name:</span>
-    <span>{props.user.name}</span>
-    </div>
+    <div className = "list-item-container profile-spacing">
 
-    <div
-      className = "profile__change-password-button"
-      onClick = {props.setShowChangePasswordModal}
-    >
-      change password
-    </div>
-
-    {/* if email address is changed, verify it */}
-    <div
-      className = "profile__email-info"
-    >
-      <span>Email Address:</span>
-      <span>{props.user.email}</span>
-      <div
-        className = "profile__change-email-button"
-        onClick = {props.setShowChangeEmailModal}
-      >
-        change email address
+      <div className = "property">
+        <div className = "key">Name:</div>
+        <div className = "short-value">{props.user.name}</div>
+        <div className = "short-value">
+          <div className = "link"
+            onClick = {() => {
+              //check for internet access
+              if (window.navigator.onLine) {
+                props.setShowChangePasswordModal();
+              }else{
+                props.showNoInternetAlert();
+              }
+            }}
+          >
+            Change password
+          </div>
+        </div>
       </div>
-    </div>
 
-    {/* age range can only be changed once every 5 years*/}
-    <div
-      className = "profile__change-ageRange"
-    >
-      <span>Age Range:</span>
-      <span>{props.userFriendlyAgeRange}</span>
-      <div
-        className = "profile__change-age-range-button"
-        onClick = {props.setShowChangeAgeRangeModal}
-      >
-        change age range
+      <div className = "property">
+        <div className = "key">Email Address:</div>
+        <div className = "short-value">{props.user.email}</div>
+        <div className = "short-value">
+          <div className = "link"
+            onClick = {() => {
+              //check for internet access
+              if (window.navigator.onLine) {
+                props.setShowChangeEmailModal();
+              }else{
+                props.showNoInternetAlert();
+              }
+            }}
+          >
+            Change email address
+          </div>
+        </div>
       </div>
+
+      <div className = "property">
+        <div className = "key">Age Range:</div>
+        <div className = "short-value">{props.userFriendlyAgeRange}</div>
+        <div className = "short-value">
+          <div className = "link"
+            onClick = {() => {
+              //check for internet access
+              if (window.navigator.onLine) {
+                props.setShowChangeAgeRangeModal();
+              }else{
+                props.showNoInternetAlert();
+              }
+            }}
+          >
+            Change age range
+          </div>
+        </div>
+      </div>
+
+      <div className = "property">
+        <div className = "key">Gender:</div>
+        <div className = "short-value">{props.user.gender}</div>
+        <div className = "short-value">
+          {/* Delete Button */}
+          <div
+            className = "link--red"
+            onClick = {props.setShowVerifyDeleteModal}
+          >
+            Delete Profile
+          </div>
+        </div>
+      </div>
+
+
     </div>
 
-    <div className = "profile__info__name">
-    <span>Gender:</span>
-    <span>{props.user.gender}</span>
-    </div>
+
 
   </div>
 );

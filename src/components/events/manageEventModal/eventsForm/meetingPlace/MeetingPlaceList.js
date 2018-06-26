@@ -6,15 +6,15 @@ const MeetingPlaceList = (props) => (
   //   submitSlide3 (function)
   // }
 
-  <div className = "meeting-place-list">
-    Use a previous meeting place:
+  <div className = "meeting-place-list center">
+    Previous meeting places:
 
     {
       props.meetingPlacesList.map((meetingPlace) => {
         return (
           <div
             key = {Math.random()}
-            className = "previous-meeting-place__list__choice-button"
+            className = "button background-green width15"
             onClick = {props.submitSlide3.bind(this, meetingPlace.name, meetingPlace.location, meetingPlace.address)}
             >
             {meetingPlace.name}

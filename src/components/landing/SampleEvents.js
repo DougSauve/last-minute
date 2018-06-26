@@ -5,7 +5,7 @@ import './SampleEvents.scss';
 const SampleEvents = () => (
   <div className = "landing__sample-events">
 
-    <div className = "event-container">
+    <div className = "list-event-container">
 
       <div className = "title">Shooting Hoops</div>
       <div className = "distance">1.3 miles away</div>

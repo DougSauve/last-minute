@@ -1,0 +1,30 @@
+.header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 4rem 0 2rem 0;
+};
+.header-modal{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-bottom: -1.6rem;
+};
+
+.size3 {
+  color: $accent1;
+  font-size: 3rem;
+};
+
+.size2 {
+  color: $accent1;
+  font-size: 2rem;
+};
+.size2--reverse-colors {
+  background: $accent1;
+
+  color: white;
+  font-size: 2rem;
+};

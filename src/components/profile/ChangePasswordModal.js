@@ -6,47 +6,69 @@ const ChangePasswordModal = (props) => (
     // closeModal = {this.closeModal}
     // submitError = {this.props.submitError}
   // }
-  <div className = "profile__change-password-modal">
-    <form className = "profile__change-password-modal__form">
-
-      <span>Enter current password:</span>
-      <input
-        className = "profile__change-password-modal__form__password"
-        type = "password"
-        name = "oldPassword"
-      />
-      <br />
-
-      <span>Enter new password (must be at least 6 characters long):</span>
-      <input
-        className = "profile__change-password-modal__form__password"
-        type = "password"
-        name = "newPassword"
-      />
-      <br />
-
-      <span>Enter new password again:</span>
-      <input
-        className = "profile__change-password-modal__form__password"
-        type = "password"
-        name = "newPasswordCheck"
-
-      />
-    </form>
-
-    <span className = "form__error">{props.submitError}</span>
-
-    <div className = "profile__change-password-modal__submit-button"
-      onClick = {props.requestPasswordReset}
-    >
-      Submit
+  <div className = "modal-padding center">
+    <div className = "header">
+      <div className = "size2">
+        Change your password
+      </div>
     </div>
 
-    <div className = "profile__change-password-modal__cancel-button"
-      onClick = {props.closeModal}
-    >
-      Cancel
+    <div className = "modal-item-container">
+      <form className = "profile__change-password-modal__form profile-spacing">
+
+
+        <div className = "property">
+          <div className = "key--no-length width15">Current password:</div>
+          <div className = "value">
+            <input
+              className = "input"
+              type = "password"
+              name = "oldPassword"
+            />
+          </div>
+        </div>
+
+        <div className = "property">
+          <div className = "key--no-length width15">New password (6+ long):</div>
+          <div className = "value">
+            <input
+              className = "input"
+              type = "password"
+              name = "newPassword"
+            />
+          </div>
+        </div>
+
+        <div className = "property">
+          <div className = "key--no-length width15">New password again:</div>
+          <div className = "value">
+            <input
+              className = "input"
+              type = "password"
+              name = "newPasswordCheck"
+            />
+          </div>
+        </div>
+      </form>
+
     </div>
+
+    <span className = "error">{props.submitError}</span>
+
+    <div className = "button-container">
+      <div className = "button width15 background-green"
+        onClick = {props.requestPasswordReset}
+      >
+        Submit
+      </div>
+
+      <div className = "button width15 background-none"
+        onClick = {props.closeModal}
+      >
+        Cancel
+      </div>
+    </div>
+
   </div>
 );
 

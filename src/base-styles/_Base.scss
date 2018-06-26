@@ -1,3 +1,7 @@
+body * {
+  max-width: 100%;
+};
+
 html {
   height: 100vh;
 }
@@ -16,8 +20,18 @@ body {
   color: $text1;
   font-size: 1.2rem;
 };
-.error {
-  color: red;
+
+//position
+.fixed {
+  position: fixed;
+};
+
+//display
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 };
 
 //spacing
@@ -28,6 +42,9 @@ body {
 //colors
 .color-accent {
   color: $accent1;
+};
+.color-red {
+  color: red;
 };
 
 //backgrounds
@@ -56,6 +73,12 @@ body {
 .width-fit {
   display: inline;
 };
+.width2 {
+  width: 2rem;
+};
+.width5 {
+  width: 5rem;
+};
 .width10 {
   width: 10rem;
 };
@@ -64,6 +87,12 @@ body {
 };
 .width25 {
   width: 25rem;
+};
+.width50_percent {
+  width: 50%;
+};
+.width100_percent {
+  width: 100%;
 };
 
 //flex

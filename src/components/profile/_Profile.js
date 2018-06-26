@@ -21,6 +21,9 @@ import ChangeAgeRangeModal from './ChangeAgeRangeModal';
 
 import VerifyDeleteModal from './VerifyDeleteModal';
 
+import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
+import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
+
 import './_Profile.scss';
 
 // the profile page shows the user's profile info in a form, where most things can be updated.
@@ -40,6 +43,10 @@ class Profile extends React.Component {
     .then(async () => {
       await this.setState(() => ({ stateLoaded: true }));
     });
+  };
+
+  componentDidMount() {
+    document.onkeydown = handleKeyboardEvents.bind(this, ['escape', this.closeModal]);
   };
 
   setShowChangePasswordModal = () => {
@@ -151,19 +158,6 @@ class Profile extends React.Component {
     });
   };
 
-  makeAgeRangeUserFriendly = () => {
-    const ageRangeNumber = this.props.user.ageRange;
-
-    switch(ageRangeNumber) {
-      case '1': return 'under 18';
-      case '2': return '18-30';
-      case '3': return '30-45';
-      case '4': return '45-60';
-      case '5': return '60+';
-      default: return 'no age selected.';
-    };
-  }
-
   closeModal = () => {
     const stateToChange = this.state;
 
@@ -183,23 +177,22 @@ class Profile extends React.Component {
           showLogout = {true}
         />
 
-        <span>{this.props.submitSuccess}</span>
+        <div className = "success">{this.props.submitSuccess}</div>
+
+        <div className = "header">
+          <div className = "size3">
+            Your Profile
+          </div>
+        </div>
 
         <UserProfileForm
           user = {this.props.user}
-          userFriendlyAgeRange = {this.makeAgeRangeUserFriendly()}
+          userFriendlyAgeRange = {makeAgeRangeUserFriendly(this.props.user.ageRange)}
           setShowChangePasswordModal = {this.setShowChangePasswordModal}
           setShowChangeEmailModal = {this.setShowChangeEmailModal}
           setShowChangeAgeRangeModal = {this.setShowChangeAgeRangeModal}
+          setShowVerifyDeleteModal = {this.setShowVerifyDeleteModal}
         />
-
-        {/* Delete Button */}
-        <div
-          className = "profile__delete-button"
-          onClick = {this.setShowVerifyDeleteModal}
-        >
-          Delete Profile
-        </div>
 
         {this.state.showChangePasswordModal &&
         <Modal>
@@ -224,6 +217,7 @@ class Profile extends React.Component {
         {this.state.showChangeAgeRangeModal &&
         <Modal>
           <ChangeAgeRangeModal
+            userFriendlyAgeRange = {makeAgeRangeUserFriendly(this.props.user.ageRange)}
             submitNewAgeRange = {this.submitNewAgeRange}
             closeModal = {this.closeModal}
             submitError = {this.props.submitError}

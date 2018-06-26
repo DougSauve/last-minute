@@ -4,9 +4,10 @@
   position: absolute;
   bottom: 0; left: 0;
 
-  height: 2rem;
+  height: 1rem;
   width: 100%;
   text-align: center;
 
-  color: $text1;
+  color: rgba($text1, 0.2);
+  font-size: .8rem;
 }

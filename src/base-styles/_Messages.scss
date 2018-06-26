@@ -1,0 +1,29 @@
+.error {
+  color: red;
+};
+.success {
+  width: 100%;
+  text-align: center;
+  color: blue;
+  margin: 1rem 0;
+};
+.message{
+  color: $text1;
+  font-size: 1.2rem;
+};
+.note{
+  margin: 1rem 0;
+
+  max-width: 25rem;
+
+  font-size: 1rem;
+  color: grey;
+  font-style: italic;
+};
+.warning {
+  margin: 1rem 0;
+
+  font-size: 1.3rem;
+  color: red;
+  font-weight: bold;
+};

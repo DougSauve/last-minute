@@ -183,8 +183,33 @@ Wednesday 20th (4:00)
 2. Fixing other small styling boinks (1:00) V
 3. Create keyboard bindings for forms and closing modals (1:00) V
 
-Next: prevent scrolling while modal is open
-in /index.detailsModal, have 'show map' open its own modal with the address and place name on it, and a close button.
-create an actual 'no internet' modal, not a pop-up. Create new meeting place should do the same thing.
-/landing.signupmodal keys need line-height or flex adjusted.
-in sign up, choose homelocation. Enter address or postal code, and explain why - 'used to find events near you'
+Thursday 21st (4:00)
+1. Style /profile - got main page and all modals styled
+2. patched up some minor things, fixing small errors that popped up during styling
+3. made getUserFriendlyAgeRange into a modular function - I need to do this with cancelJoinEvent and a couple of other things too to dry out the app
+
+Friday 22nd (4:00)
+1. Style /events main page (3:00) V
+
+2. Style /events delete modal (0:15) V
+3. Style /events create and update modal (0:45)
+
+Saturday 23rd (0:15)
+
+1. Style /events create and update modal (0:45)
+
+Sunday 24th (2:15)
+
+1. Style /events create and update modal (0:45)
+2. Get attendee list updating in AttendingEvents and HostedEvents lists (1:30)
+
+Monday 25th (0:15)
+1. Get attendee list updating in AttendingEvents and HostedEvents lists
+
+Tuesday 26th
+1. Get attendee list updating in AttendingEvents and HostedEvents lists (0:40)V
+2. 
+
+
+
+3. Style 'show map' modal

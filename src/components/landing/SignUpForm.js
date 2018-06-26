@@ -15,7 +15,7 @@ const SignUpForm = (props) => (
       <span className = "error">{props.submitError}</span>
 
       <div className = "property">
-        <div className = "landing__note">{'note: please avoid using the following reserved characters: <, >, \\, \', ", and &.'}</div>
+        <div className = "note">{'note: please avoid using the following reserved characters: <, >, \\, \', ", and &.'}</div>
       </div>
 
       <div className = "property">

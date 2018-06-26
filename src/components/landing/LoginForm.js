@@ -9,7 +9,7 @@ const LoginForm = (props) => (
   // }
   <form className = "landing__log-in-form">
 
-    <span className = "landing__form__error">
+    <span className = "error">
       {props.submitError}
     </span>
 

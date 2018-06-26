@@ -7,10 +7,11 @@ const TitleBar = (props) => (
   // props: {
   //   links (component)
   //   showLogout (boolean)
+  //   fixed (booleam)
   // }
 
 
-  <div className = "TitleBar">
+  <div className = {(props.fixed ? "TitleBar--fixed" : "TitleBar")}>
     {(props.showBackToIndex) && <BackToIndex />}
 
     {(props.links) && (props.links.includes('events') &&

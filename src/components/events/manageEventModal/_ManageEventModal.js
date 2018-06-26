@@ -15,10 +15,6 @@ const ManageEventModal = (props) => (
   <div>
     <Modal>
 
-      <div className = "events__modal__title">
-        {capitalizeFirstLetter(props.mode)}
-      </div>
-
       {((props.mode === "create") || (props.mode === "update")) &&
         <EventsForm />
       }
