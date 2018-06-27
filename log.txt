@@ -208,7 +208,10 @@ Monday 25th (0:15)
 
 Tuesday 26th
 1. Get attendee list updating in AttendingEvents and HostedEvents lists (0:40)V
-2. 
+2. Re-add 'leave event' button in /index.AttendingEventsList (0:05) V
+3. Planning next steps (0:10) V
+4. Modularize join/unjoin (2:30) V
+5. Modularize/create viewMap/setOnMap
 
 
 

@@ -6,7 +6,7 @@ import { setEvents } from '../../redux/events';
 import { setMyEvent, setSubmitError, setSubmitSuccess } from '../../redux/myEvent';
 import { setUser } from '../../redux/user';
 
-import { loadState, getAllEventsFromDB } from '../_common/loadState';
+import { loadState } from '../_common/loadState';
 
 import TitleBar from '../_common/TitleBar';
 import EventsList from './EventsList';
@@ -16,6 +16,7 @@ import Footer from '../_common/Footer';
 
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
+import joiningEvents from '../_common/joiningEvents';
 
 // The index page shows a list of all open events within 10mi (can be changed). The user can respond to these by joining an event or by adding a question/comment. They can also flag open events or comments.
 // It also shows a link to the profile and events pages.
@@ -27,6 +28,7 @@ class Index extends React.Component {
     showOnMap: false,
     detailsEvent: undefined,
     stateLoaded: false,
+    JE: new joiningEvents(this.props.socket, this.props.setEvents, this.props.setUser, this.props.setUserSubmitError),
   };
 
   componentWillMount() {
@@ -53,155 +55,6 @@ class Index extends React.Component {
   getUserFriendlyMaxMinPeople = (min, max) => {
     if (!max) return min + '+';
     else return min + ' - ' + max;
-  };
-
-  addAttendeeToEvent = (attendee, event) => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('addAttendeeToEvent', {attendee, event}, (err, res) => {
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    });
-  };
-
-  addAttendingEventToUser = (user, event) => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('addAttendingEventToUser', {user, event}, (err, res) => {
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    })
-  };
-
-  deleteAttendeeFromEvent = (attendee, event) => {
-
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('deleteAttendeeFromEvent', {attendee, event}, (err, res) => {
-
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    });
-  };
-
-  deleteAttendingEventFromUser = (user, event) => {
-
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('deleteAttendingEventFromUser', {user, event}, (err, res) => {
-
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    })
-  };
-
-  updateAssociatedUsers_join(addAttendeeToEventResult) {
-    return new Promise((resolve, reject) => {
-
-      let attendeeWithFinalUpdates = 'none';
-
-      addAttendeeToEventResult.attendees.forEach((attendee, index) => {
-
-        //get actual user from attendee thing
-        this.props.socket.emit('readUser', attendee._id, (err, res) => {
-          if (err) console.log(err);
-
-          this.props.socket.emit('updateAttendingEventOnUser', {user: res, event: addAttendeeToEventResult}, (err2, res2) => {
-            if (err2) console.log(err2);
-
-            //update hostedEvent if this is the host
-            if (res2.hostedEvents[0] &&
-            JSON.stringify(res2.hostedEvents[0]._id) === JSON.stringify(addAttendeeToEventResult._id) ) {
-
-              this.props.socket.emit('updateHostedEventOnUser', {user: res2, event: addAttendeeToEventResult}, (err3, res3) => {
-                if(err3) console.log(err3);
-                console.log('updated host thing', res3);
-              });
-            };
-
-            //if this the current user, set the eventual resolve value to that user.
-            if (JSON.stringify(res2._id) === JSON.stringify(this.props.user._id)) attendeeWithFinalUpdates = res2;
-
-            //only return the resolve value when the forEach has gone through everything
-            if (index === addAttendeeToEventResult.attendees.length - 1) resolve(attendeeWithFinalUpdates);
-          });
-        });
-      });
-    });
-
-  };
-
-  joinEvent = async () => {
-    let user = this.props.user;
-    let event = this.state.detailsEvent;
-
-    const addAttendeeToEventResult = await this.addAttendeeToEvent(user, event);
-    if (addAttendeeToEventResult === null) return;
-
-    const addAttendingEventToUserResult = await this.addAttendingEventToUser(user, event);
-    if (addAttendingEventToUserResult === null) return;
-
-    const attendeeWithFinalUpdates = await this.updateAssociatedUsers_join(addAttendeeToEventResult);
-
-    Promise.all([
-      //reset user in session storage
-      this.props.socket.emit('setCurrentUser', attendeeWithFinalUpdates, () => console.log('session user updated.')),
-      //reset user in redux
-      this.props.setUser(attendeeWithFinalUpdates),
-      //reset events from db to redux
-      getAllEventsFromDB(this.props.socket, this.props.setEvents)
-    ]).then(() => {
-      console.log('You have joined this event.');
-      this.closeModal();
-    });
-  };
-
-  updateAssociatedUsers_leave(deleteAttendeeFromEventResult) {
-    deleteAttendeeFromEventResult.attendees.forEach((attendee) => {
-
-      //get actual user from attendee thing
-      this.props.socket.emit('readUser', attendee._id, (err, res) => {
-        if (err) console.log(err);
-
-        this.props.socket.emit('updateAttendingEventOnUser', {user: res, event: deleteAttendeeFromEventResult}, (err2, res2) => {
-          if (err2) console.log(err2);
-
-          //update hostedEvent if this is the host
-          if (res2.hostedEvents[0] &&
-            JSON.stringify(res2.hostedEvents[0]._id) === JSON.stringify(deleteAttendeeFromEventResult._id) ) {
-              this.props.socket.emit('updateHostedEventOnUser', {user: res2, event: deleteAttendeeFromEventResult}, (err3, res3) => {
-                if(err3) console.log(err3);
-                console.log('updated host thing', res3);
-              });
-            };
-        });
-      });
-    });
-  };
-
-  cancelJoinEvent = async () => {
-    let user = this.props.user;
-    let event = this.state.detailsEvent;
-
-    const deleteAttendeeFromEventResult = await this.deleteAttendeeFromEvent(user, event);
-    if (deleteAttendeeFromEventResult === null) return;
-
-    const deleteEventFromUserResult = await this.deleteAttendingEventFromUser(user, event);
-    if (deleteEventFromUserResult === null) return;
-
-    this.updateAssociatedUsers_leave(deleteAttendeeFromEventResult);
-
-    Promise.all([
-      //reset user in session storage
-      this.props.socket.emit('setCurrentUser', deleteEventFromUserResult, () => console.log('session user updated.')),
-      //reset user in redux
-      this.props.setUser(deleteEventFromUserResult),
-      //reset events from db to redux
-      getAllEventsFromDB(this.props.socket, this.props.setEvents)
-    ]).then(() => {
-      console.log('You have left this event.');
-      this.closeModal();
-    });
   };
 
   deleteEvent = () => {
@@ -264,7 +117,7 @@ class Index extends React.Component {
     const stateToChange = this.state;
 
     for (let item in stateToChange) {
-        if (item !== 'stateLoaded') stateToChange[item] = false;
+        if (item !== 'stateLoaded' && item !== 'JE') stateToChange[item] = false;
     };
 
     this.setState(() => ({ ...stateToChange }));
@@ -302,10 +155,12 @@ class Index extends React.Component {
             <DetailsModal
               event = {this.state.detailsEvent}
               getUserFriendlyMaxMinPeople = {this.getUserFriendlyMaxMinPeople}
-              joinEvent = {this.joinEvent}
+              joinEvent =
+              {this.state.JE.joinEvent.bind(this, this.props.user, this.state.detailsEvent, this.closeModal)}
               userHasJoinedEvent = {this.userHasJoinedEvent}
               user = {this.props.user}
-              cancelJoinEvent = {this.cancelJoinEvent}
+              leaveEvent =
+              {this.state.JE.leaveEvent.bind(this, this.props.user, this.state.detailsEvent, this.closeModal)}
               deleteEvent = {this.deleteEvent}
               closeModal = {this.closeModal}
 

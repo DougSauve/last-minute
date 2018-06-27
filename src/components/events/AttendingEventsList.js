@@ -3,7 +3,7 @@ import React from 'react';
 const AttendingEventsList = (props) => (
   // props: {
   // user = {this.props.user}
-  // cancelJoinEvent = {this.cancelJoinEvent}
+  // leaveEvent = {JE.leaveEvent}
   // deleteEvent = {this.deleteEvent}
   // makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
   // }
@@ -97,7 +97,7 @@ const AttendingEventsList = (props) => (
           <div className = "property center">
             <div
               className = "button background-none width15"
-              onClick = {props.cancelJoinEvent}
+              onClick = {props.leaveEvent.bind(this, props.user, event, () => {console.log('hi mom')} )}
             >
               Leave this event
             </div>

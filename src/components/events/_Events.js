@@ -18,11 +18,13 @@ import AttendingEventsList from './AttendingEventsList';
 
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
+import joiningEvents from '../_common/joiningEvents';
 
 class Events extends React.Component {
 
   state = {
     stateLoaded: false,
+    JE: new joiningEvents(this.props.socket, this.props.setEvents, this.props.setUser, this.props.setUserSubmitError),
   };
 
   componentWillMount() {
@@ -34,69 +36,6 @@ class Events extends React.Component {
 
   componentDidMount() {
     document.onkeydown = handleKeyboardEvents.bind(this, ['escape', this.closeModal]);
-  };
-
-  removeUserFromEvent = (user, event) => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('removeUserFromEvent', {user, event}, (err, res) => {
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    });
-  };
-
-  removeEventFromUser = (user, event) => {
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('removeEventFromUser', {user, event}, (err, res) => {
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    })
-  };
-
-  cancelJoinEvent = async (event) => {
-    let user = this.props.user;
-
-    const deleteAttendeeFromEventResult = await this.deleteAttendeeFromEvent(user, event);
-    if (deleteAttendeeFromEventResult === null) return;
-
-    const deleteEventFromUserResult = await this.deleteAttendingEventFromUser(user, event);
-    if (deleteEventFromUserResult === null) return;
-
-    console.log('resetting user to: ', deleteEventFromUserResult);
-
-    Promise.all([
-      //reset user in session storage
-      this.props.socket.emit('setCurrentUser', deleteEventFromUserResult, () => console.log('session user updated.')),
-      //reset user in redux
-      this.props.setUser(deleteEventFromUserResult),
-      //reset events from db to redux
-      getAllEventsFromDB(this.props.socket, this.props.setEvents)
-    ]).then(() => {
-      console.log('You have left this event.');
-    });
-  };
-
-  deleteAttendeeFromEvent = (attendee, event) => {
-
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('deleteAttendeeFromEvent', {attendee, event}, (err, res) => {
-
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    });
-  };
-
-  deleteAttendingEventFromUser = (user, event) => {
-
-    return new Promise((resolve, reject) => {
-      this.props.socket.emit('deleteAttendingEventFromUser', {user, event}, (err, res) => {
-
-        if (err) return this.props.setUserSubmitError(err);
-        resolve(res);
-      });
-    })
   };
 
   showNoInternetAlert = () => {
@@ -203,7 +142,8 @@ class Events extends React.Component {
               (this.state.stateLoaded) &&
               <AttendingEventsList
                 user = {this.props.user}
-                cancelJoinEvent = {this.cancelJoinEvent}
+                leaveEvent =
+                {this.state.JE.leaveEvent}
                 deleteEvent = {this.deleteEvent}
                 makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
               />

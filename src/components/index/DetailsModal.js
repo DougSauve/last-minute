@@ -9,7 +9,7 @@ const DetailsModal = (props) => (
   // joinEvent = {this.joinEvent}
   // userHasJoinedEvent = {this.userHasJoinedEvent}
   // user = {this.props.user}
-  // cancelJoinEvent = {this.cancelJoinEvent}
+  // leaveEvent = {this.leaveEvent}
   // deleteEvent = {this.deleteEvent}
   // closeModal = {this.closeModal}
   // userFriendlyAgeRange = {this.userFriendlyAgeRange}
@@ -108,11 +108,11 @@ const DetailsModal = (props) => (
         </div> :
 
         <div>
-        {/* show join or cancel join based on whether they're signed up or not */}
+        {/* show join or leave based on whether they're signed up or not */}
         {
           (props.userHasJoinedEvent()) ?
           <div className = "button background-red width15"
-            onClick = {props.cancelJoinEvent}
+            onClick = {props.leaveEvent}
           >
             Leave event
           </div> :
