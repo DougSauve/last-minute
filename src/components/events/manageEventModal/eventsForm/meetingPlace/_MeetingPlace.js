@@ -3,10 +3,10 @@ import React from 'react';
 import './_MeetingPlace.scss';
 
 import { connect } from 'react-redux';
-import { setCurrentAddress } from '../../../../../redux/currentLocation';
+import { setCurrentPlace, setCurrentAddress } from '../../../../../redux/currentLocation';
 
+import { SetPositionOnMapModal } from '../../../../_common/maps/_Maps';
 import MeetingPlaceList from './MeetingPlaceList';
-import CreateMeetingPlace from './CreateMeetingPlace';
 
 class MeetingPlace extends React.Component {
   // props: {
@@ -15,15 +15,21 @@ class MeetingPlace extends React.Component {
 
   state = {
     previousMeetingPlacesExist: (!!this.props.user.meetingPlaces[0]),
-    showCreateMeetingPlace: false,
+    showMapModal: false,
   }
 
-  setShowCreateMeetingPlace = (value) => {
-    this.setState(() => ({ showCreateMeetingPlace: value }))
+  setShowMapModal = (value) => {
+    this.setState(() => ({ showMapModal: value }))
   };
 
   showNoInternetAlert = () => {
     alert('Please connect to the internet to choose a new meeting place, or use a previous one.');
+  };
+
+  onSubmitMapModal = (place, location, address) => {
+    if (this.props.submitSlide3(place, location, address)) {
+      this.setShowMapModal(false);
+    };
   };
 
   render() {
@@ -43,7 +49,7 @@ class MeetingPlace extends React.Component {
             onClick = {() => {
               //check for internet access
               if (window.navigator.onLine) {
-                this.setShowCreateMeetingPlace(true);
+                this.setShowMapModal(true);
               }else{
                 this.showNoInternetAlert();
               }
@@ -56,20 +62,21 @@ class MeetingPlace extends React.Component {
         <div
           className = "button background-none width15"
           onClick = {this.props.closeModal}
-          >
-            Cancel
-          </div>
+        >
+          Cancel
+        </div>
 
-        {(this.state.showCreateMeetingPlace) &&
-          <CreateMeetingPlace
-            submitSlide3 = {this.props.submitSlide3}
-            setShowCreateMeetingPlace = {this.setShowCreateMeetingPlace}
-
+        {
+          (this.state.showMapModal) &&
+          <SetPositionOnMapModal
+            submit = {this.onSubmitMapModal}
+            cancel = {this.setShowMapModal.bind(this, false)}
             lat = {this.props.lat}
             lng = {this.props.lng}
             address = {this.props.address}
+            setCurrentPlace = {this.props.setCurrentPlace}
             setCurrentAddress = {this.props.setCurrentAddress}
-
+            mapNote = {'Choose a meeting place on the map or enter an address instead. For safety, meet at a public place and go to your event from there.'}
             place = {this.props.place}
             placeError = {this.props.placeError}
           />
@@ -85,12 +92,14 @@ const mapStateToProps = (reduxState) => ({
   myEvent: reduxState.myEventReducer.myEvent,
   placeError: reduxState.eventsFormErrorsReducer.placeError,
 
+  place: reduxState.currentLocationReducer.place,
   lat: reduxState.currentLocationReducer.lat,
   lng: reduxState.currentLocationReducer.lng,
   address: reduxState.currentLocationReducer.address,
 });
 
 const mapDispatchToProps = {
+  setCurrentPlace,
   setCurrentAddress,
 };
 

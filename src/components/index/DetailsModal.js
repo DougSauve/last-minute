@@ -1,6 +1,8 @@
 import React from 'react';
 
-import DetailsMap from './DetailsMap';
+import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
+import Modal from '../_common/modal/_Modal';
+import DeleteEventModal from '../_common/DeleteEventModal';
 
 const DetailsModal = (props) => (
   // props: {
@@ -49,13 +51,13 @@ const DetailsModal = (props) => (
             onClick = {() => {
               //check for internet access
               if (window.navigator.onLine) {
-                (props.showOnMap) ? props.setShowOnMap(false) : props.setShowOnMap(true);
+                props.setShowOnMap(true);
               }else{
                 props.showNoInternetAlert();
               }
             }}
           >
-            {props.showOnMap ? <span>Hide map</span> : <span>Show map</span>}
+            <span>Show map</span>
           </div>
 
         </div>
@@ -102,7 +104,11 @@ const DetailsModal = (props) => (
       {
         (props.event.createdBy._id === props.user._id) ?
         <div className = "button background-red width15"
-          onClick = {props.deleteEvent}
+          onClick = {() => {
+            //check for internet access
+            props.setShowDeleteModal(true);
+
+          }}
         >
           Remove this event
         </div> :
@@ -132,9 +138,21 @@ const DetailsModal = (props) => (
     </div>
 
     {(props.showOnMap) &&
-      <DetailsMap
+      <ShowPositionOnMapModal
         event = {props.event}
+        close = {props.setShowOnMap.bind(this, false)}
       />
+    }
+
+    {(props.showDeleteModal) &&
+      <Modal
+        close = {props.setShowDeleteModal.bind(this, false)}
+      >
+        <DeleteEventModal
+          close = {props.setShowDeleteModal.bind(this, false)}
+          closeModal = {props.closeModal}
+        />
+      </Modal>
     }
 
   </div>

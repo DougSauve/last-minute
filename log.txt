@@ -206,13 +206,20 @@ Sunday 24th (2:15)
 Monday 25th (0:15)
 1. Get attendee list updating in AttendingEvents and HostedEvents lists
 
-Tuesday 26th
+Tuesday 26th (3:30)
 1. Get attendee list updating in AttendingEvents and HostedEvents lists (0:40)V
 2. Re-add 'leave event' button in /index.AttendingEventsList (0:05) V
 3. Planning next steps (0:10) V
 4. Modularize join/unjoin (2:30) V
-5. Modularize/create viewMap/setOnMap
 
+Wednesday (4:30)
+1. Modularize/create/style viewMap/setOnMap (4:30)
 
+Thursday (5:45)
+1. Modularize/create/style viewMap/setOnMap (3:30) V
+2. Include DeleteEventModal in /index on delete from detailsModal (2:15) < weird issue, will rebuild it
 
-3. Style 'show map' modal
+Friday 29th
+1. Integrate viewMaps into /index and /events (0:45) V
+2. Rebuild DeleteEventModal into /index (0:45) V
+3. Get homeLocations working

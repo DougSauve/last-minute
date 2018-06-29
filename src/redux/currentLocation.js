@@ -1,3 +1,8 @@
+const setCurrentPlace = (place) => ({
+  type: 'SET_CURRENT_PLACE',
+  place,
+});
+
 const setCurrentCoordinates = ({lat, lng}) => ({
   type: 'SET_CURRENT_COORDINATES',
   lat,
@@ -10,13 +15,19 @@ const setCurrentAddress = (address) => ({
 });
 
 const currentLocationReducerDefaultState = {
+  place: '',
   lat: 0,
   lng: 0,
-  address: 'none'
+  address: 'address...'
 };
 
 const currentLocationReducer = (state = currentLocationReducerDefaultState, action) => {
   switch (action.type) {
+    case 'SET_CURRENT_PLACE':
+    return {
+      ...state,
+      place: action.place,
+    };
     case 'SET_CURRENT_COORDINATES':
     return {
       ...state,
@@ -35,6 +46,7 @@ const currentLocationReducer = (state = currentLocationReducerDefaultState, acti
 
 export {
   currentLocationReducer as default,
+  setCurrentPlace,
   setCurrentCoordinates,
   setCurrentAddress,
 };

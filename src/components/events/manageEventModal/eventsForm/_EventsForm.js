@@ -121,8 +121,10 @@ class EventsForm extends React.Component {
 
   submitSlide3 = (place, location, address) => {
 
+    console.log('things', place, location, address);
+
     //check if there are any errors
-    if (this.setSlide3Errors(place)) return;
+    if (this.setSlide3Errors(place)) return false;
 
     this.setState((prevState) => ({
       eventUnderConstruction: {
@@ -134,6 +136,7 @@ class EventsForm extends React.Component {
      }));
 
     this.props.setCurrentSlide("4");
+    return true;
   };
   setSlide3Errors = (place) => {
     this.props.clearErrors();
@@ -152,7 +155,6 @@ class EventsForm extends React.Component {
 
     const notes = document.getElementsByClassName(
       "events__slide4__form")[0].elements.notes.value;
-
 
     //add notes and createdBy, and myEvent's _id (only there if this is an update)
     await this.setState((prevState) => ({
@@ -177,6 +179,7 @@ class EventsForm extends React.Component {
 
     //submit event > createEvent, which also adds the user as createdBy, completing the event.
     const submittedEvent = await new Promise((resolve, reject) => {
+      
       this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, res) => {
         if (err) {
           console.log('_EventsForm.js submitEvent error:', err);

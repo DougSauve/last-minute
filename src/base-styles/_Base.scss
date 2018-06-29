@@ -35,8 +35,14 @@ body {
 };
 
 //spacing
-.rem-before{
+.rem-before {
   padding-left: 1rem;
+};
+.rem-top-bottom {
+  padding: 1rem 0;
+};
+.top-2rem {
+  padding-top: 2rem;
 };
 
 //colors
@@ -85,8 +91,14 @@ body {
 .width15 {
   width: 15rem;
 };
+.width17 {
+  width: 17rem;
+};
 .width25 {
   width: 25rem;
+};
+.max-width25 {
+  max-width: 25rem;
 };
 .width50_percent {
   width: 50%;
@@ -99,7 +111,12 @@ body {
 .unsquishable {
   flex-shrink: 0;
 };
-
+.flex-spacer {
+  flex-grow: 1;
+}
+.flex-fill-space{
+  flex: 1 0 0;
+}
 //text
 .italic {
   font-style: italic;

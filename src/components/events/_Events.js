@@ -25,6 +25,7 @@ class Events extends React.Component {
   state = {
     stateLoaded: false,
     JE: new joiningEvents(this.props.socket, this.props.setEvents, this.props.setUser, this.props.setUserSubmitError),
+    showOnMap: false,
   };
 
   componentWillMount() {
@@ -40,6 +41,10 @@ class Events extends React.Component {
 
   showNoInternetAlert = () => {
     alert('Please connect to the internet to make a new event!');
+  };
+
+  setShowOnMap = (value) => {
+    this.setState(() => ({ showOnMap: value }));
   };
 
   deleteEvent = (event) => {
@@ -119,6 +124,8 @@ class Events extends React.Component {
             <MyEvent
               event = {this.props.myEvent}
               makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
+              showOnMap = {this.state.showOnMap}
+              setShowOnMap = {this.setShowOnMap}
             />
 
             <ActionButtonContainer
@@ -146,6 +153,9 @@ class Events extends React.Component {
                 {this.state.JE.leaveEvent}
                 deleteEvent = {this.deleteEvent}
                 makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
+
+                showOnMap = {this.state.showOnMap}
+                setShowOnMap = {this.setShowOnMap}
               />
             }
 

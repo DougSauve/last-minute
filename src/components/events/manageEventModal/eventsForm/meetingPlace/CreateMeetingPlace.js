@@ -1,12 +1,11 @@
 import React from 'react';
+import './_Maps.scss';
+
 import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
 
 import { getCoords } from './Geocode';
-import './CreateMeetingPlace.scss';
-
-
-// import { getAddress, getCoords } from './Geocode';
 import { setPositionToStore, updateStoreLocation } from './setPositionToStore';
+
 
 
 class CreateMeetingPlace extends React.Component {

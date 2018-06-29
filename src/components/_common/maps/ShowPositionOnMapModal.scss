@@ -1,0 +1,15 @@
+$map-width: 60vw;
+$map-height: 60vh;
+
+.map-container--show-modal {
+  margin: 1rem;
+
+  width: $map-width;
+  height: $map-height;
+
+  div {
+    max-width: $map-width;
+    max-height: $map-height;
+    margin-bottom: 1rem;
+  };
+};

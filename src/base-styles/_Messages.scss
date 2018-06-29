@@ -14,8 +14,6 @@
 .note{
   margin: 1rem 0;
 
-  max-width: 25rem;
-
   font-size: 1rem;
   color: grey;
   font-style: italic;
@@ -26,4 +24,7 @@
   font-size: 1.3rem;
   color: red;
   font-weight: bold;
+};
+.secondary-text {
+  color: rgba($text1, 0.7);
 };

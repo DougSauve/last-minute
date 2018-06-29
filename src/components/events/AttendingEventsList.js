@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
+
 const AttendingEventsList = (props) => (
   // props: {
   // user = {this.props.user}
@@ -40,17 +42,16 @@ const AttendingEventsList = (props) => (
               </div>
 
               <div className = "link color-accent rem-before unsquishable"
-                // onClick = {() => {
-                //   //check for internet access
-                //   if (window.navigator.onLine) {
-                //     (props.showOnMap) ? props.setShowOnMap(false) : props.setShowOnMap(true);
-                //   }else{
-                //     props.showNoInternetAlert();
-                //   }
-                // }}
+                onClick = {() => {
+                  //check for internet access
+                  if (window.navigator.onLine) {
+                    props.setShowOnMap(true);
+                  }else{
+                    props.showNoInternetAlert();
+                  }
+                }}
               >
-                map link
-                {/* {props.showOnMap ? <span>Hide map</span> : <span>Show map</span>} */}
+                <span>Show map</span>
               </div>
 
             </div>
@@ -102,6 +103,13 @@ const AttendingEventsList = (props) => (
               Leave this event
             </div>
           </div>
+
+          {(props.showOnMap) &&
+            <ShowPositionOnMapModal
+              event = {event}
+              close = {props.setShowOnMap.bind(this, false)}
+            />
+          }
 
         </div>
       }) :

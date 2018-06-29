@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import './_ManageEventModal.scss';
 import capitalizeFirstLetter from '../../../../utils/capitalizeFirstLetter';
 import Modal from '../../_common/modal/_Modal';
+import DeleteEventModal from '../../_common/DeleteEventModal';
 
 import EventsForm from './eventsForm/_EventsForm';
-import HandleDelete from './HandleDelete';
 
 const ManageEventModal = (props) => (
   // props: {
@@ -20,7 +20,7 @@ const ManageEventModal = (props) => (
       }
 
       {(props.mode === "delete") &&
-        <HandleDelete />
+        <DeleteEventModal />
       }
 
     </Modal>

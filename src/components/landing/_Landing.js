@@ -1,6 +1,8 @@
 import React from 'react';
 import validator from 'validator';
 
+                            // import { SetPositionOnMapModal } from '../_common/maps/_Maps';
+
 import { connect } from 'react-redux';
 import {
   setNameError,

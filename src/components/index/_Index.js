@@ -6,7 +6,7 @@ import { setEvents } from '../../redux/events';
 import { setMyEvent, setSubmitError, setSubmitSuccess } from '../../redux/myEvent';
 import { setUser } from '../../redux/user';
 
-import { loadState } from '../_common/loadState';
+import { loadState, getAllEventsFromDB } from '../_common/loadState';
 
 import TitleBar from '../_common/TitleBar';
 import EventsList from './EventsList';
@@ -26,6 +26,7 @@ class Index extends React.Component {
   state = {
     showDetailsModal: false,
     showOnMap: false,
+    showDeleteModal: false,
     detailsEvent: undefined,
     stateLoaded: false,
     JE: new joiningEvents(this.props.socket, this.props.setEvents, this.props.setUser, this.props.setUserSubmitError),
@@ -48,6 +49,10 @@ class Index extends React.Component {
     this.setState(() => ({ showOnMap: value }));
   };
 
+  setShowDeleteModal = (value) => {
+    this.setState(() => ({ showDeleteModal: value }));
+  };
+
   showNoInternetAlert = () => {
     alert('Please connect to the internet to see the map.');
   };
@@ -58,7 +63,7 @@ class Index extends React.Component {
   };
 
   deleteEvent = () => {
-    this.props.socket.emit ('deleteEvent', this.props.detailsEvent._id, (err, res) => {
+    this.props.socket.emit ('deleteEvent', this.state.detailsEvent._id, (err, res) => {
       console.log('res1', res);
       if (err) {
         this.props.setSubmitError({ submitError: err });
@@ -90,6 +95,9 @@ class Index extends React.Component {
 
                 //set myEvent to undefined
                 this.props.setMyEvent({});
+
+                //reload the events list
+                getAllEventsFromDB(this.props.socket, this.props.setEvents);
 
                 //close the modal
                 this.closeModal();
@@ -132,7 +140,7 @@ class Index extends React.Component {
           showLogout = {true}
         />
 
-        <div className = "success">{this.props.submitSuccess}</div>
+        <div className = "top-2rem success">{this.props.submitSuccess}</div>
 
         <div className = "header">
           <div className = "size3">
@@ -166,12 +174,15 @@ class Index extends React.Component {
 
               setShowOnMap = {this.setShowOnMap}
               showOnMap = {this.state.showOnMap}
+
+              setShowDeleteModal = {this.setShowDeleteModal}
+              showDeleteModal = {this.state.showDeleteModal}
+
               showNoInternetAlert = {this.showNoInternetAlert}
               userFriendlyAgeRange = {makeAgeRangeUserFriendly(this.state.detailsEvent.createdBy.ageRange)}
               makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
             />
           </Modal>
-
         }
 
         <Footer />
@@ -186,6 +197,7 @@ const mapStateToProps = (reduxStore) => ({
   events: reduxStore.eventsReducer.events,
   socket: reduxStore.socketReducer.socket,
   user: reduxStore.userReducer.user,
+  submitSuccess: reduxStore.eventsReducer.submitSuccess,
 });
 const mapDispatchToProps = {
   setEvents,

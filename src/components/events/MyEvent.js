@@ -1,6 +1,8 @@
 import React from 'react';
 import './MyEvent.scss';
 
+import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
+
 const MyEvent = (props) => (
   <div className = "event__myEvent list--color-reverse width100_percent">
     <div className = "message">{(!props.event.title) &&
@@ -20,17 +22,16 @@ const MyEvent = (props) => (
             </div>
 
             <div className = "link color-accent rem-before unsquishable"
-              // onClick = {() => {
-              //   //check for internet access
-              //   if (window.navigator.onLine) {
-              //     (props.showOnMap) ? props.setShowOnMap(false) : props.setShowOnMap(true);
-              //   }else{
-              //     props.showNoInternetAlert();
-              //   }
-              // }}
+              onClick = {() => {
+                //check for internet access
+                if (window.navigator.onLine) {
+                  props.setShowOnMap(true);
+                }else{
+                  props.showNoInternetAlert();
+                }
+              }}
             >
-              map link
-              {/* {props.showOnMap ? <span>Hide map</span> : <span>Show map</span>} */}
+              <span>Show map</span>
             </div>
 
           </div>
@@ -71,6 +72,13 @@ const MyEvent = (props) => (
             <div className = "key">Notes:</div>
             <div className = "value">{props.event.notes}</div>
           </div>
+        }
+
+        {(props.showOnMap) &&
+          <ShowPositionOnMapModal
+            event = {props.event}
+            close = {props.setShowOnMap.bind(this, false)}
+          />
         }
 
       </div>
