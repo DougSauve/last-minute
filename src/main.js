@@ -19,7 +19,6 @@ import Index from './components/index/_Index';
 import Profile from './components/profile/_Profile';
 import Events from './components/events/_Events';
 
-
 //router
 const Router = () => {
     switch (window.location.pathname) {

@@ -1,8 +1,6 @@
 import React from 'react';
 import validator from 'validator';
 
-                            // import { SetPositionOnMapModal } from '../_common/maps/_Maps';
-
 import { connect } from 'react-redux';
 import {
   setNameError,
@@ -13,6 +11,7 @@ import {
 } from '../../redux/landingFormErrors';
 import { setUser } from '../../redux/user';
 import { setSubmitError } from '../../redux/events';
+import { setCurrentPlace, setCurrentCoordinates, setCurrentAddress } from '../../redux/currentLocation';
 
 import TitleBar from '../_common/TitleBar';
 import SampleEvents from './SampleEvents';
@@ -63,6 +62,13 @@ class Landing extends React.Component {
       ageRange: form.elements.ageRange.value,
       gender: form.elements.gender.value,
     };
+
+    const homeLocation = {
+      name: this.props.place,
+      location: {lat: this.props.lat, lng: this.props.lng},
+      address: this.props.address,
+    };
+
     if (this.checkForSignUpErrors(newUser)) return;
 
     //write user to db
@@ -70,8 +76,17 @@ class Landing extends React.Component {
       if (err) {
         this.props.setSubmitError({submitError: err});
       } else {
-        this.props.socket.emit('setCurrentUser', res, () => {
-          window.location.pathname = "/index";
+        //set user's homeLocation, then clear it from redux currentLocation state
+        this.props.socket.emit('addHomeLocationToUser', {user: res, homeLocation}, (err2, res2) => {
+          this.props.setCurrentPlace('');
+          this.props.setCurrentCoordinates({ lat: null, lng: null });
+          this.props.setCurrentAddress('');
+
+          //set session user
+          this.props.socket.emit('setCurrentUser', res2, () => {
+            window.location.pathname = "/index";
+          });
+
         });
       };
     });
@@ -241,6 +256,11 @@ const mapStateToProps = (reduxStore) => ({
   submitError: reduxStore.eventsReducer.submitError,
   user: reduxStore.userReducer.user,
 
+  place: reduxStore.currentLocationReducer.place,
+  lat: reduxStore.currentLocationReducer.lat,
+  lng: reduxStore.currentLocationReducer.lng,
+  address: reduxStore.currentLocationReducer.address,
+
 });
 
 const mapDispatchToProps = {
@@ -253,6 +273,10 @@ const mapDispatchToProps = {
   setUser,
 
   setSubmitError,
+
+  setCurrentPlace,
+  setCurrentCoordinates,
+  setCurrentAddress,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Landing);

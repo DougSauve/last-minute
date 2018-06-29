@@ -15,6 +15,10 @@ const setPasswordCheckError = (error) => ({
   type: 'SET_PASSWORD_CHECK_ERROR',
   error
 });
+const setMapError = (error) => ({
+    type: 'SET_MAP_ERROR',
+    error
+});
 const clearErrors = () => ({
   type: 'CLEAR_ERRORS',
 });
@@ -24,6 +28,7 @@ const landingFormErrorsDefaultState = {
   emailError: '',
   passwordError: '',
   passwordCheckError: '',
+  mapError: '',
 };
 
 const landingFormErrorsReducer = (state = landingFormErrorsDefaultState, action) => {
@@ -37,6 +42,8 @@ const landingFormErrorsReducer = (state = landingFormErrorsDefaultState, action)
       return { ...state, passwordError: action.error };
     case 'SET_PASSWORD_CHECK_ERROR':
       return { ...state, passwordCheckError: action.error };
+    case 'SET_MAP_ERROR':
+      return { ...state, mapError: action.error };
     case 'CLEAR_ERRORS':
       return { ...landingFormErrorsDefaultState };
     default:
@@ -51,5 +58,6 @@ export {
   setEmailError,
   setPasswordError,
   setPasswordCheckError,
+  setMapError,
   clearErrors,
 };

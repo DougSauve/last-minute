@@ -1,9 +1,11 @@
+const { ObjectID } = require('mongodb');
+
 const mongoose = (process.env.NODE_ENV === 'test') ? require('../../mongoose_testing') : require('../../mongoose');
 const { User } = require('../../../models/User');
 
 const addHomeLocationToUser = (user, homeLocation) => {
   const homeLocationToAdd = {
-    _id: homeLocation._id,
+    _id: (homeLocation._id) ? homeLocation._id : new ObjectID(),
     name: homeLocation.name,
     location: homeLocation.location,
     address: homeLocation.address,

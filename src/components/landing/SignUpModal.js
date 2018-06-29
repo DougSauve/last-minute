@@ -1,5 +1,4 @@
 import React from 'react';
-import './SignUpModal.scss';
 
 import SignUpForm from './SignUpForm';
 
@@ -12,11 +11,12 @@ const SignUpModal = (props) => (
   //   passwordError = {this.props.passwordError}
   //   passwordCheckError = {this.props.passwordCheckError}
   // }
-  <div className = "landing__sign-up-modal">
+  <div className = "modal-item-container">
 
-    <div className = "landing__sign-up-modal__greeting">
-      Welcome to LastMinute.<br />
-      Let's get you connected.
+    <div className = "header-modal">
+      <div className = "size2">
+        Welcome to LastMinute. Let's get you connected.
+      </div>
     </div>
 
     <SignUpForm
@@ -35,7 +35,7 @@ const SignUpModal = (props) => (
         Sign up
       </div>
 
-      <div className = "button background-blue width15"
+      <div className = "button background-none width15"
         onClick = {props.closeModal}
       >
         Cancel

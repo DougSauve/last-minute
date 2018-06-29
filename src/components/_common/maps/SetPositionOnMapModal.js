@@ -19,7 +19,7 @@ class SetPositionOnMapModal extends React.Component {
   //   setCurrentAddress = {props.setCurrentAddress}
   //   mapNote (string)
   //   place (string)
-  //   placeError (String)
+  //   mapError (String)
 
   state = {
     initialCenter: null,
@@ -39,6 +39,7 @@ class SetPositionOnMapModal extends React.Component {
       readyForMap: true,
     }));
 
+    //if a starting location was passed in
     setPositionToStore().then((location) => {
       if (!location.err) {
         //if it works
@@ -99,14 +100,16 @@ class SetPositionOnMapModal extends React.Component {
       <div>
         {(this.state.readyForMap) &&
 
-        <Modal>
+        <Modal
+          close = {this.props.cancel}
+          >
           <div className = "center">
             <div className = "map-note">
               {this.props.mapNote}
             </div>
           </div>
 
-          <div className = "set-map-modal">
+          <div className = "center--row">
 
             <div className = "modal-item-container map-container flex-fill-space">
               {/* map */}
@@ -154,7 +157,6 @@ class SetPositionOnMapModal extends React.Component {
                 <div className = "flex-spacer" />
 
                 <div className = "center">
-                  <div className = "error rem-top-bottom">{this.props.placeError}</div>
                 </div>
 
                 <div className = "value--no-width">
@@ -168,6 +170,8 @@ class SetPositionOnMapModal extends React.Component {
                   value = {this.props.place}
                   onChange = {this.changePlace}
                 />
+
+                <div className = "error width15 rem-top-bottom">{this.props.mapError}</div>
 
                 <div className = "value--no-width">
                   <div

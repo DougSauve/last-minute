@@ -16,8 +16,11 @@
 .events-list {
   flex-direction: column-reverse;
 };
-
-.list-item-container{
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.list-item-container {
   margin: 1rem 0;
 
   display: flex;
@@ -30,7 +33,7 @@
   border: 1px solid $accent1;
   border-radius: .6rem;
 };
-.modal-item-container{
+.modal-item-container {
   margin: 1rem;
 
   display: flex;
@@ -43,13 +46,13 @@
   border: 1px solid $accent1;
   border-radius: .6rem;
 };
-.event-spacing{
+.event-spacing {
   line-height: 1.6rem;
 };
-.profile-spacing{
+.profile-spacing {
   line-height: 2.6rem;
 };
 
-.modal-padding{
+.modal-padding {
   padding: 5rem;
 };
