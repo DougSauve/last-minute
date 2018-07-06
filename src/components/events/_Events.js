@@ -16,6 +16,8 @@ import ActionButtonContainer from './ActionButtonContainer';
 import ManageEventModal from './manageEventModal/_ManageEventModal';
 import AttendingEventsList from './AttendingEventsList';
 
+import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
+
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
 import joiningEvents from '../_common/joiningEvents';
@@ -25,7 +27,7 @@ class Events extends React.Component {
   state = {
     stateLoaded: false,
     JE: new joiningEvents(this.props.socket, this.props.setEvents, this.props.setUser, this.props.setUserSubmitError),
-    showOnMap: false,
+    mapEvent: null,
   };
 
   componentWillMount() {
@@ -37,14 +39,26 @@ class Events extends React.Component {
 
   componentDidMount() {
     document.onkeydown = handleKeyboardEvents.bind(this, ['escape', this.closeModal]);
+    this.setStyling();
+    window.addEventListener('resize', this.setStyling()); //not working
+  };
+
+  componentDidUpdate() {
+    console.log('styling');
+    this.setStyling();
+  }
+
+  setStyling = () => {
+    document.getElementsByClassName('events__left-box__background__container')[0]
+    .style.minHeight = `${window.innerHeight - 144}px`;
   };
 
   showNoInternetAlert = () => {
     alert('Please connect to the internet to make a new event!');
   };
 
-  setShowOnMap = (value) => {
-    this.setState(() => ({ showOnMap: value }));
+  setMapEvent = async (event) => {
+    await this.setState(() => ({ mapEvent: event }));
   };
 
   deleteEvent = (event) => {
@@ -109,13 +123,14 @@ class Events extends React.Component {
 
         <div className = "events-box">
 
-          <div className = "events__left-box--placeholder">
+          <div className = "events__left-box__background__container">
             <div className = "events__left-box__background" />
           </div>
 
-          <div className = "events__left-box background-accent center">
+          <div className = "events__left-box background-accent center unsquishable">
 
-            <div className = "header">
+
+            <div className = "header__events--small">
               <div className = "size2--reverse-colors">
                 Hosting
               </div>
@@ -124,8 +139,7 @@ class Events extends React.Component {
             <MyEvent
               event = {this.props.myEvent}
               makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
-              showOnMap = {this.state.showOnMap}
-              setShowOnMap = {this.setShowOnMap}
+              setMapEvent = {this.setMapEvent}
             />
 
             <ActionButtonContainer
@@ -139,7 +153,7 @@ class Events extends React.Component {
 
           <div className = "events__right-box">
 
-            <div className = "header">
+            <div className = "header__events--small">
               <div className = "size2">
                 Joined
               </div>
@@ -154,8 +168,7 @@ class Events extends React.Component {
                 deleteEvent = {this.deleteEvent}
                 makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
 
-                showOnMap = {this.state.showOnMap}
-                setShowOnMap = {this.setShowOnMap}
+                setMapEvent = {this.setMapEvent}
               />
             }
 
@@ -169,6 +182,13 @@ class Events extends React.Component {
           (this.props.mode) &&
           <ManageEventModal
             mode = {this.props.mode}
+          />
+        }
+
+        {(this.state.mapEvent !== null) &&
+          <ShowPositionOnMapModal
+            event = {this.state.mapEvent}
+            close = {this.setMapEvent.bind(this, null)}
           />
         }
 

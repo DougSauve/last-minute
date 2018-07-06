@@ -1,4 +1,5 @@
 const mongoose = (process.env.NODE_ENV === 'test') ? require('../mongoose_testing') : require('../mongoose');
+
 const moment = require('moment');
 
 const { User } = require('../../models/User.js');
@@ -12,8 +13,11 @@ const createUser = (user) => {
     password: user.password,
     ageRange: user.ageRange,
     gender: user.gender,
+    currentHomeLocation: user.currentHomeLocation,
 
+    searchPreferences: {distance: 10, units: 'miles'},
     accountCreatedAt: new moment().format(),
+
     meetingPlaces: [],
     flags: [],
     tokens: [],
@@ -28,6 +32,7 @@ const createUser = (user) => {
       if (err.message.includes('duplicate key error') && err.message.includes('email')) {
         resolve({ err: 'Email already in use. Please use a different email address.'})
       };
+      console.log(err);
       resolve({ err: 'Error while creating user', res: null });
     });
   });

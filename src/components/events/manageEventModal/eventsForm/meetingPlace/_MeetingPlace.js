@@ -45,7 +45,7 @@ class MeetingPlace extends React.Component {
 
         {
           <div
-            className = "button background-green width15"
+            className = "button background-blue width15"
             onClick = {() => {
               //check for internet access
               if (window.navigator.onLine) {

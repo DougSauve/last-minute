@@ -5,21 +5,23 @@ import { connect } from 'react-redux';
 import { setEvents } from '../../redux/events';
 import { setMyEvent, setSubmitError, setSubmitSuccess } from '../../redux/myEvent';
 import { setUser } from '../../redux/user';
+import { setDistanceError, clearDistanceError } from '../../redux/search';
 
 import { loadState, getAllEventsFromDB } from '../_common/loadState';
 
 import TitleBar from '../_common/TitleBar';
 import EventsList from './EventsList';
-import Modal from '../_common/modal/_Modal';
 import DetailsModal from './DetailsModal';
+import OrientationModal from './OrientationModal';
+import DistanceFilter from './DistanceFilter';
+
+import Modal from '../_common/modal/_Modal';
+import EditHomeLocation from '../_common/EditHomeLocation';
 import Footer from '../_common/Footer';
 
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
 import joiningEvents from '../_common/joiningEvents';
-
-// The index page shows a list of all open events within 10mi (can be changed). The user can respond to these by joining an event or by adding a question/comment. They can also flag open events or comments.
-// It also shows a link to the profile and events pages.
 
 class Index extends React.Component {
 
@@ -27,14 +29,30 @@ class Index extends React.Component {
     showDetailsModal: false,
     showOnMap: false,
     showDeleteModal: false,
+    showOrientationModal: false,
     detailsEvent: undefined,
     stateLoaded: false,
     JE: new joiningEvents(this.props.socket, this.props.setEvents, this.props.setUser, this.props.setUserSubmitError),
   };
 
   componentWillMount() {
+    // this.props.socket.emit('readUser', '5b379f29d0eac61d74b15dc7', (err, res) => {
+    //     const koi = res;
+    //
+    //   this.props.socket.emit('setCurrentUser', koi, () => {
+    //
+    //     loadState(this.props.socket, this.props.setUser, this.props.setMyEvent, this.props.setEvents,)
+    //     .then(() => this.setState(() => ({ stateLoaded: true })));
+    //   });
+    // });
+
     loadState(this.props.socket, this.props.setUser, this.props.setMyEvent, this.props.setEvents,)
     .then(() => this.setState(() => ({ stateLoaded: true })));
+
+    this.props.socket.emit('checkFirstTimeUser', (res) => {
+      console.log('check res:', res);
+      if (res === true) this.setState(() => ({ showOrientationModal: true }));
+    });
   };
 
   componentDidMount() {
@@ -121,6 +139,18 @@ class Index extends React.Component {
     return joinedEvent;
   }
 
+  switchHomeLocation = (homeLocation) => {
+    this.props.socket.emit('setCurrentHomeLocation', {user: this.props.user, homeLocation }, (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        this.props.socket.emit('setCurrentUser', res, () => {
+          this.props.setUser(res);
+        });
+      };
+    });
+  };
+
   closeModal = () => {
     const stateToChange = this.state;
 
@@ -129,6 +159,37 @@ class Index extends React.Component {
     };
 
     this.setState(() => ({ ...stateToChange }));
+  };
+
+  setSearchPreferences = () => {
+    const form = document.getElementsByClassName('searchPreferences')[0];
+    const distance = form.elements.distance.value;
+    const units = form.elements.units.value;
+
+    if (this.checkSearchPreferencesForErrors(distance, units)) return;
+
+    //set them in the DB
+    this.props.socket.emit('setSearchPreferences', {user: this.props.user, distance, units}, (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        this.props.socket.emit('setCurrentUser', res,  () => {
+          this.props.setUser(res);
+        });
+      };
+    });
+  };
+
+  checkSearchPreferencesForErrors = (distance, units) => {
+    this.props.clearDistanceError();
+    let errorsPresent = false;
+
+    if (!distance || distance - 1 !== distance - 1 || distance < 0) {
+      errorsPresent = true;
+      this.props.setDistanceError('Please enter a valid number.');
+    };
+
+    return errorsPresent;
   };
 
   render() {
@@ -147,6 +208,24 @@ class Index extends React.Component {
             Open Events
           </div>
         </div>
+
+        {(this.state.stateLoaded) &&
+          <DistanceFilter
+            distance = {this.props.user.searchPreferences.distance}
+            units = {this.props.user.searchPreferences.units}
+            setSearchPreferences = {this.setSearchPreferences}
+            distanceError = {this.props.distanceError}
+          />
+        }
+
+        {(this.state.stateLoaded) &&
+          <EditHomeLocation
+            currentHomeLocation = {this.props.user.currentHomeLocation}
+            homeLocations = {this.props.user.homeLocations}
+            switchHomeLocation = {this.switchHomeLocation}
+            complete = {false}
+          />
+        }
 
         {(this.state.stateLoaded) &&
           <EventsList
@@ -185,6 +264,19 @@ class Index extends React.Component {
           </Modal>
         }
 
+        {(this.state.showOrientationModal) &&
+          <Modal>
+            <OrientationModal
+              closeModal = {
+                () => {
+                  this.closeModal();
+                  this.props.socket.emit('unsetFirstTimeUser');
+                }
+              }
+            />
+          </Modal>
+        }
+
         <Footer />
 
       </div>
@@ -198,6 +290,8 @@ const mapStateToProps = (reduxStore) => ({
   socket: reduxStore.socketReducer.socket,
   user: reduxStore.userReducer.user,
   submitSuccess: reduxStore.eventsReducer.submitSuccess,
+
+  distanceError: reduxStore.searchReducer.distanceError,
 });
 const mapDispatchToProps = {
   setEvents,
@@ -205,6 +299,9 @@ const mapDispatchToProps = {
   setUser,
   setSubmitError,
   setSubmitSuccess,
+
+  setDistanceError,
+  clearDistanceError,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Index);

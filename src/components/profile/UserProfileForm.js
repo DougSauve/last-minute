@@ -9,86 +9,84 @@ const UserProfileForm = (props) => (
   // setShowChangeAgeRangeModal = {this.setShowChangeAgeRangeModal}
   // setShowVerifyDeleteModal = {this.setShowVerifyDeleteModal}
   // }
-  <div className = "list">
+  <div className = "center drop-2-rem">
 
-    <div className = "list-item-container profile-spacing">
+    <div className = "list">
 
-      <div className = "property">
-        <div className = "key">Name:</div>
-        <div className = "short-value">{props.user.name}</div>
-        <div className = "short-value">
-          <div className = "link"
-            onClick = {() => {
-              //check for internet access
-              if (window.navigator.onLine) {
-                props.setShowChangePasswordModal();
-              }else{
-                props.showNoInternetAlert();
-              }
-            }}
-          >
-            Change password
+      <div className = "list-item-container profile-spacing">
+
+        <div className = "property">
+          <div className = "key">Name:</div>
+          <div className = "short-value">{props.user.name}</div>
+          <div className = "short-value">
+            <div className = "link"
+              onClick = {() => {
+                //check for internet access
+                if (window.navigator.onLine) {
+                  props.setShowChangePasswordModal();
+                }else{
+                  props.showNoInternetAlert();
+                }
+              }}
+            >
+              Change password
+            </div>
+          </div>
+        </div>
+
+        <div className = "property">
+          <div className = "key">Email Address:</div>
+          <div className = "short-value">{props.user.email}</div>
+          <div className = "short-value">
+            <div className = "link"
+              onClick = {() => {
+                //check for internet access
+                if (window.navigator.onLine) {
+                  props.setShowChangeEmailModal();
+                }else{
+                  props.showNoInternetAlert();
+                }
+              }}
+            >
+              Change email address
+            </div>
+          </div>
+        </div>
+
+        <div className = "property">
+          <div className = "key">Age Range:</div>
+          <div className = "short-value">{props.userFriendlyAgeRange}</div>
+          <div className = "short-value">
+            <div className = "link"
+              onClick = {() => {
+                //check for internet access
+                if (window.navigator.onLine) {
+                  props.setShowChangeAgeRangeModal();
+                }else{
+                  props.showNoInternetAlert();
+                }
+              }}
+            >
+              Change age range
+            </div>
+          </div>
+        </div>
+
+        <div className = "property">
+          <div className = "key">Gender:</div>
+          <div className = "short-value">{props.user.gender}</div>
+          <div className = "short-value">
+            {/* Delete Button */}
+            <div
+              className = "link--red"
+              onClick = {props.setShowVerifyDeleteModal}
+            >
+              Delete Profile
+            </div>
           </div>
         </div>
       </div>
-
-      <div className = "property">
-        <div className = "key">Email Address:</div>
-        <div className = "short-value">{props.user.email}</div>
-        <div className = "short-value">
-          <div className = "link"
-            onClick = {() => {
-              //check for internet access
-              if (window.navigator.onLine) {
-                props.setShowChangeEmailModal();
-              }else{
-                props.showNoInternetAlert();
-              }
-            }}
-          >
-            Change email address
-          </div>
-        </div>
-      </div>
-
-      <div className = "property">
-        <div className = "key">Age Range:</div>
-        <div className = "short-value">{props.userFriendlyAgeRange}</div>
-        <div className = "short-value">
-          <div className = "link"
-            onClick = {() => {
-              //check for internet access
-              if (window.navigator.onLine) {
-                props.setShowChangeAgeRangeModal();
-              }else{
-                props.showNoInternetAlert();
-              }
-            }}
-          >
-            Change age range
-          </div>
-        </div>
-      </div>
-
-      <div className = "property">
-        <div className = "key">Gender:</div>
-        <div className = "short-value">{props.user.gender}</div>
-        <div className = "short-value">
-          {/* Delete Button */}
-          <div
-            className = "link--red"
-            onClick = {props.setShowVerifyDeleteModal}
-          >
-            Delete Profile
-          </div>
-        </div>
-      </div>
-
-
     </div>
-
-
-
   </div>
 );
 

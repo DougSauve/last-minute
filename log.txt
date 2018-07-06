@@ -219,8 +219,37 @@ Thursday (5:45)
 1. Modularize/create/style viewMap/setOnMap (3:30) V
 2. Include DeleteEventModal in /index on delete from detailsModal (2:15) < weird issue, will rebuild it
 
-Friday 29th (4:30)
+Friday 29th (5:30)
 1. Integrate viewMaps into /index and /events (0:45) V
 2. Rebuild DeleteEventModal into /index (0:45) V
 3. Get homeLocation field into signup modal (2:15) V
 4. Get homeLocation map integrated into signup modal (0:45) V
+5. Get homeLocations being added to user in DB and session state (1:00) V
+
+Saturday 30th / Sunday 1st (0:45)
+1. get DisplayHomeLocations in /index wired up and styled
+
+Monday July 2nd (11:45)
+1. homeLocations completely wired up and styled (5:30) V
+2. get distance calculations working (1:00) V
+3. build in distance and unit search preferences, implement and style them completely (3:45) V
+4. General styling and tweaks (1:30) V
+
+Tuesday 3rd (3:30)
+1. Got footer to cooperate (0:20) V
+2. Fixed double map issue in /events (0:30) V
+3. General bug fixes (2:40) V
+
+Wednesday 4th (3:30)
+1. Fix styling in /events, prepare for screenshot for /landing (1:15) V
+2. Make AttendeeList hide/show on click (0:45) V
+3. Prevent scrolling on modals and have them fixed (0:30) V
+4. Put /landing screenshot in place 6:15 (0:20) V
+5. Implement orientation modal (0:45)
+
+Thursday 5th (2:30)
+1. Implement orientation modal (1:00) V
+2. Make updating an event also change the event on all attendees (1:30) V
+
+Friday 6th (1:45)
+1. Rework deleteEvent function, fix styling in /events, make new events not show up in user's attendingEvents (1:45) V

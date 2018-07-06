@@ -41,6 +41,30 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
     type: String,
     required: true,
   },
+  currentHomeLocation: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+    },
+    name: {
+      type: String,
+      required: false,
+    },
+    location: {
+      lat: {
+        type: Number,
+        required: false,
+      },
+      lng: {
+        type: Number,
+        required: false,
+      },
+    },
+    address: {
+      type: String,
+      required: false,
+    },
+  },
   homeLocations: [{
     _id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -273,6 +297,16 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
       required: false,
     },
   }],
+  searchPreferences: {
+    distance: {
+      type: Number,
+      required: true,
+    },
+    units: {
+      type: String,
+      required: true
+    },
+  },
   flags: [{
     flag: {
       type: String,

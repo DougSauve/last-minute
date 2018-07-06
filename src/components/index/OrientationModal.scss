@@ -1,0 +1,19 @@
+.orientation__row {
+  margin-top: 1rem;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+};
+
+.orientation__item {
+  max-width: 33.3%;
+  padding: 1rem;
+
+  border: 1px solid grey;
+  border-radius: .6rem;
+
+  margin: .6rem;
+
+  background: white;
+};

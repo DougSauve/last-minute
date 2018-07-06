@@ -16,12 +16,12 @@ const readAllEvents = async () => {
   //for each item in res, removeExpiredEvent, which needs to hit the db as well as res.
   await removeExpiredEvents(res);
 
-  if (!res || !res[0]) return false;
+  if (!res || !res[0]) return [];
   return res;
 };
 
 const removeExpiredEvents = async (res) => { //currently a counter
-  let count = 1;
+  let count = 0;
   res.forEach((event) => {
     count++
   });

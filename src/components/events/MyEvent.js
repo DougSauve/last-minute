@@ -1,16 +1,16 @@
 import React from 'react';
 import './MyEvent.scss';
 
-import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
+import AttendeeList from '../_common/AttendeeList';
 
 const MyEvent = (props) => (
-  <div className = "event__myEvent list--color-reverse width100_percent">
+  <div className = "up-point6 list--color-reverse width100_percent unsquishable">
     <div className = "message">{(!props.event.title) &&
       <span>What do you feel like doing? Create an event and see who joins!</span>}
     </div>
 
     {(props.event.title) &&
-      <div className = "list-item-container event-spacing">
+      <div className = "list-item-container event-spacing unsquishable">
 
         <div className = "title">{props.event.title}</div>
 
@@ -25,7 +25,7 @@ const MyEvent = (props) => (
               onClick = {() => {
                 //check for internet access
                 if (window.navigator.onLine) {
-                  props.setShowOnMap(true);
+                  props.setMapEvent(props.event);
                 }else{
                   props.showNoInternetAlert();
                 }
@@ -50,20 +50,12 @@ const MyEvent = (props) => (
             <div>
               {props.event.minimumPeople}-{props.event.maximumPeople} (currently {props.event.attendees.length})
             </div>
-            <div className = "center">
-              {
-                props.event.attendees.map((attendee, index)=> {
-                  return (
-                    <span
-                      key = {index}
-                      className = "secondary-text"
-                    >
-                      {attendee.name}, {attendee.gender}, {props.makeAgeRangeUserFriendly(attendee.ageRange)} {'  '}
-                    </span>
-                  )
-                })
-              }
-            </div>
+
+            <AttendeeList
+              event = {props.event}
+              showNames = {true}
+            />
+
           </div>
         </div>
 
@@ -72,13 +64,6 @@ const MyEvent = (props) => (
             <div className = "key">Notes:</div>
             <div className = "value">{props.event.notes}</div>
           </div>
-        }
-
-        {(props.showOnMap) &&
-          <ShowPositionOnMapModal
-            event = {props.event}
-            close = {props.setShowOnMap.bind(this, false)}
-          />
         }
 
       </div>

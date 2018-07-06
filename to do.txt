@@ -5,12 +5,10 @@ Reorganize /events form to have 4 slides instead of its current layout X
 Figure out how to make a geolocation map show up X
 Hosted event needs to persist between sessions - good in db but not in redux. X
 Need to get redux.events updating on createEvent. myEvent does, but not events. X
-
 submitEvent not working X
 incorrect login freaks out X
 duplicate sign up doesn't do anything X
 /myEvents edit event says it created event - just the wording is wrong. X
-
 wire up meetingPlaces X
 duplicate meetingPlaces don't get made X
 updating events is adding new events to hosted and attending. Needs to update the existing one instead. X
@@ -22,35 +20,30 @@ Unjoin not working X
 subset: /events / can't attend anymore doesn't do anything. (partly) X
 create 'remove event' option that shows instead of join/unjoin on own event in /index X
 implement this on /events attending events list as well X
+style /events, including the map modal; then implement that into /index maps X
+implement homeLocations X
+in /index.detailsModal, have 'show map' open its own modal with the address and place name on it, and a close button. X
+Create new meeting place should do the same thing. X
+/landing.signupmodal keys need line-height or flex adjusted. X
+in sign up, choose homelocation. Enter address or postal code, and mouseOver explain why - 'used to find events near you' X
+make footer stop being stupid X
+Implement homeLocations and distance calculations to decide which events to show X
+/events 'i can't attend anymore' can't show up on own event X
+remove own event from attendingEvents in /events X
+fix background in /events again X
+show full date of event in /myevents/attendingEventsList X
+prevent scrolling while modal is open, have modal show in current position X
+screenshot of /events on /landing X
+users shouldn't be able to join an event with the cap met X
+add sign-up greeting/orientation modal X
+Updates of any sort (notes) need to update to attending users. This happens with attendingEvents - just transfer it to general event changes! X
+rework deleting events and what that does on associated users. X
 
 
 
 Next steps:
 
-style /events, including the map modal; then implement that into /index maps
-implement homeLocations
-
-add sign-up greeting/orientation modal
-in /index.detailsModal, have 'show map' open its own modal with the address and place name on it, and a close button.
-create an actual 'no internet' modal, not a pop-up.
-Create new meeting place should do the same thing.
-/landing.signupmodal keys need line-height or flex adjusted.
-in sign up, choose homelocation. Enter address or postal code, and mouseOver explain why - 'used to find events near you'
-make footer stop being stupid
-Next: prevent scrolling while modal is open
-
-
-Later on things:
-
-Major:
-
-Implement homeLocations and distance calculations to decide which events to show
-/events 'i can't attend anymore' can't show up on own event
-users shouldn't be able to join an event with the cap met
-show full date of event in /myevents/attendingEventsList
-
-Minor:
-
+Style responsively
+Hash passwords
+Add user authentication
 Age range should only be changed once every 5 years.
-Make sure that when a user joins an event (or a second one) it reminds them their myEvent first.
-I need to get new events being pushed to the screen with sockets. They get added to the db immediately - just need to broadcast these to redux state for all users.

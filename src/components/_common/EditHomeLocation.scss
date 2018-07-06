@@ -1,0 +1,42 @@
+@import '../../base-styles/Settings';
+
+.home-location {
+  padding: 0.5rem;
+  background: $back1;
+  margin-bottom: 0.15rem;
+  border-radius: 0.6rem;
+  box-sizing: border-box;
+  line-height: 2rem;
+};
+.outlined {
+  border: 1px solid grey;
+}
+
+.outlined--accent {
+  border: 1px solid $accent1;
+};
+
+.remove-homeLocation-button {
+  margin-left: .5rem;
+
+  height: 1.6rem;
+  width: 1.6rem;
+  line-height: 1.6rem;
+
+  text-align: center;
+  font-size: 1rem;
+  background: red;
+
+  color: white;
+  font-weight: bold;
+
+  border: 1px solid red;
+  border-radius: 1rem;
+};
+.remove-homeLocation-button:hover {
+  cursor: pointer;
+};
+
+.no-hover:hover {
+  cursor: default;
+};

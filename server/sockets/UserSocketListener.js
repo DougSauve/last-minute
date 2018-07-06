@@ -89,6 +89,18 @@ const UserSocketListener = (socket) => {
     const {err, res} = await db.deleteHomeLocationFromUser(user, _id);
     acknowledge(err, res);
   });
+
+  //no tests written below here
+  socket.on('setCurrentHomeLocation', async ({user, homeLocation}, acknowledge) => {
+    const {err, res} = await db.setCurrentHomeLocation(user, homeLocation);
+    acknowledge(err, res);
+  });
+
+  socket.on('setSearchPreferences', async ({user, distance, units}, acknowledge) => {
+    const {err, res} = await db.setSearchPreferences(user, distance, units);
+    acknowledge(err, res);
+  });
+  
 };
 
 module.exports = {

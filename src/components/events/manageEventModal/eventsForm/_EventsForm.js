@@ -179,7 +179,7 @@ class EventsForm extends React.Component {
 
     //submit event > createEvent, which also adds the user as createdBy, completing the event.
     const submittedEvent = await new Promise((resolve, reject) => {
-      
+
       this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, res) => {
         if (err) {
           console.log('_EventsForm.js submitEvent error:', err);
@@ -197,14 +197,14 @@ class EventsForm extends React.Component {
     if(!submittedEvent) return console.log('no submitted Event');
 
     //also need to update the user: add the new event to user/attendingEvents...
-    const addAttendingEventToUserResult = await this.createOrUpdateAttendingEvents(
-      this.props.user, submittedEvent);
-
-    if(!addAttendingEventToUserResult) return console.log('addAttendingEventToUser call failed.');
+    // const addAttendingEventToUserResult = await this.createOrUpdateAttendingEvents(
+    //   this.props.user, submittedEvent);
+    //
+    // if(!addAttendingEventToUserResult) return console.log('addAttendingEventToUser call failed.');
 
     //...and hostedEvents...
     const addHostedEventToUserResult = await this.createOrUpdateHostedEvents(
-      addAttendingEventToUserResult, submittedEvent);
+      this.props.user, submittedEvent);
 
     if(!addHostedEventToUserResult) return console.log('addHostedEventToUser call failed.');
 
@@ -235,13 +235,31 @@ class EventsForm extends React.Component {
     this.props.setCurrentSlide("1");
     this.setState(() => ({ eventUnderConstruction: {} }));
     this.closeModal();
+
+    //now all associated users need to have the event updated as well.
+    this.updateAssociatedUsers(submittedEvent);
+
+    this.props.socket.emit('updateHostedEventOnUser', { user: this.props.user, event: submittedEvent }, (err, res) => {
+      console.log('hosting user updated:', res);
+    });
+  };
+
+  updateAssociatedUsers = (event) => {
+    //loop through attendees, for each one update their attendingEvents on their user in the db
+    event.attendees.forEach((attendee) => {
+      if (JSON.stringify(attendee._id) !== JSON.stringify(this.props.user._id)) {
+        this.props.socket.emit('readUser', attendee._id, (err, res) => {
+          this.props.socket.emit('updateAttendingEventOnUser', {user: res, event}, (err2, res2) => {
+            console.log('associated user updated:', res2);
+          });
+        });
+      };
+    });
   };
 
   createOrUpdateAttendingEvents = async (user, submittedEvent) => {
 
     if (this.doesAttendingEventExist(submittedEvent._id)) {
-
-      console.log('attending event already exists.');
       return user;
     } else {
       const addAttendingEventToUserResult = await new Promise((resolve, reject) => {

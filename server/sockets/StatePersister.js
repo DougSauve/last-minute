@@ -1,6 +1,7 @@
 const state = {
   user: undefined,
   myEvent: undefined,
+  firstTimeUser: false,
 };
 
 const StatePersister = (socket) => {
@@ -16,6 +17,17 @@ const StatePersister = (socket) => {
     state.myEvent = event;
   });
   socket.on('getMyEvent', (acknowledge) => acknowledge(state.myEvent));
+
+  socket.on('setFirstTimeUser', () => {
+    state.firstTimeUser = true;
+  });
+  socket.on('unsetFirstTimeUser', () => {
+    state.firstTimeUser = false;
+  });
+
+  socket.on('checkFirstTimeUser', (acknowledge) => {
+    acknowledge(state.firstTimeUser);
+  });
 }
 
 module.exports = {

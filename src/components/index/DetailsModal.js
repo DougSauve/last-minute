@@ -1,4 +1,7 @@
 import React from 'react';
+import {calculateDistance} from '../../../utils/calculateDistance';
+
+import AttendeeList from '../_common/AttendeeList';
 
 import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
 import Modal from '../_common/modal/_Modal';
@@ -20,12 +23,26 @@ const DetailsModal = (props) => (
   // showNoInternetAlert = {this.showNoInternetAlert}
   // }
 
-  <div className = "modal-padding">
+  <div className = "padding-1rem">
 
     <div className = "modal-item-container">
 
-      <div className = "title">{props.event.title}</div>
-      <div className = "distance">5.8 miles away</div>
+      <div className = "title">
+        {props.event.title}
+        {(props.event.maximumPeople && props.event.attendees.length === props.event.maximumPeople) &&
+          <span className = "warning">{'  (Full)'}</span>
+        }
+      </div>
+      <div className = "distance">
+        <span>
+          {calculateDistance(
+            props.user.currentHomeLocation.location.lat,
+            props.user.currentHomeLocation.location.lng,
+            props.event.location.lat,
+            props.event.location.lng,
+            props.user.searchPreferences.units)
+          } {props.user.searchPreferences.units} away</span>
+      </div>
 
       <div className = "property">
         <div className = "key">Host:</div>
@@ -76,20 +93,12 @@ const DetailsModal = (props) => (
           <div>
             {props.event.minimumPeople}-{props.event.maximumPeople} (currently {props.event.attendees.length})
           </div>
-          <div className = "center">
-            {
-              props.event.attendees.map((attendee, index)=> {
-                return (
-                  <span
-                    key = {index}
-                    className = "secondary-text"
-                  >
-                    {attendee.gender}, {props.makeAgeRangeUserFriendly(attendee.ageRange)} {'  '}
-                  </span>
-                )
-              })
-            }
-          </div>
+
+          <AttendeeList
+            event = {props.event}
+            showNames = {false}
+          />
+
         </div>
       </div>
 
@@ -114,6 +123,7 @@ const DetailsModal = (props) => (
         </div> :
 
         <div>
+
         {/* show join or leave based on whether they're signed up or not */}
         {
           (props.userHasJoinedEvent()) ?
@@ -122,14 +132,20 @@ const DetailsModal = (props) => (
           >
             Leave event
           </div> :
-          <div className = "button background-blue width15"
-            onClick = {props.joinEvent}
-          >
-            Join
+          <div>
+            {/* show message instead of join if event is full */}
+            {(!props.event.maximumPeople || props.event.attendees.length < props.event.maximumPeople) &&
+            <div className = "button background-blue width15"
+              onClick = {props.joinEvent}
+            >
+              Join
+            </div>
+            }
           </div>
-          }
-        </div>
         }
+        </div>
+      }
+
       <div className = "button background-none width15"
         onClick = {props.closeModal}
       >

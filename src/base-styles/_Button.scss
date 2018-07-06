@@ -14,9 +14,26 @@
   cursor: pointer;
 };
 
-.button-container {
-  // padding: 1rem;
+.button--round { //specify color and width
+  height: 1.6rem;
+  width: 1.6rem;
+  line-height: 1.6rem;
 
+  // color: white;
+  text-align: center;
+  font-size: 1.3rem;
+
+  border-radius: 1.6rem;
+};
+.button--round:hover {
+  cursor: pointer;
+};
+
+.button--hover-grey:hover {
+  background: darken(white, 15%);
+};
+
+.button-container {
   display: flex;
   flex-direction: row;
 };

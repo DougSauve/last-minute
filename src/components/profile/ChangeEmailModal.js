@@ -6,8 +6,8 @@ const ChangeEmailModal = (props) => (
     // closeModal = {this.closeModal}
     // submitError = {this.props.submitError}
   // }
-  <div className = "modal-padding center">
-    <div className = "header">
+  <div className = "padding-1rem center">
+    <div className = "header--modal">
       <div className = "size2">
         Change your email address
       </div>

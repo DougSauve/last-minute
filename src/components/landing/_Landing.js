@@ -54,6 +54,12 @@ class Landing extends React.Component {
     //collect data from form
     const form = document.getElementsByClassName('landing__sign-up-form')[0];
 
+    const homeLocation = {
+      name: this.props.place,
+      location: {lat: this.props.lat, lng: this.props.lng},
+      address: this.props.address,
+    };
+
     const newUser = {
       name: form.elements.name.value,
       email: form.elements.email.value,
@@ -63,11 +69,6 @@ class Landing extends React.Component {
       gender: form.elements.gender.value,
     };
 
-    const homeLocation = {
-      name: this.props.place,
-      location: {lat: this.props.lat, lng: this.props.lng},
-      address: this.props.address,
-    };
 
     if (this.checkForSignUpErrors(newUser)) return;
 
@@ -76,17 +77,19 @@ class Landing extends React.Component {
       if (err) {
         this.props.setSubmitError({submitError: err});
       } else {
-        //set user's homeLocation, then clear it from redux currentLocation state
+        //set user's homeLocation and currentHomeLocation, then clear it from redux currentLocation state
         this.props.socket.emit('addHomeLocationToUser', {user: res, homeLocation}, (err2, res2) => {
-          this.props.setCurrentPlace('');
-          this.props.setCurrentCoordinates({ lat: null, lng: null });
-          this.props.setCurrentAddress('');
+          this.props.socket.emit('setCurrentHomeLocation', {user: res2, homeLocation: res2.homeLocations[0]}, (err3, res3) => {
+            this.props.setCurrentPlace('');
+            this.props.setCurrentCoordinates({ lat: null, lng: null });
+            this.props.setCurrentAddress('');
 
-          //set session user
-          this.props.socket.emit('setCurrentUser', res2, () => {
-            window.location.pathname = "/index";
+            //set session user
+            this.props.socket.emit('setCurrentUser', res3, () => {
+              this.props.socket.emit('setFirstTimeUser');
+              window.location.pathname = "/index";
+            });
           });
-
         });
       };
     });
@@ -192,8 +195,8 @@ class Landing extends React.Component {
         <TitleBar />
 
         <div className = "landing__left-box">
-          <div className = "landing__left-box__description">
-            <SampleEvents />
+          <div className = "landing__left-box__photo">
+            <img src = "./landing-photo.png" />
           </div>
         </div>
 

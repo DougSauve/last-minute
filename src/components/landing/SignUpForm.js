@@ -81,7 +81,7 @@ class SignUpForm extends React.Component {
                 className = "input"
                 type = "text"
                 name = "name"
-                placeholder = "May Flower"
+                placeholder = "Jamie S"
               />
               <span className = "error width15">{(this.props.emailError) ? this.props.emailError : this.props.nameError}</span>
             </div>
@@ -196,7 +196,6 @@ class SignUpForm extends React.Component {
 };
 
 const mapStateToProps = (reduxState) => ({
-  placeError: reduxState.eventsFormErrorsReducer.placeError,
   place: reduxState.currentLocationReducer.place,
   lat: reduxState.currentLocationReducer.lat,
   lng: reduxState.currentLocationReducer.lng,

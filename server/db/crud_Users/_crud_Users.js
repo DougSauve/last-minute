@@ -19,6 +19,10 @@ const { deleteMeetingPlaceFromUser } = require('./meetingPlaces/deleteMeetingPla
 const { addHomeLocationToUser } = require('./homeLocations/addHomeLocationToUser');
 const { deleteHomeLocationFromUser } = require('./homeLocations/deleteHomeLocationFromUser');
 
+const { setCurrentHomeLocation } = require('./currentHomeLocation/setCurrentHomeLocation');
+
+const { setSearchPreferences } = require('./searchPreferences/setSearchPreferences');
+
 module.exports = {
   createUser,
   readUser,
@@ -41,4 +45,8 @@ module.exports = {
 
   addHomeLocationToUser,
   deleteHomeLocationFromUser,
+
+  setCurrentHomeLocation,
+
+  setSearchPreferences,
 };

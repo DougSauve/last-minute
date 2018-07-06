@@ -6,6 +6,7 @@ import myEventReducer from './myEvent';
 import eventsFormReducer from './eventsForm';
 import eventsFormErrorsReducer from './eventsFormErrors';
 import landingFormErrorsReducer from './landingFormErrors';
+import searchReducer from './search';
 
 import indexReducer from './index';
 
@@ -31,12 +32,10 @@ const storeCreator = () => createStore(
     myEventReducer,
     eventsFormReducer,
     eventsFormErrorsReducer,
-
     landingFormErrorsReducer,
-
     indexReducer,
-
     currentLocationReducer,
+    searchReducer,
   }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );

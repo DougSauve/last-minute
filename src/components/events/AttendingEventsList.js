@@ -1,6 +1,8 @@
 import React from 'react';
+import moment from 'moment';
 
-import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
+import AttendeeList from '../_common/AttendeeList';
+import {calculateDistance} from '../../../utils/calculateDistance';
 
 const AttendingEventsList = (props) => (
   // props: {
@@ -14,12 +16,25 @@ const AttendingEventsList = (props) => (
     {
       (props.user.attendingEvents[0]) ?
       props.user.attendingEvents.map((event, index) => {
+        //don't display own event
+        if (JSON.stringify(props.user._id) === JSON.stringify(event.createdBy._id)) return;
+
         return <div
           key = {index}
           className = "list-item-container event-spacing">
 
           <div className = "title">{event.title}</div>
-          <div className = "distance">5.8 miles away</div>
+          <div className = "distance">
+            <span>
+              {calculateDistance(
+                props.user.currentHomeLocation.location.lat,
+                props.user.currentHomeLocation.location.lng,
+                event.location.lat,
+                event.location.lng,
+                props.user.searchPreferences.units
+              )
+              } {props.user.searchPreferences.units} away</span>
+          </div>
 
           <div className = "property">
             <div className = "key">Host:</div>
@@ -45,7 +60,7 @@ const AttendingEventsList = (props) => (
                 onClick = {() => {
                   //check for internet access
                   if (window.navigator.onLine) {
-                    props.setShowOnMap(true);
+                    props.setMapEvent(event);
                   }else{
                     props.showNoInternetAlert();
                   }
@@ -60,7 +75,7 @@ const AttendingEventsList = (props) => (
           <div className = "property">
             <div className = "key">When:</div>
             <div className = "value">
-              {event.expiresAtHour}:{event.expiresAtMinute} {event.expiresAtAM}
+              {moment(event.expiresAt).format("MMMM Do,")} {event.expiresAtHour}:{event.expiresAtMinute} {event.expiresAtAM}
             </div>
           </div>
 
@@ -70,20 +85,12 @@ const AttendingEventsList = (props) => (
               <div>
                 {event.minimumPeople}-{event.maximumPeople} (currently {event.attendees.length})
               </div>
-              <div className = "center">
-                {
-                  event.attendees.map((attendee, index)=> {
-                    return (
-                      <span
-                        key = {index}
-                        className = "secondary-text"
-                      >
-                        {attendee.gender}, {props.makeAgeRangeUserFriendly(attendee.ageRange)} {'  '}
-                      </span>
-                    )
-                  })
-                }
-              </div>
+
+              <AttendeeList
+                event = {event}
+                showNames = {false}
+              />
+
             </div>
           </div>
 
@@ -95,20 +102,25 @@ const AttendingEventsList = (props) => (
           }
 
           {/* leave event button */}
-          <div className = "property center">
-            <div
-              className = "button background-none width15"
-              onClick = {props.leaveEvent.bind(this, props.user, event, () => {console.log('hi mom')} )}
-            >
-              Leave this event
+          {
+            (event.createdBy._id === props.user._id) ?
+            <div className = "property center">
+              <div
+                className = "button background-red width15"
+                onClick = {props.deleteEvent.bind(this, event)}
+              >
+                Remove this event
+              </div>
             </div>
-          </div>
-
-          {(props.showOnMap) &&
-            <ShowPositionOnMapModal
-              event = {event}
-              close = {props.setShowOnMap.bind(this, false)}
-            />
+            :
+            <div className = "property center">
+              <div
+                className = "button background-none width15"
+                onClick = {props.leaveEvent.bind(this, props.user, event, () => {console.log('hi mom')} )}
+              >
+                Leave this event
+              </div>
+            </div>
           }
 
         </div>

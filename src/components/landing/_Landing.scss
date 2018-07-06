@@ -13,7 +13,7 @@
   background: $back1;
 };
 .landing__left-box{
-  width: 50vw;
+  width: 60vw;
   height: 100vh;
 
   display: flex;
@@ -22,18 +22,18 @@
 
   background: $back1;
 
-  .landing__left-box__description{
+  .landing__left-box__photo{
 
-    max-width: 30vw;
+    z-index:3;
 
-    background: white;
+    max-width: 56vw;
+    padding: .15rem;
 
     border: solid $accent1 1px;
-    border-radius: 1rem;
   };
 };
 .landing__right-box{
-  width: 50vw;
+  width: 40vw;
   height: 100vh;
 
   display: flex;

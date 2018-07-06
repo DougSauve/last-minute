@@ -9,7 +9,7 @@ const ActionButtonContainer = (props) => (
   //   showNoInternetAlert (function)
   // }
 
-  <div className = "button-container">
+  <div className = "button-container unsquishable">
 
     {/* Create Button */}
     {(!props.myEventExists) &&

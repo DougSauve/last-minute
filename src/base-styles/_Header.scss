@@ -1,9 +1,12 @@
 .header{
+  margin-top: 2rem;
+
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
 
-  padding: 4rem 0 2rem 0;
+  height: 8rem;
 };
 .header-modal{
   display: flex;
