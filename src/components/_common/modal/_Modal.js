@@ -11,7 +11,6 @@ class Modal extends React.Component {
   };
 
   disableScroll = () => {
-    console.log('scrolling');
     document.documentElement.scrollTop = this.scrollTop;
     document.body.scrollTop = this.scrollTop;
   };

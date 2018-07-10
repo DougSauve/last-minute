@@ -1,54 +1,75 @@
 import React from 'react';
 import './DistanceFilter.scss';
 
-const DistanceFilter = (props) => (
-  // props: {
-  //   distance = {this.props.distance}
-  //   units = {this.props.units}
-  //   setSearchPreferences = {this.setSearchPreferences}
-  //   distanceError = {this.props.distanceError}
-  // };
+import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 
-  <div className = "quarter-width-box set-left">
-    <div className = "modal-item-container center">
-      <div className = "half-rem-below">
-        Show events within
-      </div>
+class DistanceFilter extends React.Component {
 
-      <form className = "searchPreferences center">
+  componentDidMount() {
+    if (!this.props.areModalsOpen()) {
+      document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.props.setSearchPreferences]);
+    };
+  };
 
-        <div className = "row">
-          <input
-            className = "input width5 space-after"
-            type = "number"
-            name = "distance"
-            defaultValue = {props.distance}
-          />
+  componentDidUpdate() {
+    if (!this.props.areModalsOpen()) {
+      document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.props.setSearchPreferences]);
+    };
+  };
 
-          <select
-            className = "input width7"
-            name = "units"
+  render() {
+    return (
+      // props: {
+      //   distance = {this.props.distance}
+      //   units = {this.props.units}
+      //   setSearchPreferences = {this.setSearchPreferences}
+      //   distanceError = {this.props.distanceError}
+      // };
+
+      <div className = "quarter-width-box set-left">
+        <div className = "modal-item-container center">
+          <div className = "half-rem-below">
+            Show events within
+          </div>
+
+          <form
+            action = "javascript:void(0);"
+            className = "searchPreferences center"
           >
-            <option value = {props.units}>
-              {props.units}
-            </option>
-            {(props.units !== 'km') && <option value = "km">km</option>}
-            {(props.units !== 'miles') && <option value = "miles">Miles</option>}
-          </select>
+            <div className = "row">
+              <input
+                className = "input width5 space-after"
+                type = "number"
+                name = "distance"
+                defaultValue = {this.props.distance}
+              />
+
+              <select
+                className = "input width7"
+                name = "units"
+              >
+                <option value = {this.props.units}>
+                  {this.props.units}
+                </option>
+                {(this.props.units !== 'km') && <option value = "km">km</option>}
+                {(this.props.units !== 'miles') && <option value = "miles">Miles</option>}
+              </select>
+            </div>
+
+            <span className = "error">{this.props.distanceError}</span>
+          </form>
+
+          <div
+            className = "button background-blue width100_percent"
+            onClick = {this.props.setSearchPreferences}
+          >
+            Search
+          </div>
+
         </div>
-
-        <span className = "error">{props.distanceError}</span>
-
-        <div
-          className = "button background-blue width100_percent"
-          onClick = {props.setSearchPreferences}
-        >
-          Search
-        </div>
-
-      </form>
-    </div>
-  </div>
-);
+      </div>
+    );
+  };
+};
 
 export default DistanceFilter;

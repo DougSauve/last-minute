@@ -4,27 +4,55 @@ import './SignUpForm.scss';
 import { connect } from 'react-redux';
 import { setCurrentPlace, setCurrentCoordinates, setCurrentAddress } from '../../redux/currentLocation';
 import { setMapError, clearErrors } from '../../redux/landingFormErrors';
+import { setSubmitError } from '../../redux/events';
 
 import SetPositionOnMapModal from '../_common/maps/SetPositionOnMapModal';
+import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 
 class SignUpForm extends React.Component {
   // props: {
-  //   nameError = {props.nameError}
-  //   emailError = {props.emailError}
-  //   passwordError = {props.passwordError}
-  //   passwordCheckError = {props.passwordCheckError}
-  //   submitError = {this.props.submitError}
+  //   signUp = {this.signUp}
+  // closeSignUpModal = {this.closeSignUpModal}
+  //
+  // nameError = {this.props.nameError}
+  // emailError = {this.props.emailError}
+  // passwordError = {this.props.passwordError}
+  // passwordCheckError = {this.props.passwordCheckError}
+  //
+  // submitError = {this.props.submitError}
   // };
 
   state = {
     showMapModal: false,
   }
 
+  componentDidMount() {
+    this.props.setSubmitError({});
+
+    document.onkeydown = (e) => {
+      handleKeyboardEvents(['enter', this.props.signUp], ['escape', this.props.closeSignUpModal], e);
+    };
+  };
+
+  componentDidUpdate() {
+    if (!this.state.showMapModal) {
+      document.onkeydown = (e) => {
+          handleKeyboardEvents(['enter', this.props.signUp], ['escape', this.props.closeSignUpModal], e);
+      };
+    }
+  };
+
+  componentWillUnmount() {
+    document.onkeydown = () => {};
+  };
+
   setShowMapModal = (value) => {
     this.setState(() => ({ showMapModal: value }));
   };
 
   submitMapModal = (place, location, address) => {
+
+    place = place.trim();
 
     this.props.clearErrors();
     let errorsPresent = false;
@@ -62,134 +90,165 @@ class SignUpForm extends React.Component {
     this.props.setCurrentAddress('');
   };
 
+  mountMap = () => {
+    this.setShowMapModal(false);
+    this.setShowMapModal(true);
+  };
+
   render() {
     return (
-      <div className = "center">
-        <span className = "error">{this.props.submitError}</span>
+      <div className = "modal-item-container">
 
-        <div className = "note max-width40">
-          {'Please avoid using the following reserved characters: <, >, \\, \', ", and &.'}
+        <div className = "header-modal">
+          <div className = "size2">
+            Welcome to LastMinute. Let's get you connected.
+          </div>
         </div>
 
-        <form className = "landing__sign-up-form row">
+        <div className = "center">
+          <span className = "error">{this.props.submitError}</span>
 
-          {/* left side */}
-          <div className = "container flex-fill-space">
-            <div className = "property">
-              <div className = "key">Name:</div>
-              <input
-                className = "input"
-                type = "text"
-                name = "name"
-                placeholder = "Jamie S"
-              />
-              <span className = "error width15">{(this.props.emailError) ? this.props.emailError : this.props.nameError}</span>
-            </div>
+          <div className = "note max-width40">
+            {'Please avoid using the following reserved characters: <, >, \\, \', ", and &.'}
+          </div>
 
-            <div className = "property">
-              <div className = "key">Age Range:</div>
-              <select
-                className = "input width17"
-                name = "ageRange"
-              >
-                <option value = "1">under 18</option>
-                <option value = "2">18-30</option>
-                <option value = "3">30-45</option>
-                <option value = "4">45-60</option>
-                <option value = "5">60+</option>
-              </select>
+          <form className = "landing__sign-up-form row">
 
-              <span className = "error width15">{this.props.passwordError}</span>
-            </div>
+            {/* left side */}
+            <div className = "container flex-fill-space">
+              <div className = "property">
+                <div className = "key">Name:</div>
+                <input
+                  className = "input"
+                  type = "text"
+                  name = "name"
+                  placeholder = "Jamie S"
+                  autoFocus
+                />
+                <span className = "error width15">{(this.props.emailError) ? this.props.emailError : this.props.nameError}</span>
+              </div>
 
-            <div className = "property">
-              <div className = "key">Gender:</div>
-              <select
-                className = "input width17"
-                name = "gender"
-              >
-                <option value = "Male">Male</option>
-                <option value = "Female">Female</option>
-                <option value = "Other">Other</option>
-                <option value = "None">Prefer not to say</option>
-              </select>
-
-              <span className = "error width15">{this.props.passwordCheckError}</span>
-            </div>
-
-            <div className = "property rem-above">
-
-              <div className = "key">Home Location:</div>
-
-              <div className = "center-vertically">
-                <div
-                  className = "button width15 background-blue"
-                  onClick = {this.setShowMapModal.bind(this, true)}
+              <div className = "property">
+                <div className = "key">Age Range:</div>
+                <select
+                  className = "input width17"
+                  name = "ageRange"
                 >
-                  Find on map
+                  <option value = "1">under 18</option>
+                  <option value = "2">18-30</option>
+                  <option value = "3">30-45</option>
+                  <option value = "4">45-60</option>
+                  <option value = "5">60+</option>
+                </select>
+
+                <span className = "error width15">{this.props.passwordError}</span>
+              </div>
+
+              <div className = "property">
+                <div className = "key">Gender:</div>
+                <select
+                  className = "input width17"
+                  name = "gender"
+                >
+                  <option value = "Male">Male</option>
+                  <option value = "Female">Female</option>
+                  <option value = "Other">Other</option>
+                  <option value = "None">Prefer not to say</option>
+                </select>
+
+                <span className = "error width15">{this.props.passwordCheckError}</span>
+              </div>
+
+              <div className = "property rem-above">
+
+                <div className = "key">Home Location:</div>
+
+                <div className = "center-vertically">
+                  <div
+                    className = "button width15 background-blue"
+                    // onClick = {this.setShowMapModal.bind(this, true)}
+                    onClick = {this.mountMap}
+                  >
+                    Find on map
+                  </div>
+
+                  <span className = "error width15">{this.props.homeLocationError}</span>
+                </div>
+
+              </div>
+
+              <div className = "property">
+                <div className = "note--no-margin max-width40">
+                  Your location is only used to calculate distance from events. The more specific, the more accurate distances will be, but an approximate location is fine.
                 </div>
               </div>
 
             </div>
 
-            <div className = "property">
-              <div className = "note--no-margin max-width40">
-                Your location is only used to calculate distance from events. The more specific, the more accurate distances will be, but an approximate location is fine.
+            {/* right side */}
+            <div className = "container flex-fill-space">
+              <div className = "property">
+                <div className = "key">Email address:</div>
+                <input
+                  className = "input"
+                  type = "email"
+                  name = "email"
+                  placeholder = "frozenyak@tibet.com"
+                />
               </div>
+
+              <div className = "property">
+                <div className = "key">Password (6+ long):</div>
+                <input
+                  className = "input"
+                  type = "password"
+                  name = "password"
+                  placeholder = "loopyfish%"
+                />
+              </div>
+
+              <div className = "property">
+                <div className = "key">Password again:</div>
+                <input
+                  className = "input"
+                  type = "password"
+                  name = "passwordCheck"
+                  placeholder = "loopyfish%"
+                />
+              </div>
+
+            </div>
+          </form>
+
+          {(this.state.showMapModal) &&
+            <SetPositionOnMapModal
+              submit = {this.submitMapModal}
+              cancel = {this.cancelMapModal}
+              lat = {this.props.lat}
+              lng = {this.props.lng}
+              address = {this.props.address}
+              setCurrentPlace = {this.props.setCurrentPlace}
+              setCurrentAddress = {this.props.setCurrentAddress}
+              mapNote = {'Choose a home location on the map or enter an address instead. Your location is only used to calculate distance from events. The more specific, the more accurate distances will be, but an approximate location is fine.'}
+              place = {this.props.place}
+              mapError = {this.props.mapError}
+            />
+          }
+
+          <div className = "button-container">
+            <div className = "button background-green width15"
+              onClick = {this.props.signUp}
+            >
+              Sign up
             </div>
 
+            <div className = "button background-none width15"
+              onClick = {this.props.closeSignUpModal}
+            >
+              Cancel
+            </div>
           </div>
-
-          {/* right side */}
-          <div className = "container flex-fill-space">
-            <div className = "property">
-              <div className = "key">Email address:</div>
-              <input
-                className = "input"
-                type = "email"
-                name = "email"
-                placeholder = "frozenyak@tibet.com"
-              />
-            </div>
-
-            <div className = "property">
-              <div className = "key">Password (6+ long):</div>
-              <input
-                className = "input"
-                type = "password"
-                name = "password"
-                placeholder = "loopyfish%"
-              />
-            </div>
-
-            <div className = "property">
-              <div className = "key">Password again:</div>
-              <input
-                className = "input"
-                type = "password"
-                name = "passwordCheck"
-                placeholder = "loopyfish%"
-              />
-            </div>
-
-          </div>
-        </form>
-
-        {(this.state.showMapModal) &&
-          <SetPositionOnMapModal
-            submit = {this.submitMapModal}
-            cancel = {this.cancelMapModal}
-            lat = {this.props.lat}
-            lng = {this.props.lng}
-            address = {this.props.address}
-            setCurrentPlace = {this.props.setCurrentPlace}
-            setCurrentAddress = {this.props.setCurrentAddress}
-            mapNote = {'Choose a home location on the map or enter an address instead. Your location is only used to calculate distance from events. The more specific, the more accurate distances will be, but an approximate location is fine.'}
-            place = {this.props.place}
-            mapError = {this.props.mapError}
-          />
-        }
-
+        </div>
       </div>
     );
   };
@@ -211,6 +270,8 @@ const mapDispatchToProps = {
 
   setMapError,
   clearErrors,
+
+  setSubmitError,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);

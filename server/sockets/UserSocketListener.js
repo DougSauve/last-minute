@@ -30,6 +30,11 @@ const UserSocketListener = (socket) => {
     };
   });
 
+  socket.on('updatePassword', async ({user, password}, acknowledge) => {
+    const {err, res} = await db.updatePassword(user, password);
+    acknowledge(err, res);
+  });
+
   socket.on('deleteUser', async (_id, acknowledge) => {
     const {err, res} = await db.deleteUser(_id);
     acknowledge(err, res);
@@ -100,7 +105,7 @@ const UserSocketListener = (socket) => {
     const {err, res} = await db.setSearchPreferences(user, distance, units);
     acknowledge(err, res);
   });
-  
+
 };
 
 module.exports = {

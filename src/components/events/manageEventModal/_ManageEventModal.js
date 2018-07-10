@@ -1,30 +1,48 @@
 import React, { Component } from 'react';
 
-import './_ManageEventModal.scss';
-import capitalizeFirstLetter from '../../../../utils/capitalizeFirstLetter';
 import Modal from '../../_common/modal/_Modal';
+import EventsForm from './eventsForm/_EventsForm';
 import DeleteEventModal from '../../_common/DeleteEventModal';
 
-import EventsForm from './eventsForm/_EventsForm';
+import {handleKeyboardEvents} from '../../../../utils/handleKeyboardEvents';
 
-const ManageEventModal = (props) => (
-  // props: {
-  //   setModalMode (function): set the mode of the modal
-  //   mode (string): current mode
-  // }
-  <div>
-    <Modal>
+class ManageEventModal extends React.Component {
 
-      {((props.mode === "create") || (props.mode === "update")) &&
-        <EventsForm />
-      }
+  componentDidMount() {
+    if (this.props.mode === "delete") {
+      document.onkeydown = (e) => {
+        handleKeyboardEvents(['escape', this.props.close], e);
+      };
+    };
+  };
 
-      {(props.mode === "delete") &&
-        <DeleteEventModal />
-      }
+  componentWillUnmount() {
+    document.onkeydown = null;
+  };
 
-    </Modal>
-  </div>
-);
+  render() {
+    return (
+     // props: {
+     // mode = {this.props.mode}
+     // close = {this.props.setMode.bind(this, undefined)}
+     // }
+     <div>
+       <Modal
+         close = {this.props.close}
+       >
+         {((this.props.mode === "create") || (this.props.mode === "update")) &&
+           <EventsForm />
+         }
+
+         {(this.props.mode === "delete") &&
+           <DeleteEventModal
+           />
+         }
+
+       </Modal>
+     </div>
+   );
+  };
+};
 
 export { ManageEventModal as default };

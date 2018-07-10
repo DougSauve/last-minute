@@ -12,6 +12,7 @@ const createUser = (user) => {
     email: user.email,
     password: user.password,
     ageRange: user.ageRange,
+    ageRangeCanChangeAt: new moment().hour(0).minute(0).second(0).format(),
     gender: user.gender,
     currentHomeLocation: user.currentHomeLocation,
 

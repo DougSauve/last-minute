@@ -7,6 +7,7 @@ import Modal from '../modal/_Modal';
 import { getCoords } from './Geocode';
 import { setPositionToStore, updateStoreLocation } from './setPositionToStore';
 
+import {handleKeyboardEvents} from '../../../../utils/handleKeyboardEvents';
 
 class SetPositionOnMapModal extends React.Component {
   // props: {
@@ -20,6 +21,7 @@ class SetPositionOnMapModal extends React.Component {
   //   mapNote (string)
   //   place (string)
   //   mapError (String)
+  //   mode (optional prop about whether to show map info from previous set)
 
   state = {
     initialCenter: null,
@@ -29,6 +31,19 @@ class SetPositionOnMapModal extends React.Component {
   };
 
   componentDidMount() {
+    //bind keyboard shortcuts
+
+    document.onkeydown = (e) => {
+      handleKeyboardEvents(['enter', this.props.submit.bind(this, this.props.place, {lat: this.props.lat, lng: this.props.lng}, this.props.address)], ['escape', this.props.cancel], e);
+    };
+
+    //if mode = update, reset currentLocation info since they're making a new meetingPlace.
+    if (this.props.mode && this.props.mode === "update") {
+      this.props.setCurrentPlace('');
+      this.props.setCurrentCoordinates({lat: 35, lng: -92});
+      this.props.setCurrentAddress('');
+    };
+
     //set initial position in state - start at USA map
     this.setState(() => ({
       initialCenter: {
@@ -39,7 +54,7 @@ class SetPositionOnMapModal extends React.Component {
       readyForMap: true,
     }));
 
-    //if a starting location was passed in
+    //if a starting location was passed in from google maps
     setPositionToStore().then((location) => {
       if (!location.err) {
         //if it works
@@ -58,6 +73,14 @@ class SetPositionOnMapModal extends React.Component {
     });
   };
 
+  componentWillUnmount() {
+    document.onkeydown = () => {};
+  };
+
+  submitEventPlace = () => {
+    this.props.submit(this.props.place, {lat: this.props.lat, lng: this.props.lng}, this.props.address);
+  };
+
   onPositionChanged = async () => {
     const lat = await this.currentMarker.marker.position.lat();
     const lng = await this.currentMarker.marker.position.lng();
@@ -65,6 +88,7 @@ class SetPositionOnMapModal extends React.Component {
     updateStoreLocation(lat, lng);
   };
 
+  //name of place, set by typing
   changePlace = (e) => {
     this.props.setCurrentPlace(e.target.value);
   };
@@ -78,21 +102,6 @@ class SetPositionOnMapModal extends React.Component {
     this.currentMarker.marker.setPosition({ lat: coords.lat, lng: coords.lng });
     this.currentMap.map.setCenter({ lat: coords.lat, lng: coords.lng });
     this.setState(() => ({ zoom: 15 }));
-  };
-
-  submitLocation = () => {
-    const place = document.getElementsByClassName("events__create-event-modal__slide3__form")[0].elements.place.value;
-
-    this.props.submitSlide3(
-      place,
-      {
-        lat: this.props.lat,
-        lng: this.props.lng,
-      },
-      this.props.address
-    );
-
-    this.props.setShowCreateMeetingPlace.bind(this, false);
   };
 
   render() {
@@ -176,7 +185,7 @@ class SetPositionOnMapModal extends React.Component {
                 <div className = "value--no-width">
                   <div
                     className = "button width15 background-green"
-                    onClick = {this.props.submit.bind(this, this.props.place, {lat: this.props.lat, lng: this.props.lng}, this.props.address)}
+                    onClick = {this.submitEventPlace}
                   >
                     Use this place
                   </div>

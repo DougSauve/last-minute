@@ -3,6 +3,7 @@ import React from 'react';
 import './_NotFound.scss';
 
 export default class NotFound extends React.Component {
+
   sendTo(destination) {
     window.location.pathname = '/';
   };

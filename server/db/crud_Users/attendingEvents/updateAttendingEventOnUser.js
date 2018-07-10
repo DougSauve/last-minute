@@ -36,7 +36,7 @@ const updateAttendingEventOnUser = (user, event) => {
       if (foundAMatch === true) {
         resolve({ err: null, res });
       } else {
-        resolve({ err: 'That event could not be found', res });
+        resolve({ err: 'That event could not be found: updateAttendingEventOnUser: user._id ' + user._id + ' attendingEvent._id ' + attendingEvent._id + ' event._id ' + event._id, res });
       }
     }).catch((err) => resolve({ err: {err, user, event}, res: null }));
   });

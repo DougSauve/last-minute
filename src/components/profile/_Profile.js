@@ -1,10 +1,17 @@
 import React from 'react';
+import moment from 'moment';
 import './_Profile.scss';
 
 import validator from 'validator';
 
 import { connect } from 'react-redux';
-import { setUser, setUserSubmitError, setUserSubmitSuccess } from '../../redux/user';
+import {
+  setUser,
+  setUserSubmitError,
+  setUserSubmitSuccess,
+  setDeleteProfileError,
+  clearDeleteProfileError,
+} from '../../redux/user';
 import { setMyEvent } from '../../redux/myEvent';
 import { setEvents } from '../../redux/events';
 import { setMapError, clearErrors } from '../../redux/landingFormErrors';
@@ -51,10 +58,6 @@ class Profile extends React.Component {
     });
   };
 
-  componentDidMount() {
-    document.onkeydown = handleKeyboardEvents.bind(this, ['escape', this.closeModal]);
-  };
-
   setShowChangePasswordModal = () => {
     this.setState(() => ({ showChangePasswordModal: true }));
   };
@@ -78,21 +81,29 @@ class Profile extends React.Component {
     const newPassword = form.elements.newPassword.value;
     const newPasswordCheck = form.elements.newPasswordCheck.value;
 
-    if (currentPassword !== this.props.user.password) { //this will need to be checked by hash later
-      return this.props.setUserSubmitError('Incorrect password.');
-    };
+    this.props.socket.emit('validateUser', {email: this.props.user.email, password: currentPassword }, (err, res) => {
+      if ((res) && JSON.stringify(res._id) === JSON.stringify(this.props.user._id)) {
+        if (newPassword.length < 6) return this.props.setUserSubmitError('Password must be at least 6 characters long.');
+        if (newPassword !== newPasswordCheck) return this.props.setUserSubmitError('Passwords do not match.');
 
-    if (newPassword.length < 6) return this.props.setUserSubmitError('Password must be at least 6 characters long.');
-    if (newPassword !== newPasswordCheck) return this.props.setUserSubmitError('Passwords do not match.');
+        this.props.socket.emit('updatePassword', {user: this.props.user, password: newPassword}, (err, res) => {
+          if (err) {
+          this.props.setUserSubmitError(err);
+          } else {
+            this.props.socket.emit('setCurrentUser', res, () => {
+              this.props.setUserSubmitSuccess('Your password has been updated.');
+              //update redux state
+              this.props.setUser(res);
+              this.closeModal();
+            });
+          };
+        });
+      } else {
+        this.props.setUserSubmitError(err);
+      };
+    });
 
-    const updatedUser = {
-      ...this.props.user,
-      password: newPassword,
-    };
-
-    this.updateUserInformation(updatedUser, 'Your password was successfully updated.');
   };
-
   requestEmailReset = () => {
     //reset error message
     this.props.setUserSubmitError('');
@@ -103,32 +114,53 @@ class Profile extends React.Component {
     const newEmail = form.elements.newEmail.value;
     const newEmailCheck = form.elements.newEmailCheck.value;
 
-    if (password !== this.props.user.password) { //this will need to be checked by hash later
-      return this.props.setUserSubmitError('Incorrect password.');
-    };
+    this.props.socket.emit('validateUser', {email: this.props.user.email, password }, (err, res) => {
+      if ((res) && JSON.stringify(res._id) === JSON.stringify(this.props.user._id)) {
+        if (!validator.isEmail(newEmail)) return this.props.setUserSubmitError('Please enter a valid email address.');
+        //this should send a verification email later - for password too
 
-    if (!validator.isEmail(newEmail)) return this.props.setUserSubmitError('Please enter a valid email address.');
-    //this should send a verification email later - for password too
+        if (newEmail !== newEmailCheck) return this.props.setUserSubmitError('Emails do not match.');
 
-    if (newEmail !== newEmailCheck) return this.props.setUserSubmitError('Emails do not match.');
+        const updatedUser = {
+          ...this.props.user,
+          email: newEmail,
+        };
 
-    const updatedUser = {
-      ...this.props.user,
-      email: newEmail,
-    };
-
-    this.updateUserInformation(updatedUser, 'Your email address was successfully updated.');
+        this.updateUserInformation(updatedUser, 'Your email address was successfully updated.');
+      } else {
+        this.props.setUserSubmitError(err);
+      };
+    });
   };
-
   submitNewAgeRange = () => {
-    const ageRange = document.getElementsByClassName('profile__change-ageRange-modal__form')[0].elements.ageRange.value;
+    //reset error message
+    this.props.setUserSubmitError('');
 
-    const updatedUser = {
-      ...this.props.user,
-      ageRange
-    };
+    const form = document.getElementsByClassName('profile__change-ageRange-modal__form')[0];
+    const password = form.elements.password.value;
+    const ageRange = form.elements.ageRange.value;
 
-    this.updateUserInformation(updatedUser, 'Your age range was successfully updated. Happy Birthday!');
+    this.props.socket.emit('validateUser', {email: this.props.user.email, password }, (err, res) => {
+      if ((res) && JSON.stringify(res._id) === JSON.stringify(this.props.user._id)) {
+        //check if ageRangeCanChangeAt has happened yet
+        if (new moment().isAfter(moment(this.props.user.ageRangeCanChangeAt))) {
+
+          const newChangeDate = new moment().add(5, "year").hour(0).minute(0).second(0).format();
+
+          const updatedUser = {
+            ...this.props.user,
+            ageRange,
+            ageRangeCanChangeAt: newChangeDate,
+          };
+
+          this.updateUserInformation(updatedUser, 'Your age range was successfully updated. You will not be able to update your age range again until ' + moment(newChangeDate).format("MMMM Do, YYYY") + '. Happy Birthday!');
+        } else {
+          this.props.setUserSubmitError(`Sorry, your age range cannot be changed until ${moment(this.props.user.ageRangeCanChangeAt).format("MMMM Do, YYYY")}.`);
+        };
+      } else {
+        this.props.setUserSubmitError(err);
+      };
+    });
   };
 
   updateUserInformation(updatedUser, successMessage) {
@@ -148,20 +180,27 @@ class Profile extends React.Component {
   };
 
   deleteProfile = () => {
-    this.props.socket.emit('deleteUser', this.props.user._id, (err, res) => {
-      if (err) {
-        this.props.setUserSubmitError(err);
-      } else {
-        this.props.socket.emit('setCurrentUser', null, () => {
-          this.props.setUserSubmitSuccess('Your profile was succesfully deleted.');//never seen :/
-          //update redux state
-          this.props.setUser({});
-          this.closeModal();
+    //verify that they have no hosted events
+    if(this.props.user.hostedEvents[0]) {
+      this.props.setDeleteProfileError(`You are hosting an event called ${this.props.user.hostedEvents[0].title}. You will need to remove it before you can delete your profile.` );
+    } else {
+      //delete
+      this.props.socket.emit('deleteUser', this.props.user._id, (err, res) => {
+        if (err) {
+          this.props.setUserSubmitError(err);
+        } else {
+          this.props.socket.emit('setCurrentUser', null, () => {
+            this.props.setUserSubmitSuccess('Your profile was succesfully deleted.');//never seen :/
 
-          window.location.pathname = '/';
-        });
-      }
-    });
+            //reset session state
+            this.props.socket.emit('setMyEvent', null);
+            this.props.socket.emit('setCurrentUser', null, () => {
+              window.location.pathname = '/';
+            });
+          });
+        }
+      });
+    };
   };
 
   closeModal = () => {
@@ -171,6 +210,8 @@ class Profile extends React.Component {
       if (item !== 'stateLoaded') stateToChange[item] = false;
     };
 
+    this.props.setUserSubmitSuccess(this.props.submitSuccess);
+
     this.setState(() => ({ ...stateToChange }));
   };
 
@@ -179,21 +220,50 @@ class Profile extends React.Component {
   };
 
   addHomeLocation = (place, location, address) => {
-    this.props.socket.emit('addHomeLocationToUser', { user: this.props.user, homeLocation: {name: place, location, address} }, (err, res) => {
-      if (err) {
-        this.props.setUserSubmitError(err);
-      } else {
-        this.props.socket.emit('setCurrentUser', res, () => {
-          this.props.setUser(res);
-          this.props.setUserSubmitSuccess(`${place} was added.`);
-          this.closeModal();
-        });
-      };
-    });
+
+    place = place.trim();
+
+    //form validation
+    this.props.clearErrors();
+    let errorsPresent = false;
+
+    if (!place || parseInt(place) === parseInt(place)) {
+      this.props.setMapError('Please enter a name for this place.');
+      errorsPresent = true;
+    };
+
+    if (!location || !location.lat || !location.lng) {
+      this.props.setMapError('Error retrieving coordinates. Please reposition the map marker.');
+      errorsPresent = true;
+    };
+
+    if (location.lat - 1 === NaN || location.lng - 1 === NaN) {
+      this.props.setMapError('Type error. Please fire the system administrator.');
+      errorsPresent = true;
+    };
+
+    if (!address) {
+      this.props.setMapError('Please enter an address or choose a location on the map.');
+      errorsPresent = true;
+    };
+
+    //if no errors, add the location
+    if (!errorsPresent) {
+      this.props.socket.emit('addHomeLocationToUser', { user: this.props.user, homeLocation: {name: place, location, address} }, (err, res) => {
+        if (err) {
+          this.props.setUserSubmitError(err);
+        } else {
+          this.props.socket.emit('setCurrentUser', res, () => {
+            this.props.setUser(res);
+            this.props.setUserSubmitSuccess(`${place} was added.`);
+            this.closeModal();
+          });
+        };
+      });
+    };
   };
 
   deleteHomeLocation = (homeLocation) => {
-    console.log('delete', homeLocation);
     this.props.socket.emit('deleteHomeLocationFromUser', { user: this.props.user, _id: homeLocation._id }, (err, res) => {
       if (err) {
         this.props.setUserSubmitError(err);
@@ -209,13 +279,17 @@ class Profile extends React.Component {
   switchHomeLocation = (homeLocation) => {
     this.props.socket.emit('setCurrentHomeLocation', {user: this.props.user, homeLocation }, (err, res) => {
       if (err) {
-        console.log(err);
+        this.props.setUserSubmitError(err);
       } else {
         this.props.socket.emit('setCurrentUser', res, () => {
           this.props.setUser(res);
         });
       };
     });
+  };
+
+  showNoInternetAlert = () => {
+    alert('Please connect to the internet to see the map.');
   };
 
   render () {
@@ -255,11 +329,13 @@ class Profile extends React.Component {
           setShowChangeEmailModal = {this.setShowChangeEmailModal}
           setShowChangeAgeRangeModal = {this.setShowChangeAgeRangeModal}
           setShowVerifyDeleteModal = {this.setShowVerifyDeleteModal}
+          showNoInternetAlert = {this.showNoInternetAlert}
         />
 
         {this.state.showChangePasswordModal &&
         <Modal>
           <ChangePasswordModal
+            showChangePasswordModal = {this.state.showChangePasswordModal}
             requestPasswordReset = {this.requestPasswordReset}
             closeModal = {this.closeModal}
             submitError = {this.props.submitError}
@@ -270,6 +346,7 @@ class Profile extends React.Component {
         {this.state.showChangeEmailModal &&
         <Modal>
           <ChangeEmailModal
+            showChangeEmailModal = {this.state.showChangeEmailModal}
             requestEmailReset = {this.requestEmailReset}
             closeModal = {this.closeModal}
             submitError = {this.props.submitError}
@@ -280,6 +357,7 @@ class Profile extends React.Component {
         {this.state.showChangeAgeRangeModal &&
         <Modal>
           <ChangeAgeRangeModal
+            showChangeAgeRangeModal = {this.state.showChangeAgeRangeModal}
             userFriendlyAgeRange = {makeAgeRangeUserFriendly(this.props.user.ageRange)}
             submitNewAgeRange = {this.submitNewAgeRange}
             closeModal = {this.closeModal}
@@ -290,11 +368,17 @@ class Profile extends React.Component {
 
         {/* delete modal */}
         {this.state.showVerifyDeleteModal &&
-          <Modal>
+          <Modal
+            close = {this.closeModal}
+          >
             <VerifyDeleteModal
+              showVerifyDeleteModal = {this.state.showVerifyDeleteModal}
               submitError = {this.props.submitError}
               deleteProfile = {this.deleteProfile}
               closeModal = {this.closeModal}
+
+              deleteProfileError = {this.props.deleteProfileError}
+              clearDeleteProfileError = {this.props.clearDeleteProfileError}
             />
           </Modal>
         }
@@ -328,6 +412,7 @@ const mapStateToProps = (reduxStore) => ({
   user: reduxStore.userReducer.user,
   submitError: reduxStore.userReducer.submitError,
   submitSuccess: reduxStore.userReducer.submitSuccess,
+  deleteProfileError: reduxStore.userReducer.deleteProfileError,
 
   place: reduxStore.currentLocationReducer.place,
   lat: reduxStore.currentLocationReducer.lat,
@@ -343,6 +428,8 @@ const mapDispatchToProps = {
   setMyEvent,
   setUserSubmitError,
   setUserSubmitSuccess,
+  setDeleteProfileError,
+  clearDeleteProfileError,
 
   setCurrentPlace,
   setCurrentCoordinates,

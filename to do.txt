@@ -38,12 +38,30 @@ users shouldn't be able to join an event with the cap met X
 add sign-up greeting/orientation modal X
 Updates of any sort (notes) need to update to attending users. This happens with attendingEvents - just transfer it to general event changes! X
 rework deleting events and what that does on associated users. X
+Hash passwords X
+Age range should only be changed once every 5 years. X
+Add user authentication X - I'm going to call this done since I've done it client-side through persisting state.
+change password needs to have its own route, not updateUser. Make this work properly. X
+Enter/escape binding are getting really messy between modals. What is going on here. In Landing, anyway. X
+add enter sensors to modals (/events left, unmounting ones in /profile... look in profile. I don't want different actions getting scrambled up between the modals - that's probably what was happening before.) X
+Change age range modal is submitting the form. X
+add autoFocus in all modals X
+July 9th:
+map in create event has no manners. K, now it has manners but escape and enter aren't working in it. X
+unhandled promise rejection in /events when deleting event, repeating X
+joinEvents and leaveEvents broken X
+bind enter to searchPreferences in /index X
+add removeMeetingPlaces in MeetingPlaceList X
+possible to sign up without choosing a homeLocation X not anymore
+prevent map buttons from being spammed (all buttons, really.) Can I use refs? Probably. Does it actually matter? Probably not. Can I add an off-on switch at mounting, so if you click it again it retries? X
+remove console.logs X
+make sure all error and success messages show properly X
+remove a user's hosted events when deleting profile... or ask them to do it first. :) I'll do that. X
 
-
+Functionality is complete. :)
 
 Next steps:
 
+
 Style responsively
-Hash passwords
-Add user authentication
-Age range should only be changed once every 5 years.
+accessibility

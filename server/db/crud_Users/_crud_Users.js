@@ -1,6 +1,7 @@
 const { createUser } = require('./createUser');
 const { readUser, readAllUsers } = require('./readUser');
 const { updateUser } = require('./updateUser');
+const { updatePassword } = require('./updatePassword');
 const { deleteUser } = require('./deleteUser');
 
 const { validateUser } = require('./validateUser');
@@ -28,6 +29,7 @@ module.exports = {
   readUser,
   readAllUsers,
   updateUser,
+  updatePassword,
   deleteUser,
 
   validateUser,

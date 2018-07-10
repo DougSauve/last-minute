@@ -7,6 +7,7 @@ import {
   setEmailError,
   setPasswordError,
   setPasswordCheckError,
+  setHomeLocationError,
   clearErrors,
 } from '../../redux/landingFormErrors';
 import { setUser } from '../../redux/user';
@@ -14,12 +15,11 @@ import { setSubmitError } from '../../redux/events';
 import { setCurrentPlace, setCurrentCoordinates, setCurrentAddress } from '../../redux/currentLocation';
 
 import TitleBar from '../_common/TitleBar';
-import SampleEvents from './SampleEvents';
 import Footer from '../_common/Footer';
 import { blacklist } from '../../../utils/sanitize';
 
 import Modal from '../_common/modal/_Modal';
-import SignUpModal from './SignUpModal';
+import SignUpForm from './SignUpForm';
 import LoginForm from './LoginForm';
 
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
@@ -33,11 +33,18 @@ class Landing extends React.Component {
 
   state = {
     showSignUpModal: false,
-    showLogInModal: false,
   };
 
   componentDidMount() {
-    document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.logIn], ['escape', this.closeModal]);
+    document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.logIn]);
+  };
+
+  componentDidUpdate() {
+    if (!this.state.showSignUpModal) {
+      document.onkeydown = (e) => {
+          handleKeyboardEvents(['enter', this.logIn], ['escape', this.closeModal], e);
+      };
+    }
   };
 
   setShowSignUpModal = () => {
@@ -45,9 +52,6 @@ class Landing extends React.Component {
   };
   closeSignUpModal = () => {
     this.setState(() => ({ showSignUpModal: false }));
-  };
-  setShowLogInModal = () => {
-    this.setState(() => ({ showLogInModal: true }));
   };
 
   signUp = () => {
@@ -70,7 +74,7 @@ class Landing extends React.Component {
     };
 
 
-    if (this.checkForSignUpErrors(newUser)) return;
+    if (this.checkForSignUpErrors(newUser, homeLocation)) return;
 
     //write user to db
     this.props.socket.emit('createUser', newUser, (err, res) => {
@@ -94,7 +98,7 @@ class Landing extends React.Component {
       };
     });
   };
-  checkForSignUpErrors = (user) => {
+  checkForSignUpErrors = (user, homeLocation) => {
 
     this.props.clearErrors();
     let errorsPresent = false;
@@ -151,6 +155,11 @@ class Landing extends React.Component {
     } else if (user.password !== user.passwordCheck) {
         this.props.setPasswordCheckError('Paswords do not match.');
         errorsPresent = true;
+    };
+
+    if (!homeLocation.address || !homeLocation.location.lat || !homeLocation.location.lng || !homeLocation.name) {
+      this.props.setHomeLocationError('Please choose a home location.');
+      errorsPresent = true;
     };
 
     return errorsPresent;
@@ -219,26 +228,18 @@ class Landing extends React.Component {
           <Modal
             close = {this.closeSignUpModal}
           >
-            <SignUpModal
+            <SignUpForm
               signUp = {this.signUp}
-              closeModal = {this.closeModal}
+              closeSignUpModal = {this.closeSignUpModal}
 
               nameError = {this.props.nameError}
               emailError = {this.props.emailError}
               passwordError = {this.props.passwordError}
               passwordCheckError = {this.props.passwordCheckError}
+              homeLocationError = {this.props.homeLocationError}
 
               submitError = {this.props.submitError}
-            />
-          </Modal>
-        }
-
-        {(this.state.showLogInModal) &&
-          <Modal>
-            <LogInModal
-              logIn = {this.logIn}
-              closeModal = {this.closeModal}
-              submitError = {this.props.submitError}
+              setSubmitError = {this.props.setSubmitError}
             />
           </Modal>
         }
@@ -255,6 +256,7 @@ const mapStateToProps = (reduxStore) => ({
   emailError: reduxStore.landingFormErrorsReducer.emailError,
   passwordError: reduxStore.landingFormErrorsReducer.passwordError,
   passwordCheckError: reduxStore.landingFormErrorsReducer.passwordCheckError,
+  homeLocationError: reduxStore.landingFormErrorsReducer.homeLocationError,
 
   submitError: reduxStore.eventsReducer.submitError,
   user: reduxStore.userReducer.user,
@@ -271,6 +273,7 @@ const mapDispatchToProps = {
   setEmailError,
   setPasswordError,
   setPasswordCheckError,
+  setHomeLocationError,
   clearErrors,
 
   setUser,

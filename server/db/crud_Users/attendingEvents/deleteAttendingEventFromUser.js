@@ -20,12 +20,15 @@ const deleteAttendingEventFromUser = (user, event) => {
         })
       }
     }, { new: true }).then((res) => {
+
       if (foundAMatch === true) {
         resolve({ err: null, res });
       } else {
-        resolve({ err: 'That event could not be found', res });
+        resolve({ err: 'That event could not be found: deleteAttendingEventOnUser', res });
       }
-    }).catch((err) => resolve({ err, res: null }));
+    }).catch((err) => {
+      resolve({ err, res: null });
+    });
   });
 };
 

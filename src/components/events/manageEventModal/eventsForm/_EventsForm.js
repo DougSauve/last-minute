@@ -1,8 +1,6 @@
 import React from 'react';
 import moment from 'moment';
 
-import './_EventsForm.scss';
-
 import { connect } from 'react-redux';
 import { setMode, setEvents, setSubmitError, setSubmitSuccess } from '../../../../redux/events';
 import { setCurrentSlide } from '../../../../redux/eventsForm';
@@ -16,6 +14,7 @@ import {
 } from '../../../../redux/eventsFormErrors';
 import { setMyEvent } from '../../../../redux/myEvent';
 import { setUser } from '../../../../redux/user';
+import { setMapError, clearMapErrors } from '../../../../redux/landingFormErrors';
 
 import Slide1 from './Slide1';
 import Slide2 from './Slide2';
@@ -56,14 +55,14 @@ class EventsForm extends React.Component {
       this.props.setTitleError('Please enter a name for your event.');
     };
 
-    if (parseInt(minimumPeople) < 1) {
+    if (parseInt(minimumPeople) < 2) {
       errorsPresent = true;
-      this.props.setMinPeopleError('Please enter a minimum number of people.');
+      this.props.setMinimumPeopleError('Please enter a number 2 or higher.');
     }
 
     if (parseInt(maximumPeople) < parseInt(minimumPeople)) {
       errorsPresent = true;
-      this.props.setMaxPeopleError('The maximum number of people can\'t be less than the minimum!');
+      this.props.setMaximumPeopleError('The maximum number of people can\'t be less than the minimum!');
     };
 
     return errorsPresent;
@@ -121,10 +120,8 @@ class EventsForm extends React.Component {
 
   submitSlide3 = (place, location, address) => {
 
-    console.log('things', place, location, address);
-
     //check if there are any errors
-    if (this.setSlide3Errors(place)) return false;
+    if (this.setSlide3Errors(place, location, address)) return false;
 
     this.setState((prevState) => ({
       eventUnderConstruction: {
@@ -138,14 +135,30 @@ class EventsForm extends React.Component {
     this.props.setCurrentSlide("4");
     return true;
   };
-  setSlide3Errors = (place) => {
-    this.props.clearErrors();
+  setSlide3Errors = (place, location, address) => {
+    place = place.trim();
 
+    this.props.clearMapErrors();
     let errorsPresent = false;
 
-    if (!place || place.length < 1 || parseInt(place) === parseInt(place)) {
+    if (!place || parseInt(place) === parseInt(place)) {
+      this.props.setMapError('Please enter a name for this place.');
       errorsPresent = true;
-      this.props.setPlaceError('Please enter a place for your event.');
+    };
+
+    if (!location || !location.lat || !location.lng) {
+      this.props.setMapError('Error retrieving coordinates. Please reposition the map marker.');
+      errorsPresent = true;
+    };
+
+    if (location.lat - 1 === NaN || location.lng - 1 === NaN) {
+      this.props.setMapError('Type error. Please fire the system administrator.');
+      errorsPresent = true;
+    };
+
+    if (!address) {
+      this.props.setMapError('Please enter an address or choose a location on the map.');
+      errorsPresent = true;
     };
 
     return errorsPresent;
@@ -182,7 +195,6 @@ class EventsForm extends React.Component {
 
       this.props.socket.emit ('submitEvent', {user: this.props.user, event: this.state.eventUnderConstruction}, (err, res) => {
         if (err) {
-          console.log('_EventsForm.js submitEvent error:', err);
           this.props.setSubmitError({ submitError: 'An error occurred while creating the event.' });
           reject(null);
         } else {
@@ -192,45 +204,29 @@ class EventsForm extends React.Component {
       });
     });
 
-    console.log('submittedEvent', submittedEvent);
+    if(!submittedEvent) return;
 
-    if(!submittedEvent) return console.log('no submitted Event');
-
-    //also need to update the user: add the new event to user/attendingEvents...
-    // const addAttendingEventToUserResult = await this.createOrUpdateAttendingEvents(
-    //   this.props.user, submittedEvent);
-    //
-    // if(!addAttendingEventToUserResult) return console.log('addAttendingEventToUser call failed.');
-
-    //...and hostedEvents...
+    //Udpate the user's hostedEvents...
     const addHostedEventToUserResult = await this.createOrUpdateHostedEvents(
       this.props.user, submittedEvent);
 
-    if(!addHostedEventToUserResult) return console.log('addHostedEventToUser call failed.');
+    if(!addHostedEventToUserResult) return;
 
     //...and add the location to meetingPlaces, if it doesn't exist.
     const addMeetingPlaceToUserResult = await this.createOrUpdateMeetingPlace(
       addHostedEventToUserResult, submittedEvent);
 
-    if(!addMeetingPlaceToUserResult) return console.log('addMeetingPlaceToUser call failed.');
+    if(!addMeetingPlaceToUserResult) return;
 
     //all four calls went well, now redux and session state need to be updated.
-    console.log('submittedEvent', submittedEvent)
-    console.log('addMeetingPlaceToUserResult', addMeetingPlaceToUserResult);
 
     //set redux.myEvent and session state to eventUnderConstruction
     this.props.setMyEvent(submittedEvent);
     this.props.socket.emit('setMyEvent', submittedEvent);
 
-    // //add event to redux.events
-    // this.props.setEvents(this.props.events.concat(myEvent));
-    console.log('events:', this.props.events);
-    console.log('myEvent', submittedEvent);
-
     //add the user to redux as well
     this.props.setUser(addMeetingPlaceToUserResult);
-    this.props.socket.emit('setCurrentUser', addMeetingPlaceToUserResult,
-    () => {console.log('event created and user updated.')});
+    this.props.socket.emit('setCurrentUser', addMeetingPlaceToUserResult, () => {});
 
     this.props.setCurrentSlide("1");
     this.setState(() => ({ eventUnderConstruction: {} }));
@@ -239,9 +235,7 @@ class EventsForm extends React.Component {
     //now all associated users need to have the event updated as well.
     this.updateAssociatedUsers(submittedEvent);
 
-    this.props.socket.emit('updateHostedEventOnUser', { user: this.props.user, event: submittedEvent }, (err, res) => {
-      console.log('hosting user updated:', res);
-    });
+    this.props.socket.emit('updateHostedEventOnUser', { user: this.props.user, event: submittedEvent }, (err, res) => {});
   };
 
   updateAssociatedUsers = (event) => {
@@ -250,7 +244,6 @@ class EventsForm extends React.Component {
       if (JSON.stringify(attendee._id) !== JSON.stringify(this.props.user._id)) {
         this.props.socket.emit('readUser', attendee._id, (err, res) => {
           this.props.socket.emit('updateAttendingEventOnUser', {user: res, event}, (err2, res2) => {
-            console.log('associated user updated:', res2);
           });
         });
       };
@@ -283,7 +276,6 @@ class EventsForm extends React.Component {
 
     if (this.doesHostedEventExist(submittedEvent._id)) {
 
-      console.log('hosted event already exists.');
       addHostedEventToUserResult = addAttendingEventToUserResult;
 
     } else {
@@ -309,7 +301,6 @@ class EventsForm extends React.Component {
 
     if (this.doesMeetingPlaceExist(submittedEvent.place)) {
 
-      console.log('meeting place already exists.');
       addMeetingPlaceToUserResult = addHostedEventToUserResult;
 
     } else {
@@ -388,6 +379,7 @@ class EventsForm extends React.Component {
 
           submitSlide1 = {this.submitSlide1}
           closeModal = {this.closeModal}
+          currentSlide = {this.props.currentSlide}
         />}
 
         {(this.props.currentSlide === "2") && <Slide2
@@ -398,14 +390,13 @@ class EventsForm extends React.Component {
 
           submitSlide2 = {this.submitSlide2}
           closeModal = {this.closeModal}
+          currentSlide = {this.props.currentSlide}
         />}
 
         {(this.props.currentSlide === "3") && <Slide3
-          place = {this.props.myEvent.place}
-          placeError = {this.props.placeError}
-
           submitSlide3 = {this.submitSlide3}
           closeModal = {this.closeModal}
+          currentSlide = {this.props.currentSlide}
         />}
 
         {(this.props.currentSlide === "4") && <Slide4
@@ -415,6 +406,7 @@ class EventsForm extends React.Component {
 
           submitSlide4 = {this.submitSlide4}
           closeModal = {this.closeModal}
+          currentSlide = {this.props.currentSlide}
         />}
 
       </div>
@@ -460,6 +452,9 @@ const mapDispatchToProps = {
   setMyEvent,
 
   setUser,
+
+  setMapError,
+  clearMapErrors,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsForm);

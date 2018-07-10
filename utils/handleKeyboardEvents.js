@@ -13,7 +13,6 @@ const handleKeyboardEvents = function () {
   pairs.forEach((pair) => {
     if (e.keyCode === keyBindings[pair[0]]) {
       const callback = pair[1];
-      console.log('callback:', callback);
       callback();
     };
   });

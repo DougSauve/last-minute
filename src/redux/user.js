@@ -16,11 +16,23 @@ const setUserSubmitSuccess = ( submitSuccess ) => ({
   submitError: '',
 });
 
+const setDeleteProfileError = ( error ) => ({
+  type: 'SET_DELETE_PROFILE_ERROR',
+  error,
+});
+
+const clearDeleteProfileError = () => ({
+  type: 'CLEAR_DELETE_PROFILE_ERROR',
+});
+
+
+
 const userReducerDefaultState = {
   mode: undefined,
   user: '',
   userSubmitError: '',
   userSubmitSuccess: '',
+  deleteProfileError: '',
 };
 
 
@@ -41,6 +53,16 @@ const userReducer = (state = userReducerDefaultState, action) => {
       submitError: action.submitError,
       submitSuccess: action.submitSuccess,
     };
+    case 'SET_DELETE_PROFILE_ERROR':
+    return {
+      ...state,
+      deleteProfileError: action.error,
+    };
+    case 'CLEAR_DELETE_PROFILE_ERROR':
+    return {
+      ...state,
+      deleteProfileError: '',
+    };
     default:
     return state;
   }
@@ -51,4 +73,6 @@ export {
   setUser,
   setUserSubmitError,
   setUserSubmitSuccess,
+  setDeleteProfileError,
+  clearDeleteProfileError,
 };

@@ -1,74 +1,90 @@
 import React from 'react';
 
-const ChangeEmailModal = (props) => (
-  // props: {
-    // requestEmailReset = {this.requestEmailReset}
-    // closeModal = {this.closeModal}
-    // submitError = {this.props.submitError}
-  // }
-  <div className = "padding-1rem center">
-    <div className = "header--modal">
-      <div className = "size2">
-        Change your email address
-      </div>
-    </div>
+import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 
-    <div className = "modal-item-container">
-      <form className = "profile__change-email-modal__form profile-spacing">
+class ChangeEmailModal extends React.Component {
 
-        <div className = "property">
-          <div className = "key--no-length width15">Password:</div>
-          <div className = "value">
-            <input
-              className = "input"
-              type = "password"
-              name = "password"
-            />
-          </div>
-        </div>
+  componentDidMount() {
+    document.onkeydown = (e) => {
+      if (this.props.showChangeEmailModal) {
+        handleKeyboardEvents(['escape', this.props.closeModal], ['enter', this.props.requestEmailReset], e);
+      };
+    };
+  };
 
-        <div className = "property">
-          <div className = "key--no-length width15">New email address:</div>
-          <div className = "value">
-            <input
-              className = "input"
-              type = "email"
-              name = "newEmail"
-            />
-          </div>
-        </div>
+  render() {
+    return (
+     // props: {
+       // requestEmailReset = {this.requestEmailReset}
+       // closeModal = {this.closeModal}
+       // submitError = {this.props.submitError}
+     // }
+     <div className = "padding-1rem center">
+       <div className = "header--modal">
+         <div className = "size2">
+           Change your email address
+         </div>
+       </div>
 
-        <div className = "property">
-          <div className = "key--no-length width15">New email address again:</div>
-          <div className = "value">
-            <input
-              className = "input"
-              type = "email"
-              name = "newEmailCheck"
-            />
-          </div>
-        </div>
-      </form>
+       <div className = "modal-item-container">
+         <form className = "profile__change-email-modal__form profile-spacing">
 
-    </div>
+           <div className = "property">
+             <div className = "key--no-length width15">Password:</div>
+             <div className = "value">
+               <input
+                 className = "input"
+                 type = "password"
+                 name = "password"
+                 autoFocus
+               />
+             </div>
+           </div>
 
-    <span className = "error">{props.submitError}</span>
+           <div className = "property">
+             <div className = "key--no-length width15">New email address:</div>
+             <div className = "value">
+               <input
+                 className = "input"
+                 type = "email"
+                 name = "newEmail"
+               />
+             </div>
+           </div>
 
-    <div className = "button-container">
-      <div className = "button width15 background-green"
-        onClick = {props.requestEmailReset}
-      >
-        Submit
-      </div>
+           <div className = "property">
+             <div className = "key--no-length width15">New email address again:</div>
+             <div className = "value">
+               <input
+                 className = "input"
+                 type = "email"
+                 name = "newEmailCheck"
+               />
+             </div>
+           </div>
+         </form>
 
-      <div className = "button width15 background-none"
-        onClick = {props.closeModal}
-      >
-        Cancel
-      </div>
-    </div>
+       </div>
 
-  </div>
-);
+       <span className = "error">{this.props.submitError}</span>
+
+       <div className = "button-container">
+         <div className = "button width15 background-green"
+           onClick = {this.props.requestEmailReset}
+         >
+           Submit
+         </div>
+
+         <div className = "button width15 background-none"
+           onClick = {this.props.closeModal}
+         >
+           Cancel
+         </div>
+       </div>
+
+     </div>
+    );
+  };
+};
 
 export default ChangeEmailModal;

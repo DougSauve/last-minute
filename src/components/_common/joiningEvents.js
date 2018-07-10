@@ -11,7 +11,7 @@ class JoiningEvents {
   addAttendeeToEvent = (attendee, event) => {
     return new Promise((resolve, reject) => {
       this.socket.emit('addAttendeeToEvent', {attendee, event}, (err, res) => {
-        if (err) return this.setUserSubmitError(err);
+        if (err) resolve(this.setUserSubmitError(err));
         resolve(res);
       });
     });
@@ -20,13 +20,9 @@ class JoiningEvents {
   deleteAttendeeFromEvent = (attendee, event) => {
     return new Promise((resolve, reject) => {
 
-      console.log('in joiningEvents', this.socket);
-      console.log('attendee', attendee);
-      console.log('event', event);
-
       try {
         this.socket.emit('deleteAttendeeFromEvent', {attendee, event}, (err, res) => {
-          if (err) return this.setUserSubmitError(err);
+          if (err) resolve(this.setUserSubmitError(err));
           resolve(res);
         });
       }catch(e){
@@ -39,7 +35,7 @@ class JoiningEvents {
   addAttendingEventToUser = (user, event) => {
     return new Promise((resolve, reject) => {
       this.socket.emit('addAttendingEventToUser', {user, event}, (err, res) => {
-        if (err) return this.setUserSubmitError(err);
+        if (err) resolve(this.setUserSubmitError(err));
         resolve(res);
       });
     })
@@ -49,67 +45,46 @@ class JoiningEvents {
     return new Promise((resolve, reject) => {
       this.socket.emit('deleteAttendingEventFromUser', {user, event}, (err, res) => {
 
-        if (err) return this.setUserSubmitError(err);
+        if (err) resolve(this.setUserSubmitError(err));
         resolve(res);
       });
     });
   };
 
-  updateAssociatedUsers_join(addAttendeeToEventResult, user_id) {
+  updateAssociatedUsers(event, user_id) {
     return new Promise((resolve, reject) => {
 
       let attendeeWithFinalUpdates = 'none';
 
-      addAttendeeToEventResult.attendees.forEach((attendee, index) => {
+      event.attendees.forEach((attendee, index) => {
 
-        //get actual user from attendee thing
-        this.socket.emit('readUser', attendee._id, (err, res) => {
-          if (err) console.log(err);
+        if (JSON.stringify(attendee._id) !== JSON.stringify(event.createdBy._id)) {
+          //get actual user from attendee thing
+          this.socket.emit('readUser', attendee._id, (err, res) => {
+            if (err) reject('err in joiningEvents 64, readUser call', err);
 
-          this.socket.emit('updateAttendingEventOnUser', {user: res, event: addAttendeeToEventResult}, (err2, res2) => {
-            if (err2) console.log(err2);
+            this.socket.emit('updateAttendingEventOnUser', {user: res, event: event}, (err2, res2) => {
+              if (err2) reject('err in joiningEvents 67, updateAttendingEventOnUser call: attendee:', attendee, err2);
 
-            //update hostedEvent if this is the host
-            if (res2.hostedEvents[0] &&
-              JSON.stringify(res2.hostedEvents[0]._id) === JSON.stringify(addAttendeeToEventResult._id) ) {
-
-                this.socket.emit('updateHostedEventOnUser', {user: res2, event: addAttendeeToEventResult}, (err3, res3) => {
-                  if(err3) console.log(err3);
-                  console.log('updated host thing', res3);
-                });
-              };
-
-              //if this the current user, set the eventual resolve value to that user.
-              if (JSON.stringify(res2._id) === JSON.stringify(user_id)) attendeeWithFinalUpdates = res2;
+              if (JSON.stringify(res2._id) === JSON.stringify(user_id))  attendeeWithFinalUpdates = res2;
 
               //only return the resolve value when the forEach has gone through everything
-              if (index === addAttendeeToEventResult.attendees.length - 1) resolve(attendeeWithFinalUpdates);
+              if (index === event.attendees.length - 1) resolve(attendeeWithFinalUpdates);
             });
           });
-        });
-      });
-
-    };
-
-  updateAssociatedUsers_leave(deleteAttendeeFromEventResult) {
-    deleteAttendeeFromEventResult.attendees.forEach((attendee) => {
-
-      //get actual user from attendee thing
-      this.socket.emit('readUser', attendee._id, (err, res) => {
-        if (err) console.log(err);
-
-        this.socket.emit('updateAttendingEventOnUser', {user: res, event: deleteAttendeeFromEventResult}, (err2, res2) => {
-          if (err2) console.log(err2);
-
+        } else {
           //update hostedEvent if this is the host
-          if (res2.hostedEvents[0] &&
-            JSON.stringify(res2.hostedEvents[0]._id) === JSON.stringify(deleteAttendeeFromEventResult._id) ) {
-              this.socket.emit('updateHostedEventOnUser', {user: res2, event: deleteAttendeeFromEventResult}, (err3, res3) => {
-                if(err3) console.log(err3);
-                console.log('updated host thing', res3);
-              });
-            };
-        });
+          this.socket.emit('readUser', attendee._id, (errA, resA) => {
+            if (errA) reject(errA);
+
+            this.socket.emit('updateHostedEventOnUser', {user: resA, event: event}, (errB, resB) => {
+              if(errB) reject('err in joiningEvents 79, updateHostedEventOnUser call: attendee:', attendee, errB,);
+
+              //only return the resolve value when the forEach has gone through everything
+              if (index === event.attendees.length - 1) resolve(attendeeWithFinalUpdates);
+            });
+          });
+        };
       });
     });
   };
@@ -122,17 +97,16 @@ class JoiningEvents {
     const addAttendingEventToUserResult = await this.addAttendingEventToUser(user, event);
     if (addAttendingEventToUserResult === null) return;
 
-    const attendeeWithFinalUpdates = await this.updateAssociatedUsers_join(addAttendeeToEventResult, user._id);
+    const attendeeWithFinalUpdates = await this.updateAssociatedUsers(addAttendeeToEventResult, user._id);
 
     Promise.all([
       //reset user in session storage
-      this.socket.emit('setCurrentUser', attendeeWithFinalUpdates, () => console.log('session user updated.')),
+      this.socket.emit('setCurrentUser', attendeeWithFinalUpdates, () => {}),
       //reset user in redux
       this.setUser(attendeeWithFinalUpdates),
       //reset events from db to redux
       getAllEventsFromDB(this.socket, this.setEvents)
     ]).then(() => {
-      console.log('You have joined this event.');
       closeModal();
     });
   };
@@ -145,17 +119,16 @@ class JoiningEvents {
     const deleteEventFromUserResult = await this.deleteAttendingEventFromUser(user, event);
     if (deleteEventFromUserResult === null) return;
 
-    this.updateAssociatedUsers_leave(deleteAttendeeFromEventResult);
+    this.updateAssociatedUsers(deleteAttendeeFromEventResult, user._id);
 
     Promise.all([
       //reset user in session storage
-      this.socket.emit('setCurrentUser', deleteEventFromUserResult, () => console.log('session user updated.')),
+      this.socket.emit('setCurrentUser', deleteEventFromUserResult, () => {}),
       //reset user in redux
       this.setUser(deleteEventFromUserResult), //shouldn't this be empty?
       //reset events from db to redux
       getAllEventsFromDB(this.socket, this.setEvents)
     ]).then(() => {
-      console.log('You have left this event.');
       closeModal();
     });
   };

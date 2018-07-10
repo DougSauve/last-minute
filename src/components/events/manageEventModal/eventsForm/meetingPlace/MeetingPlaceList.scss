@@ -1,0 +1,24 @@
+.remove-meetingPlace-button {
+  position: absolute;
+  margin-left: 17.3rem;
+
+  height: 1.2rem;
+  width: 1.2rem;
+  line-height: 1.15rem;
+  padding: .1rem;
+
+  text-align: center;
+  font-size: 1rem;
+
+  color: grey;
+  font-weight: bold;
+
+  border: 1px solid grey;
+  border-radius: 1rem;
+};
+.remove-meetingPlace-button:hover {
+  cursor: pointer;
+  background: red;
+  color: white;
+  border: none;
+};

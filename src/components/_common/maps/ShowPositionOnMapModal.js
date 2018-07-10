@@ -4,41 +4,58 @@ import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
 
 import Modal from '../modal/_Modal';
 
-const ShowPositionOnMapModal = (props) => (
-  // props: {
-  //   event = {props.event}
-  //   close (function)
-  // };
+import {handleKeyboardEvents} from '../../../../utils/handleKeyboardEvents';
 
-  <Modal>
-    <div className = "center">
+class ShowPositionOnMapModal extends React.Component {
 
-      <div className = "map-note">
-        {props.event.address}
-      </div>
+  componentDidMount() {
+    //bind keyboard shortcuts
+    document.onkeydown = handleKeyboardEvents.bind(this, ['escape', this.props.close], ['enter', this.props.close]);
+  };
 
-      <div className = "modal-item-container map-container--show-modal">
-        {/* map */}
-        <Map
-          google = {props.google}
-          initialCenter = {props.event.location}
-          zoom = {15}
-        >
-          <Marker
-            position = {props.event.location}
-          />
-        </Map>
-      </div>
+  componentWillUnMount() {
+    document.onkeydown = handleKeyboardEvents.bind(this, ['escape', () => {}], ['enter', () => {}]);
+  };
 
-      <div
-        className = "button background-none width15"
-        onClick = {props.close}
+  render() {
+    return (
+     // props: {
+     //   event = {props.event}
+     //   close (function)
+     // };
+
+     <Modal
+       close = {this.props.close}
       >
-        Close
-      </div>
+       <div className = "center">
+         <div className = "map-note">
+           {this.props.event.address}
+         </div>
 
-    </div>
-  </Modal>
-);
+         <div className = "modal-item-container map-container--show-modal">
+           {/* map */}
+           <Map
+             google = {this.props.google}
+             initialCenter = {this.props.event.location}
+             zoom = {15}
+           >
+             <Marker
+               position = {this.props.event.location}
+             />
+           </Map>
+         </div>
+
+         <div
+           className = "button background-none width15"
+           onClick = {this.props.close}
+         >
+           Close
+         </div>
+
+       </div>
+     </Modal>
+   );
+  };
+};
 
 export default GoogleApiWrapper({ apiKey: 'AIzaSyDA9D9WAez1LHMwXWEiOsPF_G5Iwgk6RQs' })(ShowPositionOnMapModal);

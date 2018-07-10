@@ -44,7 +44,6 @@ class Events extends React.Component {
   };
 
   componentDidUpdate() {
-    console.log('styling');
     this.setStyling();
   }
 
@@ -63,40 +62,27 @@ class Events extends React.Component {
 
   deleteEvent = (event) => {
     this.props.socket.emit ('deleteEvent', event._id, (err, res) => {
-      console.log('res1', res);
       if (err) {
         this.props.setSubmitError({ submitError: err });
       } else {
         const eventBeingDeleted = res;
         //remove event from user's attendingEvents...
         this.props.socket.emit('deleteAttendingEventFromUser', {user: this.props.user, event: eventBeingDeleted}, (err2, res2) => {
-          console.log('res2', res2);
-          if (err2) {
-            console.log('failed at deleteAttendingEventFromUser:', err2);
-          } else {
+          if (!err2){
             // ...and hostedEvents
             this.props.socket.emit('deleteHostedEventFromUser', {user: res2, event: eventBeingDeleted}, (err3, res3) => {
-              console.log('res3', res3);
               const updatedUser = res3;
-              if (err3) {
-                console.log('failed at deleteHostedEventFromUser:', err3);
-              } else {
+              if (!err3) {
                 //reset user in redux
                 this.props.setUser(updatedUser);
 
                 //reset user and myEvent in persisting state
-                this.props.socket.emit('setCurrentUser', updatedUser, () => {
-                  console.log('persisting user updated.');
-                });
-                this.props.socket.emit('setMyEvent', {}, () => {
-                  console.log('persisting myEvent updated.');
-                });
+                this.props.socket.emit('setCurrentUser', updatedUser, () => {});
+                this.props.socket.emit('setMyEvent', {}, () => {});
 
                 //set myEvent to undefined
                 this.props.setMyEvent({});
-
                 this.props.setSubmitSuccess({ submitSuccess: `${eventBeingDeleted.title} has been removed.` });
-                console.log('hosted and attending events successfully removed from user.');
               };
             });
           };
@@ -182,6 +168,7 @@ class Events extends React.Component {
           (this.props.mode) &&
           <ManageEventModal
             mode = {this.props.mode}
+            close = {this.props.setMode.bind(this, undefined)}
           />
         }
 

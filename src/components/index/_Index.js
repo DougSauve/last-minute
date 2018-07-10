@@ -50,13 +50,8 @@ class Index extends React.Component {
     .then(() => this.setState(() => ({ stateLoaded: true })));
 
     this.props.socket.emit('checkFirstTimeUser', (res) => {
-      console.log('check res:', res);
       if (res === true) this.setState(() => ({ showOrientationModal: true }));
     });
-  };
-
-  componentDidMount() {
-    document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.logIn], ['escape', this.closeModal]);
   };
 
   showDetailsModal = async (event) => {
@@ -82,34 +77,23 @@ class Index extends React.Component {
 
   deleteEvent = () => {
     this.props.socket.emit ('deleteEvent', this.state.detailsEvent._id, (err, res) => {
-      console.log('res1', res);
       if (err) {
         this.props.setSubmitError({ submitError: err });
       } else {
         const eventBeingDeleted = res;
         //remove event from user's attendingEvents...
         this.props.socket.emit('deleteAttendingEventFromUser', {user: this.props.user, event: eventBeingDeleted}, (err2, res2) => {
-          console.log('res2', res2);
-          if (err2) {
-            console.log('failed at deleteAttendingEventFromUser:', err2);
-          } else {
+          if (!err2) {
             // ...and hostedEvents
             this.props.socket.emit('deleteHostedEventFromUser', {user: res2, event: eventBeingDeleted}, (err3, res3) => {
-              console.log('res3', res3);
               const updatedUser = res3;
-              if (err3) {
-                console.log('failed at deleteHostedEventFromUser:', err3);
-              } else {
+              if (!err3) {
                 //reset user in redux
                 this.props.setUser(updatedUser);
 
                 //reset user and myEvent in persisting state
-                this.props.socket.emit('setCurrentUser', updatedUser, () => {
-                  console.log('persisting user updated.');
-                });
-                this.props.socket.emit('setMyEvent', {}, () => {
-                  console.log('persisting myEvent updated.');
-                });
+                this.props.socket.emit('setCurrentUser', updatedUser, () => {});
+                this.props.socket.emit('setMyEvent', {}, () => {});
 
                 //set myEvent to undefined
                 this.props.setMyEvent({});
@@ -120,7 +104,6 @@ class Index extends React.Component {
                 //close the modal
                 this.closeModal();
                 this.props.setSubmitSuccess({ submitSuccess: `${eventBeingDeleted.title} has been removed.` });
-                console.log('hosted and attending events successfully removed from user.');
               };
             });
           };
@@ -141,9 +124,7 @@ class Index extends React.Component {
 
   switchHomeLocation = (homeLocation) => {
     this.props.socket.emit('setCurrentHomeLocation', {user: this.props.user, homeLocation }, (err, res) => {
-      if (err) {
-        console.log(err);
-      } else {
+      if (!err) {
         this.props.socket.emit('setCurrentUser', res, () => {
           this.props.setUser(res);
         });
@@ -170,9 +151,7 @@ class Index extends React.Component {
 
     //set them in the DB
     this.props.socket.emit('setSearchPreferences', {user: this.props.user, distance, units}, (err, res) => {
-      if (err) {
-        console.log(err);
-      } else {
+      if (!err) {
         this.props.socket.emit('setCurrentUser', res,  () => {
           this.props.setUser(res);
         });
@@ -190,6 +169,10 @@ class Index extends React.Component {
     };
 
     return errorsPresent;
+  };
+
+  areModalsOpen = () => {
+    return (this.state.showDetailsModal || this.state.showOrientationModal);
   };
 
   render() {
@@ -211,6 +194,7 @@ class Index extends React.Component {
 
         {(this.state.stateLoaded) &&
           <DistanceFilter
+            areModalsOpen = {this.areModalsOpen}
             distance = {this.props.user.searchPreferences.distance}
             units = {this.props.user.searchPreferences.units}
             setSearchPreferences = {this.setSearchPreferences}
@@ -260,6 +244,8 @@ class Index extends React.Component {
               showNoInternetAlert = {this.showNoInternetAlert}
               userFriendlyAgeRange = {makeAgeRangeUserFriendly(this.state.detailsEvent.createdBy.ageRange)}
               makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
+
+              showDetailsModal = {this.state.showDetailsModal}
             />
           </Modal>
         }
@@ -273,6 +259,7 @@ class Index extends React.Component {
                   this.props.socket.emit('unsetFirstTimeUser');
                 }
               }
+              showOrientationModal = {this.state.showOrientationModal}
             />
           </Modal>
         }

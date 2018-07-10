@@ -1,4 +1,5 @@
 import React from 'react';
+import './MeetingPlaceList.scss';
 
 const MeetingPlaceList = (props) => (
   // props: {
@@ -6,25 +7,41 @@ const MeetingPlaceList = (props) => (
   //   submitSlide3 (function)
   // }
 
-  <div className = "meeting-place-list center">
-    Previous meeting places:
+  <div>
+    {props.meetingPlacesList[0] &&
 
-    {
-      props.meetingPlacesList.map((meetingPlace) => {
-        return (
-          <div
-            key = {Math.random()}
-            className = "button background-green width15"
-            onClick = {props.submitSlide3.bind(this, meetingPlace.name, meetingPlace.location, meetingPlace.address)}
+    <div className = "meeting-place-list center">
+      Previous meeting places:
+
+      {
+        props.meetingPlacesList.map((meetingPlace, index) => {
+          return (
+            <div
+              className = "row--align-left center-vertically"
+              key = {index}
             >
-            {meetingPlace.name}
-          </div>
-        );
-      })
+              <div
+                className = "button background-green width15"
+                onClick = {props.submitSlide3.bind(this, meetingPlace.name, meetingPlace.location, meetingPlace.address)}
+              >
+                {meetingPlace.name}
+              </div>
 
-    }
-    or
-  </div>
+              <div
+                className = "unsquishable remove-meetingPlace-button"
+                onClick = {props.deleteMeetingPlace.bind(this, meetingPlace)}
+              >
+                x
+              </div>
+            </div>
+          );
+        })
+
+      }
+      or
+    </div>
+  }
+</div>
 );
 
 export default MeetingPlaceList;

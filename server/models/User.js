@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and statics
   name: {
@@ -26,6 +27,10 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
     },
   },
   ageRange: {
+    type: String,
+    required: true,
+  },
+  ageRangeCanChangeAt: {
     type: String,
     required: true,
   },
@@ -323,6 +328,21 @@ const UserSchema = new mongoose.Schema({ //use a Schema if you need methods and 
       required: true,
     },
   }]
+});
+
+UserSchema.pre('save', function (next) {
+  const user = this; //bind this to the user
+
+  if (user.isModified('password')) { //Only hash and save a password if it is new. ...duh? Not quite sure how this works.
+    bcrypt.genSalt(12, (err, salt) => {
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        user.password = hash;
+        next();
+      });
+    })
+  } else {
+    next();
+  };
 });
 
 const User = mongoose.model('User', UserSchema);

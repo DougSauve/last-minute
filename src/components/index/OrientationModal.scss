@@ -7,13 +7,18 @@
 };
 
 .orientation__item {
+  margin: .6rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
   max-width: 33.3%;
   padding: 1rem;
 
   border: 1px solid grey;
   border-radius: .6rem;
 
-  margin: .6rem;
 
   background: white;
 };

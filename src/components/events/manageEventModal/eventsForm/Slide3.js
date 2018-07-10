@@ -24,6 +24,7 @@ const Slide3 = (props) => (
     <MeetingPlace
       submitSlide3 = {props.submitSlide3}
       closeModal = {props.closeModal}
+      currentSlide = {props.currentSlide}
      />
   </div>
 );

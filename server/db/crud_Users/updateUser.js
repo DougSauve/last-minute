@@ -1,10 +1,9 @@
 const mongoose = (process.env.NODE_ENV === 'test') ? require('../mongoose_testing') : require('../mongoose');
-const moment = require('moment');
 
 const { User } = require('../../models/User.js');
 
 // returns Promise: {err, res}
-const updateUser = (user) => {
+const updateUser = async (user) => {
 
   const userWithChanges = {
     name: user.name,
@@ -13,7 +12,8 @@ const updateUser = (user) => {
     ageRange: user.ageRange,
     gender: user.gender,
 
-    accountCreatedAt: user.accountCreateAt,
+    ageRangeCanChangeAt: user.ageRangeCanChangeAt,
+    accountCreatedAt: user.accountCreatedAt,
     meetingPlaces: user.meetingPlaces,
     flags: user.flags,
     tokens: user.tokens,

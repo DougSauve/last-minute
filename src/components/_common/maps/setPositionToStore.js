@@ -12,7 +12,6 @@ const setPositionToStore = async () => {
 
         const lat = await position.coords.latitude;
         const lng = await position.coords.longitude;
-        console.log(lat, lng);
 
         //set coordinates to redux store
         store.dispatch(setCurrentCoordinates({lat, lng}));

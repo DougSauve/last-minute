@@ -26,8 +26,6 @@ const getCoords = async (address) => {
   let lng;
   let err;
 
-  console.log('provided address:', address);
-
   await Geocode.fromAddress(address).then(
     (response) => {
       lat  = response.results[0].geometry.location.lat;

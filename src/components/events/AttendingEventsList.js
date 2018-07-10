@@ -116,7 +116,7 @@ const AttendingEventsList = (props) => (
             <div className = "property center">
               <div
                 className = "button background-none width15"
-                onClick = {props.leaveEvent.bind(this, props.user, event, () => {console.log('hi mom')} )}
+                onClick = {props.leaveEvent.bind(this, props.user, event, () => {} )}
               >
                 Leave this event
               </div>

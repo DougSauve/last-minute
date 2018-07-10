@@ -20,14 +20,7 @@ const UserProfileForm = (props) => (
           <div className = "short-value">{props.user.name}</div>
           <div className = "short-value">
             <div className = "link"
-              onClick = {() => {
-                //check for internet access
-                if (window.navigator.onLine) {
-                  props.setShowChangePasswordModal();
-                }else{
-                  props.showNoInternetAlert();
-                }
-              }}
+              onClick = {props.setShowChangePasswordModal}
             >
               Change password
             </div>
@@ -39,14 +32,7 @@ const UserProfileForm = (props) => (
           <div className = "short-value">{props.user.email}</div>
           <div className = "short-value">
             <div className = "link"
-              onClick = {() => {
-                //check for internet access
-                if (window.navigator.onLine) {
-                  props.setShowChangeEmailModal();
-                }else{
-                  props.showNoInternetAlert();
-                }
-              }}
+              onClick = {props.setShowChangeEmailModal}
             >
               Change email address
             </div>
@@ -58,14 +44,7 @@ const UserProfileForm = (props) => (
           <div className = "short-value">{props.userFriendlyAgeRange}</div>
           <div className = "short-value">
             <div className = "link"
-              onClick = {() => {
-                //check for internet access
-                if (window.navigator.onLine) {
-                  props.setShowChangeAgeRangeModal();
-                }else{
-                  props.showNoInternetAlert();
-                }
-              }}
+              onClick = {props.setShowChangeAgeRangeModal}
             >
               Change age range
             </div>
