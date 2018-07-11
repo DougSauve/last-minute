@@ -1,3 +1,23 @@
+@import '../../base-styles/Hub';
+
+.landing__sign-up-form {
+  flex-direction: column;
+
+  select {
+    width: 90vw;
+  }
+};
+
+.scrollable {
+  max-height: 90vh;
+  overflow: auto;
+
+};
+
+.scrollable > * {
+  flex-shrink: 0;
+};
+
 .note--sign-up-location-message {
   margin-left: -5rem;
 
@@ -6,4 +26,46 @@
   font-size: 1rem;
   color: grey;
   font-style: italic;
+};
+
+.responsive-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90vw;
+};
+
+.landing__first-row {
+  display: flex;
+  flex-direction: column;
+  height: 650px;
+
+};
+.landing__first-row > div {
+  justify-content: space-evenly;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+
+  //desktop
+  @media (min-height: $ds) {
+    .landing__sign-up-form {
+      select {
+        width: 17rem;
+      }
+    };
+
+    .landing__first-row {
+      flex-direction: row;
+      height: auto;
+    };
+
+    .responsive-layout {
+      flex-direction: row;
+    };
+
+  };
 };

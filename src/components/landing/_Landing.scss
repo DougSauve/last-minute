@@ -13,10 +13,11 @@
   background: $back1;
 };
 .landing__left-box{
-  width: 60vw;
+  display: none;
+
+  width: 100vw;
   height: 100vh;
 
-  display: flex;
   justify-content: center;
   align-items: center;
 
@@ -33,7 +34,7 @@
   };
 };
 .landing__right-box{
-  width: 40vw;
+  width: 100vw;
   height: 100vh;
 
   display: flex;
@@ -58,4 +59,23 @@
 
     //Login Form
   }
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+  .landing__right-box{
+    flex-direction: row;
+  };
+
+  //desktop
+  @media (min-height: $ds) {
+    .landing__left-box{
+      display: flex;
+    };
+    .landing__right-box{
+      flex-direction: column;
+      width: 40vw;
+    };
+  };
 };

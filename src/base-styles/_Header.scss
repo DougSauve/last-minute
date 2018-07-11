@@ -23,11 +23,24 @@
 
 .size2 {
   color: $accent1;
-  font-size: 2rem;
+  font-size: 1.3rem;
+  max-width: 90%;
 };
 .size2--reverse-colors {
   background: $accent1;
 
   color: white;
   font-size: 2rem;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+  //desktop
+  @media (min-height: $ds) {
+    .size2 {
+      font-size: 2rem;
+      max-width: 100%;
+    };
+  };
 };

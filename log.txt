@@ -271,5 +271,6 @@ Monday 9th (9:30)
 2. Add removeMeetingPlaces, small error fixes, remove console.logs, check all error/success messages, fix delete events, fix delete profile (3:00) V
 learning: use react-modal and form action. This has probably cost me 2 weeks. There must be secure ways to implement form action.
 
-Tuesday 10th 4:45
-Begin responsive styling - /landing
+Tuesday 10th 10
+1. Responsive styling - /landing + modal (2:00) V
+2.

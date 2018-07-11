@@ -13,7 +13,7 @@ const LoginForm = (props) => (
       {props.submitError}
     </span>
 
-    <div>
+    <div className = "center">
       <span className = "landing__text-style">Email address:</span>
       <input
         className = "input width15"
@@ -23,7 +23,7 @@ const LoginForm = (props) => (
       />
     </div>
 
-    <div>
+    <div className = "center">
       <span className = "landing__text-style">Password:</span>
       <input
         className = "input width15"

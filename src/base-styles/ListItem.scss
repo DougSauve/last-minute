@@ -1,9 +1,21 @@
 .property {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   margin-bottom: .5rem;
 };
+
+//mobile-landscape
+@media (min-width: $ds) {
+  .property {
+    flex-direction: row;
+  };
+
+  //desktop
+  @media (min-height: $ds) {
+  };
+};
+
 .title {
   color: $text1;
   font-weight: bold;

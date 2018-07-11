@@ -35,18 +35,20 @@
   border-radius: .6rem;
 };
 .modal-item-container {
-  margin: 1rem;
+  margin: .3rem;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 2rem 1rem 2rem;
+  padding: .6rem .6rem 0 .6rem;
 
   background: white;
 
   border: 1px solid $accent1;
   border-radius: .6rem;
 };
+
+
 .quarter-width-box {
   position: absolute;
   top: 10rem;
@@ -70,4 +72,15 @@
 };
 .modal-padding {
   padding: 5rem;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+  //desktop
+  @media (min-height: $ds) {
+    .modal-item-container {
+      margin: 1rem;
+      padding: 2rem 2rem 1rem 2rem;
+    };
+  };
 };

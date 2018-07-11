@@ -26,9 +26,6 @@ import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 
 import './_Landing.scss';
 
-// this page greets users and provides a list of current local events.
-// it also show a button for 'sign up' and one for 'log in'. These drop down into forms. (maybe - this might be pretty fancy animation.)
-
 class Landing extends React.Component {
 
   state = {
@@ -38,7 +35,6 @@ class Landing extends React.Component {
   componentDidMount() {
     document.onkeydown = handleKeyboardEvents.bind(this, ['enter', this.logIn]);
   };
-
   componentDidUpdate() {
     if (!this.state.showSignUpModal) {
       document.onkeydown = (e) => {

@@ -99,9 +99,14 @@ class SetPositionOnMapModal extends React.Component {
 
   showAddressOnMap = async () => {
     const coords = await getCoords(this.props.address);
-    this.currentMarker.marker.setPosition({ lat: coords.lat, lng: coords.lng });
-    this.currentMap.map.setCenter({ lat: coords.lat, lng: coords.lng });
-    this.setState(() => ({ zoom: 15 }));
+
+    Promise.all([
+      this.currentMarker.marker.setPosition({ lat: coords.lat, lng: coords.lng }),
+      this.currentMap.map.setCenter({ lat: coords.lat, lng: coords.lng }),
+      this.setState(() => ({ zoom: 15 }))
+    ]).then(() => {
+      this.onPositionChanged();
+    });
   };
 
   render() {
