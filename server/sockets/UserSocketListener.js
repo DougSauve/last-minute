@@ -41,6 +41,7 @@ const UserSocketListener = (socket) => {
   });
 
   socket.on('validateUser', async (creds, acknowledge) => {
+    console.log('hello?');
     const {err, user} = await db.validateUser(creds);
     acknowledge(err, user);
   });

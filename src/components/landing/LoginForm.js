@@ -21,32 +21,31 @@ const LoginForm = (props) => (
         name = "email"
         autoFocus
       />
-    </div>
 
-    <div className = "center">
       <span className = "landing__text-style">Password:</span>
       <input
         className = "input width15"
         type = "password"
         name = "password"
       />
+
+      {/* Log in Button */}
+      <div
+        className = "button background-blue width15"
+        onClick = {props.logIn}
+      >
+        Log in
+      </div>
+
+      {/* Sign up Button */}
+      <div
+        className = "button background-green width15"
+        onClick = {props.setShowSignUpModal}
+      >
+        Sign up
+      </div>
     </div>
 
-    {/* Log in Button */}
-    <div
-      className = "button background-blue width15"
-      onClick = {props.logIn}
-    >
-      Log in
-    </div>
-
-    {/* Sign up Button */}
-    <div
-      className = "button background-green width15"
-      onClick = {props.setShowSignUpModal}
-    >
-      Sign up
-    </div>
 
   </form>
 );

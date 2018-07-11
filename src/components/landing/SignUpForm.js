@@ -96,7 +96,7 @@ class SignUpForm extends React.Component {
 
   render() {
     return (
-      <div className = "modal-item-container scrollable">
+      <div className = "modal-item-container scrollable max-height90">
 
         <div className = "header-modal">
           <div className = "size2 responsive-layout">

@@ -8,6 +8,7 @@ import { getCoords } from './Geocode';
 import { setPositionToStore, updateStoreLocation } from './setPositionToStore';
 
 import {handleKeyboardEvents} from '../../../../utils/handleKeyboardEvents';
+import getDeviceType from '../../../../utils/getDeviceType';
 
 class SetPositionOnMapModal extends React.Component {
   // props: {
@@ -115,23 +116,20 @@ class SetPositionOnMapModal extends React.Component {
         {(this.state.readyForMap) &&
 
         <Modal
+          style = {{
+            top: '2vh',
+            bottom: '2vh',
+          }}
           close = {this.props.cancel}
-          >
-          <div className = "center">
-            <div className = "map-note">
-              {this.props.mapNote}
-            </div>
-          </div>
-
-          <div className = "center--row">
-
-            <div className = "modal-item-container map-container flex-fill-space">
-              {/* map */}
-              <Map
-                google = {this.props.google}
-                initialCenter = {this.state.initialCenter}
-                zoom = {this.state.zoom}
-                ref = {(Map) => this.currentMap = Map}
+        >
+          {(getDeviceType() === 'mobile') &&
+          <div className = "mobile-map-container show-pl">
+            {/* map for mobile*/}
+            <Map
+              google = {this.props.google}
+              initialCenter = {this.state.initialCenter}
+              zoom = {this.state.zoom}
+              ref = {(Map) => this.currentMap = Map}
               >
                 <Marker
                   position = {this.state.initialCenter}
@@ -141,72 +139,102 @@ class SetPositionOnMapModal extends React.Component {
                 />
               </Map>
             </div>
+          }
 
-            <form className = "modal-item-container map-height center flex-fill-space">
-
-                <div className = "value--no-width">
-                  Search for an address:
-                </div>
-
-                <div className = "value--no-width">
-                  <input
-                    className = "input"
-                    type = "text"
-                    name = "address"
-                    value = {this.props.address}
-                    onChange = {this.changeAddress}
-                    autoFocus
-                  />
-                </div>
-
-                <div className = "value--no-width">
-                  <div
-                    className = "button width15 background-blue"
-                    onClick = {this.showAddressOnMap}
-                  >
-                    Find on map
-                  </div>
-                </div>
-
-                <div className = "flex-spacer" />
-
-                <div className = "center">
-                </div>
-
-                <div className = "value--no-width">
-                  Name this place:
-                </div>
-
-                <input
-                  className = "input width15"
-                  type = "text"
-                  name = "place"
-                  value = {this.props.place}
-                  onChange = {this.changePlace}
-                />
-
-                <div className = "error width15 rem-top-bottom">{this.props.mapError}</div>
-
-                <div className = "value--no-width">
-                  <div
-                    className = "button width15 background-green"
-                    onClick = {this.submitEventPlace}
-                  >
-                    Use this place
-                  </div>
-                </div>
-              {/* </div> */}
-
-              <div className = "value--no-width">
-                <div
-                  className = "button width15 background-none"
-                  onClick = {this.props.cancel}
-                >
-                  Cancel
-                </div>
+          <div className = "map-info-box-pl scrollable-pl">
+            <div className = "center">
+              <div className = "map-note">
+                {this.props.mapNote}
               </div>
+            </div>
 
-            </form>
+            <div className = "center--row">
+
+              {(getDeviceType() === 'desktop') &&
+              <div className = "modal-item-container map-container flex-fill-space show-d">
+                {/* map for desktop */}
+                <Map
+                  google = {this.props.google}
+                  initialCenter = {this.state.initialCenter}
+                  zoom = {this.state.zoom}
+                  ref = {(Map) => this.currentMap = Map}
+                >
+                  <Marker
+                    position = {this.state.initialCenter}
+                    draggable = {true}
+                    onDragend = {this.onPositionChanged}
+                    ref = {(Marker) => this.currentMarker = Marker}
+                  />
+                </Map>
+              </div>
+            }
+
+              <form className = "modal-item-container map-height-d center flex-fill-space">
+
+                  <div className = "value--no-width">
+                    Search for an address:
+                  </div>
+
+                  <div className = "value--no-width">
+                    <input
+                      className = "input"
+                      type = "text"
+                      name = "address"
+                      value = {this.props.address}
+                      onChange = {this.changeAddress}
+                      autoFocus
+                    />
+                  </div>
+
+                  <div className = "value--no-width">
+                    <div
+                      className = "button width15 background-blue"
+                      onClick = {this.showAddressOnMap}
+                    >
+                      Find on map
+                    </div>
+                  </div>
+
+                  <div className = "flex-spacer" />
+
+                  <div className = "center">
+                  </div>
+
+                  <div className = "value--no-width">
+                    Name this place:
+                  </div>
+
+                  <input
+                    className = "input width15"
+                    type = "text"
+                    name = "place"
+                    value = {this.props.place}
+                    onChange = {this.changePlace}
+                  />
+
+                  <div className = "error width15 rem-top-bottom">{this.props.mapError}</div>
+
+                  <div className = "value--no-width">
+                    <div
+                      className = "button width15 background-green"
+                      onClick = {this.submitEventPlace}
+                    >
+                      Use this place
+                    </div>
+                  </div>
+                {/* </div> */}
+
+                <div className = "value--no-width">
+                  <div
+                    className = "button width15 background-none"
+                    onClick = {this.props.cancel}
+                  >
+                    Cancel
+                  </div>
+                </div>
+
+              </form>
+            </div>
           </div>
         </Modal>
         }

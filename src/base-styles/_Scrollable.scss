@@ -1,0 +1,40 @@
+.scrollable {
+  overflow: auto;
+  max-height: 90vh;
+};
+.scrollable > * {
+  flex-shrink: 0;
+};
+
+.scrollable-pl {
+  overflow: auto;
+};
+.scrollable-pl > * {
+  flex-shrink: 0;
+};
+.scrollable-d {
+  overflow: visible;
+};
+.scrollable-d > * {
+  flex-shrink: 1;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+  //desktop
+  @media (min-height: $ds) {
+    .scrollable-pl {
+      overflow: visible;
+    };
+    .scrollable-pl > * {
+      flex-shrink: 1;
+    };
+    .scrollable-d {
+      overflow: auto;
+    };
+    .scrollable-d > * {
+      flex-shrink: 0;
+    };
+  };
+};

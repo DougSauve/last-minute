@@ -1,0 +1,20 @@
+.show-d {
+  display: none !important;
+};
+.show-pl {
+  display: flex !important;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+  //desktop
+  @media (min-height: $ds) {
+    .show-d{
+      display: flex !important;
+    };
+    .show-pl{
+      display: none !important;
+    };
+  };
+};

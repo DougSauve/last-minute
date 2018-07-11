@@ -8,16 +8,6 @@
   }
 };
 
-.scrollable {
-  max-height: 90vh;
-  overflow: auto;
-
-};
-
-.scrollable > * {
-  flex-shrink: 0;
-};
-
 .note--sign-up-location-message {
   margin-left: -5rem;
 
