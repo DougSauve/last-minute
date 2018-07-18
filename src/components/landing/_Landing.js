@@ -70,7 +70,12 @@ class Landing extends React.Component {
     };
 
 
-    if (this.checkForSignUpErrors(newUser, homeLocation)) return;
+    if (this.checkForSignUpErrors(newUser, homeLocation)) {
+      this.props.setSubmitError('Please correct the errors below.');
+
+      document.getElementsByClassName('scrollable')[0].scrollTop = 0;
+      return;
+    };
 
     //write user to db
     this.props.socket.emit('createUser', newUser, (err, res) => {
@@ -208,7 +213,7 @@ class Landing extends React.Component {
         <div className = "landing__right-box">
           <div className = "landing__title-box">
             <div className = "landing__title-box__title">LastMinute</div>
-            <div className = "landing__title-box__phrase">Forgot to make plans? No problem.</div>
+            <div className = "landing__title-box__phrase">No plans? No problem.</div>
           </div>
 
           <div className = "landing__entry-box">
@@ -262,6 +267,7 @@ const mapStateToProps = (reduxStore) => ({
   lng: reduxStore.currentLocationReducer.lng,
   address: reduxStore.currentLocationReducer.address,
 
+  events: reduxStore.eventsReducer.events,
 });
 
 const mapDispatchToProps = {

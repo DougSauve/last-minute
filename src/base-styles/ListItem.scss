@@ -9,6 +9,7 @@
 @media (min-width: $ds) {
   .property {
     flex-direction: row;
+    flex-wrap: wrap;
   };
 
   //desktop

@@ -1,15 +1,52 @@
+@import '../../../base-styles/Settings';
+
 $map-width: 60vw;
 $map-height: 60vh;
 
-.map-container--show-modal {
-  margin: 1rem;
+$map-width-mobile: 90vw;
+$map-height-p: 80vh;
+$map-height-l: 70vh;
 
-  width: $map-width;
-  height: $map-height;
+.map-container--show-modal {
+  margin: .3rem;
+
+  width: $map-width-mobile;
+  height: $map-height-p;
 
   div {
-    max-width: $map-width;
-    max-height: $map-height;
+    max-width: $map-width-mobile;
+    max-height: $map-height-p;
     margin-bottom: 1rem;
+  };
+};
+
+
+@media (min-width: $ds) {
+
+  .map-container--show-modal {
+    height: $map-height-l;
+
+    div {
+      max-height: $map-height-l;
+    };
+  };
+
+  .showMap__button {
+    margin-top: .3rem;
+  };
+
+  //desktop
+  @media (min-height: $ds) {
+    .map-container--show-modal {
+      margin: 1rem;
+
+      width: $map-width;
+      height: $map-height;
+
+      div {
+        max-width: $map-width;
+        max-height: $map-height;
+      };
+    };
   };
 };

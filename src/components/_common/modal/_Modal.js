@@ -4,19 +4,40 @@ import './_Modal.scss';
 
 class Modal extends React.Component {
 
-  scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  state = {
+    loaded: false,
+    styling: {},
+  }
 
   componentDidMount() {
-    window.addEventListener('scroll', this.disableScroll);
-  };
 
-  disableScroll = () => {
-    document.documentElement.scrollTop = this.scrollTop;
-    document.body.scrollTop = this.scrollTop;
+    let styling = {};
+
+    if (this.props.deviceType === 'mobile') {
+      if (this.props.keepSize) {
+          styling = {
+            top: '10vh',
+            maxWidth: '96vw',
+          };
+      } else {
+        styling = {
+          top: '2vh',
+          bottom: '2vh',
+          maxWidth: '96vw',
+        };
+      };
+    };
+
+    this.setState(() => ({
+      styling,
+      loaded: true,
+    }));
+
+    document.body.style.overflow = "hidden";
   };
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.disableScroll);
+    document.body.style.overflow = "auto";
   };
 
   render() {
@@ -24,18 +45,25 @@ class Modal extends React.Component {
       // props: {
       //   close: (function)
       //   children (children)
+      //   style (styles)
+      //   classNames {classes to add}
       // };
-    <div className = "modal-container">
+    <div
+      id = "modal-container"
+      className = "modal-container"
+    >
       <div className = "backdrop"
         onClick = {this.props.close}
       />
 
-      <div
-        className = "modal"
-        style = {this.props.style}
-      >
-        {this.props.children}
-      </div>
+      {(this.state.loaded) &&
+        <div
+          className = {(this.props.classNames) ? this.props.classNames + " modal" : "modal"}
+          style = {this.state.styling}
+          >
+            {this.props.children}
+          </div>
+      }
     </div>
     );
   };

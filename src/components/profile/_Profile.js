@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+
 import './_Profile.scss';
 
 import validator from 'validator';
@@ -34,8 +35,7 @@ import SetPositionOnMapModal from '../_common/maps/SetPositionOnMapModal';
 
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
-
-import './_Profile.scss';
+import getDeviceType from '../../../utils/getDeviceType';
 
 // the profile page shows the user's profile info in a form, where most things can be updated.
 // It shows flags when there are 3 or more, which can be accessed and disputed in a modal.
@@ -49,6 +49,7 @@ class Profile extends React.Component {
     showVerifyDeleteModal: false,
     showAddHomeLocationModal: false,
     stateLoaded: false,
+    deviceType: getDeviceType(),
   };
 
   componentWillMount() {
@@ -207,7 +208,7 @@ class Profile extends React.Component {
     const stateToChange = this.state;
 
     for (let item in stateToChange) {
-      if (item !== 'stateLoaded') stateToChange[item] = false;
+      if (item !== 'stateLoaded' && item !== 'deviceType') stateToChange[item] = false;
     };
 
     this.props.setUserSubmitSuccess(this.props.submitSuccess);
@@ -218,7 +219,6 @@ class Profile extends React.Component {
   setShowAddHomeLocationModal = (value) => {
     this.setState(() => ({ showAddHomeLocationModal: value }))
   };
-
   addHomeLocation = (place, location, address) => {
 
     place = place.trim();
@@ -262,7 +262,6 @@ class Profile extends React.Component {
       });
     };
   };
-
   deleteHomeLocation = (homeLocation) => {
     this.props.socket.emit('deleteHomeLocationFromUser', { user: this.props.user, _id: homeLocation._id }, (err, res) => {
       if (err) {
@@ -275,7 +274,6 @@ class Profile extends React.Component {
       };
     });
   };
-
   switchHomeLocation = (homeLocation) => {
     this.props.socket.emit('setCurrentHomeLocation', {user: this.props.user, homeLocation }, (err, res) => {
       if (err) {
@@ -288,38 +286,38 @@ class Profile extends React.Component {
     });
   };
 
-  showNoInternetAlert = () => {
-    alert('Please connect to the internet to see the map.');
-  };
-
   render () {
     return (
-      <div className = "profile">
+      <div className = "profile center">
 
         <TitleBar
           links = {['index']}
           showLogout = {true}
+          deviceType = {this.state.deviceType}
         />
 
-        <div className = "success">{this.props.submitSuccess}</div>
+        <div className = "success profile__success-message">{this.props.submitSuccess}</div>
 
-        <div className = "header">
+        <div className = {this.state.deviceType === 'mobile' ? "header--fixed profile-header-pl" : "header profile-header-d"}>
           <div className = "size3">
             Your Profile
           </div>
         </div>
 
         {(this.state.stateLoaded) &&
-          <EditHomeLocation
-            currentHomeLocation = {this.props.user.currentHomeLocation}
-            homeLocations = {this.props.user.homeLocations}
-            setShowAddHomeLocationModal = {this.setShowAddHomeLocationModal}
-            deleteHomeLocation = {this.deleteHomeLocation}
-            switchHomeLocation = {this.switchHomeLocation}
-            complete = {true}
+          <div className = "options--profile">
+            <EditHomeLocation
+              currentHomeLocation = {this.props.user.currentHomeLocation}
+              homeLocations = {this.props.user.homeLocations}
+              setShowAddHomeLocationModal = {this.setShowAddHomeLocationModal}
+              deleteHomeLocation = {this.deleteHomeLocation}
+              switchHomeLocation = {this.switchHomeLocation}
+              complete = {true}
 
-            showAddHomeLocationModal = {this.state.showAddHomeLocationModal}
-          />
+              showAddHomeLocationModal = {this.state.showAddHomeLocationModal}
+              deviceType = {this.state.deviceType}
+            />
+          </div>
         }
 
         <UserProfileForm
@@ -329,11 +327,16 @@ class Profile extends React.Component {
           setShowChangeEmailModal = {this.setShowChangeEmailModal}
           setShowChangeAgeRangeModal = {this.setShowChangeAgeRangeModal}
           setShowVerifyDeleteModal = {this.setShowVerifyDeleteModal}
-          showNoInternetAlert = {this.showNoInternetAlert}
+          deviceType = {this.state.deviceType}
         />
 
         {this.state.showChangePasswordModal &&
-        <Modal>
+        <Modal
+          close = {this.closeModal}
+          deviceType = {this.state.deviceType}
+          keepSize = {true}
+          classNames = "scrollable"
+        >
           <ChangePasswordModal
             showChangePasswordModal = {this.state.showChangePasswordModal}
             requestPasswordReset = {this.requestPasswordReset}
@@ -344,7 +347,12 @@ class Profile extends React.Component {
         }
 
         {this.state.showChangeEmailModal &&
-        <Modal>
+        <Modal
+          close = {this.closeModal}
+          deviceType = {this.state.deviceType}
+          keepSize = {true}
+          classNames = "scrollable"
+        >
           <ChangeEmailModal
             showChangeEmailModal = {this.state.showChangeEmailModal}
             requestEmailReset = {this.requestEmailReset}
@@ -355,7 +363,12 @@ class Profile extends React.Component {
         }
 
         {this.state.showChangeAgeRangeModal &&
-        <Modal>
+        <Modal
+          close = {this.closeModal}
+          deviceType = {this.state.deviceType}
+          keepSize = {true}
+          classNames = "scrollable"
+        >
           <ChangeAgeRangeModal
             showChangeAgeRangeModal = {this.state.showChangeAgeRangeModal}
             userFriendlyAgeRange = {makeAgeRangeUserFriendly(this.props.user.ageRange)}
@@ -370,6 +383,9 @@ class Profile extends React.Component {
         {this.state.showVerifyDeleteModal &&
           <Modal
             close = {this.closeModal}
+            deviceType = {this.state.deviceType}
+            keepSize = {true}
+            classNames = "scrollable"
           >
             <VerifyDeleteModal
               showVerifyDeleteModal = {this.state.showVerifyDeleteModal}

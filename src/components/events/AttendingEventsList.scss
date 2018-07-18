@@ -1,0 +1,38 @@
+@import '../../base-styles/Settings';
+.attending-event-tag {
+  position: absolute;
+
+  width: 7rem;
+  padding: .3rem .6rem;
+
+  text-align: center;
+  color: white;
+
+  border: grey 1px solid;
+};
+.past-event {
+  align-self: flex-end;
+
+  background: black;
+
+  border-radius: 3rem 0 3rem 0;
+};
+.hosted-event {
+  align-self: flex-start;
+
+  background: $accent1;
+
+  border-radius: 0 3rem 0 3rem;
+};
+.attending-events-list__title {
+  margin-top: 3rem;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+  //desktop
+  @media (min-height: $ds) {
+
+
+  };
+};

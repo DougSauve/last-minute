@@ -3,7 +3,6 @@ import {calculateDistance} from '../../../utils/calculateDistance';
 
 import AttendeeList from '../_common/AttendeeList';
 
-import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
 import Modal from '../_common/modal/_Modal';
 import DeleteEventModal from '../_common/DeleteEventModal';
 
@@ -13,6 +12,24 @@ class DetailsModal extends React.Component {
 
   componentDidMount() {
     if (this.props.showDetailsModal) {
+      let enterCommand;
+
+      if (this.props.event.createdBy._id === this.props.user._id) {
+        enterCommand = this.props.setShowDeleteModal.bind(this, true);
+      } else {
+        if (this.props.userHasJoinedEvent()) {
+          enterCommand = this.props.leaveEvent;
+        } else {
+          enterCommand = this.props.joinEvent;
+        };
+      };
+
+      document.onkeydown = handleKeyboardEvents.bind(this, ['enter', enterCommand], ['escape', this.props.closeModal]);
+    };
+  };
+
+  componentDidUpdate() {
+    if (this.props.showDetailsModal && !this.props.showOnMap) {
       let enterCommand;
 
       if (this.props.event.createdBy._id === this.props.user._id) {
@@ -43,7 +60,6 @@ class DetailsModal extends React.Component {
       // userFriendlyAgeRange = {this.userFriendlyAgeRange}
       // setShowOnMap = {this.setShowOnMap}
       // showOnMap = {this.state.showOnMap}
-      // showNoInternetAlert = {this.showNoInternetAlert}
       // }
 
       <div className = "padding-1rem">
@@ -87,17 +103,10 @@ class DetailsModal extends React.Component {
                 <div className = "secondary-text">{this.props.event.address}</div>
               </div>
 
-              <div className = "link color-accent rem-before unsquishable"
-                onClick = {() => {
-                  //check for internet access
-                  if (window.navigator.onLine) {
-                    this.props.setShowOnMap(true);
-                  }else{
-                    this.props.showNoInternetAlert();
-                  }
-                }}
+              <div className = "link color-accent unsquishable"
+                onClick = {this.props.setShowOnMap.bind(this, true)}
               >
-                <span>Show map</span>
+                Show map
               </div>
 
             </div>
@@ -136,11 +145,7 @@ class DetailsModal extends React.Component {
           {
             (this.props.event.createdBy._id === this.props.user._id) ?
             <div className = "button background-red width15"
-              onClick = {() => {
-                //check for internet access
-                this.props.setShowDeleteModal(true);
-
-              }}
+              onClick = {this.props.setShowDeleteModal.bind(this, true)}
             >
               Remove this event
             </div> :
@@ -175,13 +180,6 @@ class DetailsModal extends React.Component {
             Close
           </div>
         </div>
-
-        {(this.props.showOnMap) &&
-          <ShowPositionOnMapModal
-            event = {this.props.event}
-            close = {this.props.setShowOnMap.bind(this, false)}
-          />
-        }
 
         {(this.props.showDeleteModal) &&
           <Modal

@@ -15,17 +15,17 @@ const socket = io();
 store.dispatch(setSocket(socket));
 
 import Landing from './components/landing/_Landing';
-// import Index from './components/index/_Index';
-// import Profile from './components/profile/_Profile';
-// import Events from './components/events/_Events';
+import Index from './components/index/_Index';
+import Profile from './components/profile/_Profile';
+import Events from './components/events/_Events';
 
 //router
 const Router = () => {
     switch (window.location.pathname) {
       case '/': return <Landing socket = {socket} />;
-      // case '/index': return <Index socket = {socket} />;
-      // case '/profile': return <Profile socket = {socket} />;
-      // case '/events': return <Events socket = {socket} />;
+      case '/index': return <Index socket = {socket} />;
+      case '/profile': return <Profile socket = {socket} />;
+      case '/events': return <Events socket = {socket} />;
       default:
       return <NotFound />;
   };

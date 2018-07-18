@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 
+import './AttendingEventsList.scss';
+
 import AttendeeList from '../_common/AttendeeList';
 import {calculateDistance} from '../../../utils/calculateDistance';
 
@@ -16,14 +18,27 @@ const AttendingEventsList = (props) => (
     {
       (props.user.attendingEvents[0]) ?
       props.user.attendingEvents.map((event, index) => {
-        //don't display own event
-        if (JSON.stringify(props.user._id) === JSON.stringify(event.createdBy._id)) return;
+        //don't display own event that is current
+        if (JSON.stringify(props.user._id) === JSON.stringify(event.createdBy._id) && moment(event.expiresAt).isAfter(moment())) return;
 
         return <div
           key = {index}
           className = "list-item-container event-spacing">
 
-          <div className = "title">{event.title}</div>
+          {/* past event tag */}
+          {(moment(event.expiresAt).isBefore(moment())) &&
+            <div className = "past-event attending-event-tag">Past Event</div>
+          }
+
+          {/* hosted event tag */}
+          {(moment(event.expiresAt).isBefore(moment()) && JSON.stringify(props.user._id) === JSON.stringify(event.createdBy._id)) &&
+            <div className = "hosted-event attending-event-tag">Hosted</div>
+          }
+
+          <div className = "title attending-events-list__title">
+            {event.title}
+          </div>
+
           <div className = "distance">
             <span>
               {calculateDistance(
@@ -56,17 +71,10 @@ const AttendingEventsList = (props) => (
                 <div className = "secondary-text">{event.address}</div>
               </div>
 
-              <div className = "link color-accent rem-before unsquishable"
-                onClick = {() => {
-                  //check for internet access
-                  if (window.navigator.onLine) {
-                    props.setMapEvent(event);
-                  }else{
-                    props.showNoInternetAlert();
-                  }
-                }}
+              <div className = "link color-accent unsquishable"
+                onClick = {props.setMapEvent.bind(this, event)}
               >
-                <span>Show map</span>
+                Show map
               </div>
 
             </div>
@@ -105,12 +113,21 @@ const AttendingEventsList = (props) => (
           {
             (event.createdBy._id === props.user._id) ?
             <div className = "property center">
+              {(moment(event.expiresAt).isBefore(moment())) ?
               <div
                 className = "button background-red width15"
-                onClick = {props.deleteEvent.bind(this, event)}
+                onClick = {props.deleteAttendingEvent.bind(this, event)}
               >
                 Remove this event
+              </div> :
+              <div
+                className = "button background-red width15"
+                onClick = {props.deleteAttendingEvent.bind(this, event)}
+              >
+                {/* //after */}
+                Remove this event
               </div>
+              }
             </div>
             :
             <div className = "property center">
@@ -118,7 +135,10 @@ const AttendingEventsList = (props) => (
                 className = "button background-none width15"
                 onClick = {props.leaveEvent.bind(this, props.user, event, () => {} )}
               >
-                Leave this event
+                {(moment(event.expiresAt).isBefore(moment())) ?
+                  'Remove from list':
+                  'Leave this event'
+                }
               </div>
             </div>
           }
@@ -126,7 +146,7 @@ const AttendingEventsList = (props) => (
         </div>
       }) :
       <div className = "message">
-        There are no events to display.
+        You haven't joined any events yet.
       </div>
     }
 

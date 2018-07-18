@@ -9,19 +9,16 @@ const EditHomeLocation = (props) => (
     // deleteHomeLocation = {this.deleteHomeLocation}
     // complete = (boolean) whether to show add and delete options
   // };
-  <div className = "quarter-width-box set-right">
-    <div className = "modal-item-container center">
-      {
-      (props.homeLocations.length > 1) ?
-      <div className = "title half-rem-below">Home Locations:</div> :
-      <div className = "title half-rem-below">Home Location:</div>
-      }
+  <div className = {(props.deviceType === 'mobile') ? "" : "quarter-width-box set-right"}>
+    <div className = {(props.deviceType === 'mobile') ? "" : "modal-item-container center"}>
 
-      <div>
+      <div className = {(props.deviceType === 'mobile') ? "title half-rem-above text-center" : "title half-rem-below text-center"}>{(props.homeLocations.length > 1) ? 'Home Locations:' : 'Home Location:'}</div>
+
+      <div className = "center">
         {props.homeLocations.map((homeLocation, index) => {
           return(
             <div
-              className = "center"
+              className = "center home-location-box"
               key = {index}
             >
 
@@ -34,7 +31,7 @@ const EditHomeLocation = (props) => (
                   &#10003;
                 </div>
 
-                <span>{homeLocation.name}</span>
+                <span className = "break-word">{homeLocation.name}</span>
 
               </div> :
 
@@ -46,6 +43,8 @@ const EditHomeLocation = (props) => (
                 />
 
                 <span>{homeLocation.name}</span>
+
+                <div className = "flex-spacer" />
 
                 {props.complete &&
                   <div
@@ -65,7 +64,7 @@ const EditHomeLocation = (props) => (
 
         {/* add homeLocation button */}
         {props.complete &&
-          <div className = "width100_percent row center-vertically">
+          <div className = "width100_percent row center-vertically add-home-location-pl">
             <div
               className = "button--round background-blue border-blue half-rem-before"
               onClick = {() => {

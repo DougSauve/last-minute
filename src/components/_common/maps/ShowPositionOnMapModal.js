@@ -5,6 +5,8 @@ import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
 import Modal from '../modal/_Modal';
 
 import {handleKeyboardEvents} from '../../../../utils/handleKeyboardEvents';
+import getDeviceType from '../../../../utils/getDeviceType';
+
 
 class ShowPositionOnMapModal extends React.Component {
 
@@ -26,6 +28,7 @@ class ShowPositionOnMapModal extends React.Component {
 
      <Modal
        close = {this.props.close}
+       deviceType = {getDeviceType()}
       >
        <div className = "center">
          <div className = "map-note">
@@ -46,7 +49,7 @@ class ShowPositionOnMapModal extends React.Component {
          </div>
 
          <div
-           className = "button background-none width15"
+           className = "button background-none width15 showMap__button"
            onClick = {this.props.close}
          >
            Close

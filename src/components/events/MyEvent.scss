@@ -1,3 +1,18 @@
+@import '../../base-styles/Settings';
+
 .up-point6 {
   margin-top: -.6rem;
+};
+.myEvent__list-item {
+  box-sizing: border-box;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+  //desktop
+  @media (min-height: $ds) {
+    .myEvent__list-item {
+      box-sizing: content-box;
+    };
+  };
 };

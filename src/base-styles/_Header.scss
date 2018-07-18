@@ -16,6 +16,18 @@
   padding-bottom: -1.6rem;
 };
 
+.header--fixed{
+  position: fixed;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 8rem;
+  width: 100vw;
+};
+
 .size3 {
   color: $accent1;
   font-size: 3rem;
@@ -23,8 +35,7 @@
 
 .size2 {
   color: $accent1;
-  font-size: 1.3rem;
-  max-width: 90%;
+  font-size: 2rem;
 };
 .size2--reverse-colors {
   background: $accent1;
@@ -40,7 +51,9 @@
   @media (min-height: $ds) {
     .size2 {
       font-size: 2rem;
-      max-width: 100%;
+    };
+    .size2--reverse-colors {
+      font-size: 2rem;
     };
   };
 };

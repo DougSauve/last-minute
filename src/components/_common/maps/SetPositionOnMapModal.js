@@ -116,11 +116,8 @@ class SetPositionOnMapModal extends React.Component {
         {(this.state.readyForMap) &&
 
         <Modal
-          style = {{
-            top: '2vh',
-            bottom: '2vh',
-          }}
           close = {this.props.cancel}
+          deviceType = {this.props.deviceType}
         >
           {(getDeviceType() === 'mobile') &&
           <div className = "mobile-map-container show-pl">

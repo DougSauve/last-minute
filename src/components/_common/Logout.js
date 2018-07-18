@@ -1,4 +1,5 @@
 import React from 'react';
+import './Logout.scss';
 
 import { connect } from 'react-redux';
 import { setMyEvent } from '../../redux/myEvent';

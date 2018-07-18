@@ -4,13 +4,13 @@ import './MyEvent.scss';
 import AttendeeList from '../_common/AttendeeList';
 
 const MyEvent = (props) => (
-  <div className = "up-point6 list--color-reverse width100_percent unsquishable">
+  <div className = "list--color-reverse width100_percent unsquishable up-point6">
     <div className = "message">{(!props.event.title) &&
       <span>What do you feel like doing? Create an event and see who joins!</span>}
     </div>
 
     {(props.event.title) &&
-      <div className = "list-item-container event-spacing unsquishable">
+      <div className = "list-item-container myEvent__list-item event-spacing unsquishable">
 
         <div className = "title">{props.event.title}</div>
 
@@ -21,17 +21,10 @@ const MyEvent = (props) => (
               <div className = "secondary-text">{props.event.address}</div>
             </div>
 
-            <div className = "link color-accent rem-before unsquishable"
-              onClick = {() => {
-                //check for internet access
-                if (window.navigator.onLine) {
-                  props.setMapEvent(props.event);
-                }else{
-                  props.showNoInternetAlert();
-                }
-              }}
+            <div className = "link color-accent unsquishable"
+              onClick = {props.setMapEvent.bind(this, props.event)}
             >
-              <span>Show map</span>
+              Show map
             </div>
 
           </div>

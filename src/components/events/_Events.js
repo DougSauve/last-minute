@@ -17,6 +17,7 @@ import ManageEventModal from './manageEventModal/_ManageEventModal';
 import AttendingEventsList from './AttendingEventsList';
 
 import ShowPositionOnMapModal from '../_common/maps/ShowPositionOnMapModal';
+import checkMyEventForExpiry from '../_common/checkMyEventForExpiry';
 
 import {handleKeyboardEvents} from '../../../utils/handleKeyboardEvents';
 import makeAgeRangeUserFriendly from '../../../utils/makeAgeRangeUserFriendly';
@@ -34,13 +35,18 @@ class Events extends React.Component {
     loadState(this.props.socket, this.props.setUser, this.props.setMyEvent, this.props.setEvents,)
     .then(async () => {
       await this.setState(() => ({ stateLoaded: true }));
+
+      // check if a user's hosted event has expired. If it has, move it to their attendingEvents list, where it can be history.
+      if (this.props.myEvent._id) {
+        checkMyEventForExpiry(this.props.socket, this.props.user, this.props.setUser, this.props.setMyEvent);
+      };
     });
   };
 
   componentDidMount() {
     document.onkeydown = handleKeyboardEvents.bind(this, ['escape', this.closeModal]);
     this.setStyling();
-    window.addEventListener('resize', this.setStyling()); //not working
+    window.addEventListener('resize', this.setStyling());
   };
 
   componentDidUpdate() {
@@ -48,12 +54,11 @@ class Events extends React.Component {
   }
 
   setStyling = () => {
-    document.getElementsByClassName('events__left-box__background__container')[0]
-    .style.minHeight = `${window.innerHeight - 144}px`;
-  };
+    const container = document.getElementsByClassName('events__left-box__background__container')[0];
+    container.style.minHeight = `${window.innerHeight - 144}px`;
 
-  showNoInternetAlert = () => {
-    alert('Please connect to the internet to make a new event!');
+    const rightBox = document.getElementsByClassName('events__right-box')[0];
+    container.style.height = `${rightBox.clientHeight}px`;
   };
 
   setMapEvent = async (event) => {
@@ -88,6 +93,15 @@ class Events extends React.Component {
           };
         });
       }
+    });
+  };
+  deleteAttendingEvent = (event) => {
+    this.props.socket.emit('deleteAttendingEventFromUser', {user: this.props.user, event}, (err, res) => {
+      if (!err) {
+        //redux and persisting state
+        this.props.setUser(res);
+        this.props.socket.emit('setCurrentUser', res, () => {});
+      };
     });
   };
 
@@ -131,13 +145,13 @@ class Events extends React.Component {
             <ActionButtonContainer
               myEventExists = {(!!this.props.myEvent.title)}
               setMode = {this.props.setMode}
-              showNoInternetAlert = {this.showNoInternetAlert}
+              myEvent = {this.props.myEvent}
             />
 
           </div>
           {/* ^ end left box */}
 
-          <div className = "events__right-box">
+          <div className = "events__right-box center--column">
 
             <div className = "header__events--small">
               <div className = "size2">
@@ -152,6 +166,7 @@ class Events extends React.Component {
                 leaveEvent =
                 {this.state.JE.leaveEvent}
                 deleteEvent = {this.deleteEvent}
+                deleteAttendingEvent = {this.deleteAttendingEvent}
                 makeAgeRangeUserFriendly = {makeAgeRangeUserFriendly}
 
                 setMapEvent = {this.setMapEvent}

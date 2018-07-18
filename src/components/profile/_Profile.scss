@@ -1,11 +1,42 @@
-#template-message {
-  padding: 5rem;
-  font-family: times;
-  font-size: 2rem;
-}
-.form__error{
-  color: red;
-}
-.profile{
+@import '../../base-styles/Settings';
+
+.profile-header-pl {
+  top: 0;
   margin-top: 2rem;
+  background: $back1;
+  z-index: 3;
+};
+
+.profile__success-message {
+  margin-top: 2rem;
+  z-index: 4;
+};
+
+.options--profile {
+  margin-top: 8rem;
+
+  box-sizing: border-box;
+  padding: .3rem;
+  width: 95vw;
+
+  background: rgba($accent1, .3);
+  border-radius: .6rem;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+  //desktop
+  @media (min-height: $ds) {
+    .options--profile {
+      margin: 0;
+      padding: 0;
+      width: 0;
+      background: none;
+    };
+
+    .profile-header-d {
+      height: 6rem;
+    };
+  };
 };

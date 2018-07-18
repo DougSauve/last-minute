@@ -26,6 +26,10 @@ body {
   position: fixed;
 };
 
+.text-center{
+  text-align: center;
+};
+
 //display
 %row {
   display: flex;
@@ -37,13 +41,18 @@ body {
 };
 .center--row {
   @extend %row;
-    justify-content: center;
+  justify-content: center;
   align-items: center;
 };
 
 %column {
   display: flex;
   flex-direction: column;
+};
+%center--column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 };
 
 %center-vertically {
@@ -53,10 +62,13 @@ body {
 .center-vertically {
   @extend %center-vertically;
 }
-.center {
+%center {
   @extend %center-vertically;
   flex-direction: column;
   justify-content: center;
+};
+.center {
+  @extend %center;
 };
 .row--align-left {
   @extend %row;
@@ -67,6 +79,7 @@ body {
 .rem-before {
   margin-left: 1rem;
 };
+
 .half-rem-before {
   margin-left: .5rem;
 }
@@ -80,6 +93,9 @@ body {
   margin: 0;
   margin: 0 1rem;
 };
+.half-rem-above {
+  margin-top: .5rem;
+}
 .half-rem-below {
   margin-bottom: .5rem;
 }
@@ -88,6 +104,9 @@ body {
 };
 .drop-2-rem {
   margin-top: 2rem;
+};
+.space-before {
+  margin-left: .3rem;
 };
 .space-after {
   margin-right: .3rem;
@@ -174,8 +193,17 @@ body {
 .max-width40 {
   max-width: 40rem;
 };
+.width30_percent {
+  width: 30%;
+};
 .width50_percent {
   width: 50%;
+};
+.width70_percent {
+  width: 70%;
+};
+.width95vw {
+  width: 95vw;
 };
 .width100_percent {
   width: 100%;
@@ -202,4 +230,22 @@ body {
 };
 .bold {
   font-weight: bold;
+};
+.break-word {
+  word-wrap: break-word;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+  .rem-before-ld {
+    margin-left: 1rem;
+  };
+
+
+  //desktop
+  @media (min-height: $ds) {
+    .options {
+      background: none;
+    }
+  };
 };

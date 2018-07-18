@@ -45,7 +45,7 @@ class Slide1 extends React.Component {
               <div className = "key--no-width width15">
                 What do you want to do?
               </div>
-              <div className = "value--no-width">
+              <div className = "width15">
                 <input
                   className = "input width15"
                   type = "text"
@@ -61,16 +61,16 @@ class Slide1 extends React.Component {
               <div className = "key--no-width width15">
                 How many people can join (including you)?
               </div>
-              <div className = "value--no-width">
+              <div className = "width15 row center-vertically">
                 <input
-                  className = "input width2"
+                  className = "input width2 flex-fill-space"
                   type = "number"
                   name = "minimumPeople"
                   defaultValue = {(this.props.minimumPeople) ? this.props.minimumPeople : 2}
                 />
                  -
                 <input
-                  className = "input width2"
+                  className = "input width2 flex-fill-space"
                   type = "number"
                   name = "maximumPeople"
                   defaultValue = {(this.props.maximumPeople) ? this.props.maximumPeople : 4}

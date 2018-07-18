@@ -1,11 +1,15 @@
 import React from 'react';
+import moment from 'moment';
 import {calculateDistance} from '../../../utils/calculateDistance';
+
+import './EventsList.scss';
 
 class EventsList extends React.Component {
   // props: {
   //   events = {this.props.events}
   //   showDetailsModal = {this.showDetailsModal}
   //   user
+  //   deviceType = {this.state.deviceType}
   // }
   eventsInRange = false;
 
@@ -15,7 +19,7 @@ class EventsList extends React.Component {
 
   render() {
     return (
-      <div className = 'list events-list width50_percent'>
+      <div className = {this.props.deviceType ? "events-list-pl center" : "list events-list width50_percent center"}>
 
         {
           this.props.events.map((event, index) => {
@@ -34,7 +38,7 @@ class EventsList extends React.Component {
 
               return <div
                 key = {event.createdAt}
-                className = "list-item-container event-spacing">
+                className = "list-item-container event-spacing width100_percent">
 
                 <div className = "title">{event.title}</div>
                 <div className = "distance">
@@ -73,7 +77,10 @@ class EventsList extends React.Component {
 
                 <div
                   className = "button width15 background-blue"
-                  onClick = {this.props.showDetailsModal.bind(this, event)}
+                  onClick = {moment(event.expiresAt).isAfter(moment()) ?
+                    this.props.showDetailsModal.bind(this, event) :
+                    window.location.pathname = '/index'
+                  }
                   >
                   See details
                 </div>
@@ -83,8 +90,15 @@ class EventsList extends React.Component {
         }
 
         {(this.eventsInRange === false) &&
-          <div className = "message">
-            There are no events to display.
+          <div className = {this.props.deviceType === 'mobile' ? "message rem-above rem-before" : "message rem-above events-list__no-events-message-d"}>
+            There are no events to display. Try
+            {
+              this.props.deviceType === 'mobile' ?
+              <span className = "link" onClick = {this.props.setShowOptions.bind(this, true)}> widening your search area </span> :
+              " widening your search area "
+            }
+               or
+            <span className = "link" onClick = {() => {window.location.pathname = '/events'}}> create your own event! </span>
           </div>
         }
 

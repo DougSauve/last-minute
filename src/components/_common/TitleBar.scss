@@ -1,4 +1,4 @@
-@import '../../base-styles/Settings';
+  @import '../../base-styles/Settings';
 
 .TitleBar{
   position: absolute;
@@ -35,6 +35,16 @@
   background: $accent1;
 };
 
-.TitleBar__spacer{
-  flex-grow: 1;
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+
+  //desktop
+  @media (min-height: $ds) {
+    .TitleBar__spacer{
+      flex-grow: 1;
+    };
+
+  };
 };

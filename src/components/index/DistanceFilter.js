@@ -24,11 +24,14 @@ class DistanceFilter extends React.Component {
       //   units = {this.props.units}
       //   setSearchPreferences = {this.setSearchPreferences}
       //   distanceError = {this.props.distanceError}
+      //   deviceType = {this.props.deviceType}
       // };
 
-      <div className = "quarter-width-box set-left">
-        <div className = "modal-item-container center">
-          <div className = "half-rem-below">
+      <div className = {(this.props.deviceType === 'mobile') ? "" : "quarter-width-box set-left"}>
+        <div className = "center title show-pl">Show events within:</div>
+
+        <div className = {(this.props.deviceType === 'mobile') ? "distance-filter-layout-pl outlined--accent" : "modal-item-container center"}>
+          <div className = "half-rem-below show-d">
             Show events within
           </div>
 
@@ -36,16 +39,16 @@ class DistanceFilter extends React.Component {
             action = "javascript:void(0);"
             className = "searchPreferences center"
           >
-            <div className = "row">
+            <div className = "row width100_percent">
               <input
-                className = "input width5 space-after"
+                className = "input width50_percent space-after"
                 type = "number"
                 name = "distance"
                 defaultValue = {this.props.distance}
               />
 
               <select
-                className = "input width7"
+                className = "input width50_percent"
                 name = "units"
               >
                 <option value = {this.props.units}>

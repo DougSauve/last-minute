@@ -109,7 +109,7 @@ describe('deleteAttendingEventFromUser', () => {
 
     deleteAttendingEventFromUser(self, nonExistentEvent).then(async ({ err, res }) => {
       expect(res).toBeTruthy();
-      expect(err).toBe('That event could not be found');
+      expect(err).toMatch('That event could not be found');
       done();
     });
   });

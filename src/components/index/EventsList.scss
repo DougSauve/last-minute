@@ -1,0 +1,16 @@
+@import '../../base-styles/Settings';
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+  //desktop
+  @media (min-height: $ds) {
+    .events-list-pl {
+      margin: -1rem .3rem 0 .3rem;
+    };
+
+    .events-list__no-events-message-d {
+      width: 60%;
+    }
+  };
+};

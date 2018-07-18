@@ -1,6 +1,8 @@
+  @import '../../../../../base-styles/Settings';
+
 .remove-meetingPlace-button {
   position: absolute;
-  margin-left: 17.3rem;
+  margin-left: 16.65rem;
 
   height: 1.2rem;
   width: 1.2rem;
@@ -21,4 +23,17 @@
   background: red;
   color: white;
   border: none;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+
+  //desktop
+  @media (min-height: $ds) {
+    .remove-meetingPlace-button {
+      margin-left: 17.3rem;
+    };
+
+  };
 };

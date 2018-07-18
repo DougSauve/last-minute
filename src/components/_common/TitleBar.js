@@ -8,10 +8,11 @@ const TitleBar = (props) => (
   //   links (component)
   //   showLogout (boolean)
   //   fixed (booleam)
+  //   deviceType (string - 'desktop' or 'mobile')
   // }
 
 
-  <div className = {(props.fixed ? "TitleBar--fixed" : "TitleBar")}>
+  <div className = {(props.fixed || props.deviceType === 'mobile') ? "TitleBar--fixed" : "TitleBar"}>
     {(props.showBackToIndex) && <BackToIndex />}
 
     {(props.links) && (props.links.includes('events') &&

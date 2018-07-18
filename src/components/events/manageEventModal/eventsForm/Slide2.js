@@ -41,7 +41,7 @@ class Slide2 extends React.Component {
             <div className = "property center">
 
               <select
-                className = "input width3"
+                className = "input width3 space-after"
                 name = "expiresAtHour"
               >
                 <option value = {this.props.expiresAtHour ? this.props.expiresAtHour : ""}>
@@ -62,7 +62,7 @@ class Slide2 extends React.Component {
               </select>
               :
               <select
-                className = "input width3"
+                className = "input width3 space-before space-after"
                 name = "expiresAtMinute">
                 <option value = {this.props.expiresAtMinute ? this.props.expiresAtMinute : ""}>
                   {this.props.expiresAtMinute && this.props.expiresAtMinute}
@@ -83,8 +83,9 @@ class Slide2 extends React.Component {
                 <option value = "PM">PM</option>
               </select>
 
-              <span className = "error">{this.props.titleError}</span>
             </div>
+
+            <div className = "error">{this.props.expiresAtError}</div>
 
           </form>
 

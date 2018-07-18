@@ -35,5 +35,14 @@
 
 .button-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+};
+
+@media (min-width: $ds) {
+  //desktop
+  @media (min-height: $ds) {
+    .button-container {
+      flex-direction: row;
+    };
+  };
 };

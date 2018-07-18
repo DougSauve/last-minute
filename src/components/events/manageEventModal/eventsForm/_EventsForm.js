@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 
+import './Slides.scss';
+
 import { connect } from 'react-redux';
 import { setMode, setEvents, setSubmitError, setSubmitSuccess } from '../../../../redux/events';
 import { setCurrentSlide } from '../../../../redux/eventsForm';
@@ -212,9 +214,14 @@ class EventsForm extends React.Component {
 
     if(!addHostedEventToUserResult) return;
 
+    const addAttendingEventToUserResult = await this.createOrUpdateAttendingEvents(
+      addHostedEventToUserResult, submittedEvent);
+
+    if(!addAttendingEventToUserResult) return;
+
     //...and add the location to meetingPlaces, if it doesn't exist.
     const addMeetingPlaceToUserResult = await this.createOrUpdateMeetingPlace(
-      addHostedEventToUserResult, submittedEvent);
+      addAttendingEventToUserResult, submittedEvent);
 
     if(!addMeetingPlaceToUserResult) return;
 

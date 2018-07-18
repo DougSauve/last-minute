@@ -96,10 +96,10 @@ class SignUpForm extends React.Component {
 
   render() {
     return (
-      <div className = "modal-item-container scrollable max-height90">
+      <div className = "modal-item-container scrollable sign-up-container">
 
         <div className = "header-modal">
-          <div className = "size2 responsive-layout">
+          <div className = "landing__header">
             <span className = "space-after">Welcome to LastMinute.</span>
             <span>Let's get you connected.</span>
           </div>
@@ -128,7 +128,7 @@ class SignUpForm extends React.Component {
                     placeholder = "Jamie S"
                     autoFocus
                   />
-                  <span className = "error width15">{(this.props.emailError) ? this.props.emailError : this.props.nameError}</span>
+                  <span className = "error  show-pl rem-before">{this.props.nameError}</span>
                 </div>
 
                 <div className = "property">
@@ -143,8 +143,6 @@ class SignUpForm extends React.Component {
                     <option value = "4">45-60</option>
                     <option value = "5">60+</option>
                   </select>
-
-                  <span className = "error width15">{this.props.passwordError}</span>
                 </div>
 
                 <div className = "property">
@@ -158,8 +156,6 @@ class SignUpForm extends React.Component {
                     <option value = "Other">Other</option>
                     <option value = "None">Prefer not to say</option>
                   </select>
-
-                  <span className = "error width15">{this.props.passwordCheckError}</span>
                 </div>
 
               </div>
@@ -174,6 +170,8 @@ class SignUpForm extends React.Component {
                     name = "email"
                     placeholder = "frozenyak@tibet.com"
                   />
+
+                  <span className = "error  show-pl rem-before">{this.props.emailError}</span>
                 </div>
 
                 <div className = "property">
@@ -184,6 +182,8 @@ class SignUpForm extends React.Component {
                     name = "password"
                     placeholder = "loopyfish%"
                   />
+
+                  <span className = "error show-pl rem-before">{this.props.passwordError}</span>
                 </div>
 
                 <div className = "property">
@@ -194,20 +194,29 @@ class SignUpForm extends React.Component {
                     name = "passwordCheck"
                     placeholder = "loopyfish%"
                   />
+                    <span className = "error show-pl rem-before">{this.props.passwordCheckError}</span>
                 </div>
 
               </div>
             </div>
             {/* ^ end first row */}
 
-            {/* second row */}
+            {/* second row - desktop errors */}
+            <div className = "show-d rem-before">
+              <div className = "error">{this.props.nameError}</div>
+              <div className = "error">{this.props.emailError}</div>
+              <div className = "error">{this.props.passwordError}</div>
+              <div className = "error">{this.props.passwordCheckError}</div>
+            </div>
+
+            {/* third row */}
             <div className = "row">
               <div className = "container flex-fill-space">
                 <div className = "property rem-above">
 
                   <div className = "key">Home Location:</div>
 
-                  <div className = "center-vertically">
+                  <div className = "button-container center-vertically">
                     <div
                       className = "button width15 background-blue"
                       // onClick = {this.setShowMapModal.bind(this, true)}
@@ -216,7 +225,7 @@ class SignUpForm extends React.Component {
                       Find on map
                     </div>
 
-                    <span className = "error width15">{this.props.homeLocationError}</span>
+                    <span className = "error">{this.props.homeLocationError}</span>
                   </div>
 
                 </div>

@@ -1,6 +1,5 @@
 .link {
   display: inline;
-  margin: 0 .6rem;
 
   color: $accent1;
 };
@@ -11,11 +10,18 @@
 
 .link--red {
   display: inline;
-  margin: 0 .6rem;
 
   color: red;
 };
 .link--red:hover {
   cursor: pointer;
   color: darken(red, 10%);
+};
+
+@media (min-width: $ds) {
+
+  //desktop
+  @media (min-height: $ds) {
+
+  };
 };

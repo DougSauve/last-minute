@@ -1,0 +1,17 @@
+@import '../../base-styles/Settings';
+
+.log-out {
+  flex-grow: 2;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+
+  //desktop
+  @media (min-height: $ds) {
+    .log-out {
+      flex-grow: 0;
+    };
+  };
+};

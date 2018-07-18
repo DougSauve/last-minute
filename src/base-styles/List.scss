@@ -3,6 +3,8 @@
   flex-direction: column;
   margin-top: -1rem;
 
+  width: 95vw;
+
   background: $back1;
 };
 .list--color-reverse {
@@ -22,6 +24,7 @@
   flex-direction: column;
 }
 .list-item-container {
+  box-sizing: border-box;
   margin: 1rem 0;
 
   display: flex;
@@ -34,7 +37,7 @@
   border: 1px solid $accent1;
   border-radius: .6rem;
 };
-.modal-item-container {
+%modal-item-container {
   margin: .3rem;
 
   display: flex;
@@ -46,6 +49,9 @@
 
   border: 1px solid $accent1;
   border-radius: .6rem;
+};
+.modal-item-container {
+  @extend %modal-item-container;
 };
 
 
@@ -71,16 +77,22 @@
   line-height: 2.6rem;
 };
 .modal-padding {
-  padding: 5rem;
+  padding: 1rem;
 };
 
 //mobile-landscape
 @media (min-width: $ds) {
   //desktop
   @media (min-height: $ds) {
+    .list {
+      width: auto;
+    };
     .modal-item-container {
       margin: 1rem;
       padding: 2rem 2rem 1rem 2rem;
+    };
+    .modal-padding {
+      padding: 5rem;
     };
   };
 };

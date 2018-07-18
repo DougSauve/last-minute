@@ -1,5 +1,18 @@
 @import '../../base-styles/Hub';
 
+.sign-up-container {
+  max-height: 90vh;
+};
+.sign-up-container .key {
+  padding-left: 1rem;
+};
+.sign-up-container .note {
+  padding-left: 1rem;
+};
+.sign-up-container .note--no-margin {
+  padding-left: 1rem;
+};
+
 .landing__sign-up-form {
   flex-direction: column;
 
@@ -18,12 +31,17 @@
   font-style: italic;
 };
 
-.responsive-layout {
+.landing__header {
+  margin: 4rem 0;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 90vw;
+  width: 95vw;
+
+  color: $accent1;
+  font-size: 1.5rem;
 };
 
 .landing__first-row {
@@ -38,7 +56,24 @@
 
 //mobile-landscape
 @media (min-width: $ds) {
+  .landing__header {
+    font-size: 2rem;
+  };
 
+  .landing__sign-up-form select {
+    width: 17rem;
+  };
+
+  .sign-up-container .key {
+    padding-left: none;
+    width: 30%;
+  };
+  .sign-up-container .note {
+    padding-left: none;
+  };
+  .sign-up-container .note--no-margin {
+    padding-left: none;
+  };
 
   //desktop
   @media (min-height: $ds) {
@@ -48,13 +83,17 @@
       }
     };
 
+    .sign-up-container .key {
+      width: 10rem;
+    };
+
     .landing__first-row {
       flex-direction: row;
       height: auto;
     };
 
-    .responsive-layout {
-      flex-direction: row;
+    .landing__header {
+      margin: 0;
     };
 
   };

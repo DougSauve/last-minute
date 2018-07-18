@@ -39,14 +39,13 @@ class Slide4 extends React.Component {
             {this.props.submitError}
           </div>
 
-          <form className = "events__slide4__form">
+          <form className = "events__slide4__form center">
 
             <textarea
               className = "input"
               type = "text"
               name = "notes"
               rows = "4"
-              cols = "50"
               defaultValue = {(this.props.notes) && this.props.notes}
               autoFocus
             />

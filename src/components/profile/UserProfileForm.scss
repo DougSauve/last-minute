@@ -1,0 +1,23 @@
+.user-profile-form__mobile-layout {
+  .property {
+    flex-direction: row;
+    align-items: flex-start;
+  };
+  .key {
+    width: 30vw;
+    padding-left: 2.5vw;
+  };
+  .short-value {
+    width: 70vw;
+    padding-right: 2.5vw;
+  };
+};
+.property--user-profile-form--mobile {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+
+  * {
+    line-height: 2rem;
+  };
+};

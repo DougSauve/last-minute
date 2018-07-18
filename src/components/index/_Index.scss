@@ -1,11 +1,81 @@
-.index{
+@import '../../base-styles/Settings';
+
+.index {
   position: absolute;
   top: 0; left: 0;
 
   width: 100%;
-  min-height: 100%;
+  height: 100vh;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+};
+
+.index-body {
+  position: absolute;
+  top: 6rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+
+  width: 95vw;
+
+  box-sizing: border-box;
+};
+
+.index__toggle-options-pl {
+
+  padding: .3rem;
+
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  background: rgba($accent1, .3);
+
+  border-radius: .6rem;
+};
+.index__toggle-options:hover {
+  cursor: pointer;
+};
+
+
+.options--index {
+  background: rgba($accent1, .3);
+  padding: .3rem;
+  border-radius: 0 0 .6rem .6rem;
+  box-sizing: border-box;
+};
+
+//mobile-landscape
+@media (min-width: $ds) {
+
+  //desktop
+  @media (min-height: $ds) {
+    .index{
+      height: auto;
+      min-height: 100%;
+    };
+
+    .index-body {
+      position: static;
+      width: auto;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+
+      padding: 0;
+    };
+    .index__toggle-options-pl {
+      display: none;
+      padding: 0;
+    }
+    .options--index {
+      padding: 0;
+    };
+  };
 };
