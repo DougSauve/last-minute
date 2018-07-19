@@ -33,7 +33,7 @@ class Index extends React.Component {
     showDetailsModal: false,
     showOnMap: false,
     showDeleteModal: false,
-    showOrientationModal: true,
+    showOrientationModal: false,
     detailsEvent: undefined,
     stateLoaded: false,
     showOptions: false,
