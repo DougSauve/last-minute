@@ -7,7 +7,6 @@ const validateUser = (creds) => {
   return new Promise(async (resolve, reject) => {
     User.findOne({ email: creds.email }).then((user) => {
 
-
       bcrypt.compare(creds.password, user.password, (err, match) => {
         if (!match) {
           resolve({ err: 'Incorrect password.', user: null });

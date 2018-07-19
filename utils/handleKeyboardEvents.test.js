@@ -9,11 +9,9 @@ beforeEach(() => {
 });
 
 const sayBoo = () => {
-  console.log('boo');
   booTripped = true;
 };
 const sayHi = () => {
-  console.log('hi');
   hiTripped = true;
 };
 
@@ -30,7 +28,7 @@ describe('handleKeyboardEvents', () => {
   test('should call sayHi according to input', () => {
     expect.assertions(2);
 
-    handleKeyboardEvents(['enter', sayBoo], ['escape', sayHi], {keyCode: 13});
+    handleKeyboardEvents(['enter', sayBoo], ['escape', sayHi], {keyCode: 27});
 
     expect(booTripped).toBeFalsy();
     expect(hiTripped).toBeTruthy();

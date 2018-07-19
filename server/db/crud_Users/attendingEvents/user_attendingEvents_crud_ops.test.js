@@ -56,11 +56,18 @@ describe('updateAttendingEventOnUser', () => {
   });
 
   test('should return an error if attempting to update a non-existent event in user.attendingEvents', (done) => {
+    expect.assertions(2);
+
     resetSeedData();
     const newEvent = getSeedEvent();
     updateAttendingEventOnUser(self, newEvent).then(({ err, res }) => {
-      expect(res.attendingEvents[0].notes).toBe('weeeeeee');
-      done();
+      expect(err).toBeTruthy();
+
+      User.findById(self._id).then((res) => {
+        expect(res.attendingEvents[0].notes).toBe('weeeeeee'); //this should remain the same
+        done();
+      });
+
     });
   });
 });

@@ -33,7 +33,6 @@ const createUser = (user) => {
       if (err.message.includes('duplicate key error') && err.message.includes('email')) {
         resolve({ err: 'Email already in use. Please use a different email address.'})
       };
-      console.log(err);
       resolve({ err: 'Error while creating user', res: null });
     });
   });

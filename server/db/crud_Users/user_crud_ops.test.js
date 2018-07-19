@@ -79,7 +79,7 @@ describe('validateUser', () => {
   expect.assertions(2);
 
   test('should validate a user with correct credentials', async (done) => {
-    const creds = { email: user.email, password: user.password };
+    const creds = { email: user.email, password: 'testtest' };
 
     validateUser(creds).then(({ err, user }) => {
       expect(user.name).toBe('test');

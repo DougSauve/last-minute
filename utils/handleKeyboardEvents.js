@@ -4,7 +4,7 @@ const keyBindings = {
 };
 
 const handleKeyboardEvents = function () {
-  const e = arguments[arguments.length] || window.event;
+  const e = window.event || arguments[arguments.length - 1]; //for testing
 
   const pairs = [...arguments];
   pairs.pop();

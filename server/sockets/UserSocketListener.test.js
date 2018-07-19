@@ -142,7 +142,7 @@ describe('updateUser', () => {
 describe('validateUser', () => {
   test('should validate a user with correct credentials', (done) => {
     expect.assertions(1);
-    socket.emit('validateUser', {email: user.email, password: user.password}, (err, res) => {
+    socket.emit('validateUser', {email: user.email, password: 'testtest'}, (err, res) => {
       expect(res.createdAt).toBe(user.createdAt);
       done();
     });
