@@ -42,7 +42,7 @@ const EditHomeLocation = (props) => (
                   onClick = {props.switchHomeLocation.bind(this, homeLocation)}
                 />
 
-                <span>{homeLocation.name}</span>
+                <div className = "flex-wrap">{homeLocation.name}</div>
 
                 <div className = "flex-spacer" />
 

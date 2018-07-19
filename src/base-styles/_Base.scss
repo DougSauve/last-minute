@@ -54,6 +54,9 @@ body {
   flex-direction: column;
   align-items: center;
 };
+.center--column {
+  @extend %center--column;
+};
 
 %center-vertically {
   display: flex;
@@ -202,6 +205,9 @@ body {
 .width70_percent {
   width: 70%;
 };
+.max-width75_percent {
+  max-width: 75%;
+};
 .width95vw {
   width: 95vw;
 };
@@ -224,6 +230,9 @@ body {
 .flex-fill-space{
   flex: 1 0 0;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+};
 //text
 .italic {
   font-style: italic;

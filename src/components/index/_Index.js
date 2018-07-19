@@ -33,7 +33,7 @@ class Index extends React.Component {
     showDetailsModal: false,
     showOnMap: false,
     showDeleteModal: false,
-    showOrientationModal: false,
+    showOrientationModal: true,
     detailsEvent: undefined,
     stateLoaded: false,
     showOptions: false,
@@ -184,7 +184,7 @@ class Index extends React.Component {
 
     this.setState(() => ({ ...stateToChange }));
   };
-  
+
   render() {
     return(
       <div className = "index">
@@ -291,7 +291,11 @@ class Index extends React.Component {
           }
 
           {(this.state.showOrientationModal) &&
-            <Modal>
+            <Modal
+              close = {this.closeModal}
+              classNames = "scrollable"
+              deviceType = {this.state.deviceType}
+            >
               <OrientationModal
                 closeModal = {
                   () => {

@@ -16,7 +16,7 @@ class OrientationModal extends React.Component {
     return (
      <div className = "modal-item-container">
 
-       <div className = "header--modal">
+       <div className = "header-modal">
          <div className = "size2">
            You're in! A couple of things to get you started:
          </div>

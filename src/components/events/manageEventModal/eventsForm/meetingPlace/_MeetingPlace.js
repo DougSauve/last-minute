@@ -123,6 +123,7 @@ class MeetingPlace extends React.Component {
             setCurrentPlace = {this.props.setCurrentPlace}
             setCurrentCoordinates = {this.props.setCurrentCoordinates}
             setCurrentAddress = {this.props.setCurrentAddress}
+            homeLocation = {this.props.user.currentHomeLocation}
           />
         }
 

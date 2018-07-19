@@ -412,6 +412,7 @@ class Profile extends React.Component {
             mapNote = {'Choose a new home location on the map or enter an address instead. Your location is only used to calculate distance from events. The more specific, the more accurate distances will be, but an approximate location is fine.'}
             place = {this.props.place}
             mapError = {this.props.mapError}
+            homeLocation = {this.props.user.currentHomeLocation}
           />
         }
 

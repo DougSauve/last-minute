@@ -23,6 +23,7 @@ class SetPositionOnMapModal extends React.Component {
   //   place (string)
   //   mapError (String)
   //   mode (optional prop about whether to show map info from previous set)
+  //   homeLocation - current home location
 
   state = {
     initialCenter: null,
@@ -41,19 +42,33 @@ class SetPositionOnMapModal extends React.Component {
     //if mode = update, reset currentLocation info since they're making a new meetingPlace.
     if (this.props.mode && this.props.mode === "update") {
       this.props.setCurrentPlace('');
-      this.props.setCurrentCoordinates({lat: 35, lng: -92});
+      this.props.setCurrentCoordinates({lat: this.props.homeLocation.lat, lng: this.props.homeLocation.lng});
       this.props.setCurrentAddress('');
     };
 
-    //set initial position in state - start at USA map
-    this.setState(() => ({
-      initialCenter: {
-        lat: 35,
-        lng:-92,
-      },
-      address: '',
-      readyForMap: true,
-    }));
+    //set initial position in state - start at homeLocation (or USA map if none is passed in)
+
+    if (this.props.homeLocation) {
+      console.log('lat and lng:', this.props.homeLocation.location.lat, this.props.homeLocation.location.lng);
+      this.setState(() => ({
+        initialCenter: {
+          lat: this.props.homeLocation.location.lat,
+          lng: this.props.homeLocation.location.lng,
+        },
+        zoom: 15,
+        address: '',
+        readyForMap: true,
+      }));
+    } else {
+      this.setState(() => ({
+        initialCenter: {
+          lat: 35,
+          lng:-92,
+        },
+        address: '',
+        readyForMap: true,
+      }));
+    };
 
     //if a starting location was passed in from google maps
     setPositionToStore().then((location) => {

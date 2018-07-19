@@ -73,8 +73,14 @@
 
 //mobile-landscape
 @media (min-width: $ds) {
+  .header--events {
+    position: absolute;
+  };
   //desktop
   @media (min-height: $ds) {
+    .header--events {
+      position: fixed;
+    };
     .header__events--small {
       height: 8rem;
     };
