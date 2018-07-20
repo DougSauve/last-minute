@@ -13,20 +13,20 @@
   <body>
     <div id = "app">
       If you are seeing this message, LastMinute is not compatible with the device you are using. This is a known issue and is being worked on. Known non-compatible environments include: iOS 10, OSX (uncertain which version)
-      <button onclick = "showlocation()">show</button>
+      <button onClick = "showLocation()">show</button>
     </div>
 
     <script>
-      function show() {
-        document.getElementById('app').innerHTML = "window" + window.location.pathname + "<br />document" + document.location.pathname;
-      }
+      function showLocation() {
+        alert("window" + window.location.pathname + "<br />document" + document.location.pathname);
+      };
     </script>
 
     <noscript>
       JavaScript must be enabled in order for this app to run.
     </noscript>
 
-    <script src = "/socket.io/socket.io.js"></script>
-    <script src="./bundle.js"></script>
+    <!-- <script src = "/socket.io/socket.io.js"></script>
+    <script src="./bundle.js"></script> -->
   </body>
 </html>
