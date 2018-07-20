@@ -18,16 +18,19 @@ import Landing from './components/landing/_Landing';
 import Index from './components/index/_Index';
 import Profile from './components/profile/_Profile';
 import Events from './components/events/_Events';
-console.log('pathname:', 'win', window.location.pathname, 'doc', document.location.pathname);
+
+// console.log('pathname:', 'win', window.location.pathname, 'doc', document.location.pathname);
 //router
 const Router = () => {
-    switch (window.location.pathname) {
-      case '/': return <Landing socket = {socket} />;
-      case '/index': return <Index socket = {socket} />;
-      case '/profile': return <Profile socket = {socket} />;
-      case '/events': return <Events socket = {socket} />;
-      default:
-      return <NotFound />;
+  return <div>{'win' + window.location.pathname + 'doc' + document.location.pathname}</div>
+
+    // switch (window.location.pathname) {
+    //   case '/': return <Landing socket = {socket} />;
+    //   case '/index': return <Index socket = {socket} />;
+    //   case '/profile': return <Profile socket = {socket} />;
+    //   case '/events': return <Events socket = {socket} />;
+    //   default:
+    //   return <NotFound />;
   };
 };
 
