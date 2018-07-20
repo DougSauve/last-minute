@@ -31,7 +31,7 @@ const Router = () => {
     //   case '/events': return <Events socket = {socket} />;
     //   default:
     //   return <NotFound />;
-  };
+  // };
 };
 
 const WrappedApp = () => (
