@@ -18,7 +18,7 @@ import Landing from './components/landing/_Landing';
 import Index from './components/index/_Index';
 import Profile from './components/profile/_Profile';
 import Events from './components/events/_Events';
-
+console.log('pathname:', 'win', window.location.pathname, 'doc', document.location.pathname);
 //router
 const Router = () => {
     switch (window.location.pathname) {
