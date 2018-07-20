@@ -19,14 +19,12 @@ import Index from './components/index/_Index';
 import Profile from './components/profile/_Profile';
 import Events from './components/events/_Events';
 
-
+alert('1');
 //router
 const Router = () => {
 
     switch (window.location.pathname) {
-      case '/':
-      // return <Landing socket = {socket} />
-      alert('landing');
+      case '/': return <Landing socket = {socket} />;
       case '/index': return <Index socket = {socket} />;
       case '/profile': return <Profile socket = {socket} />;
       case '/events': return <Events socket = {socket} />;
