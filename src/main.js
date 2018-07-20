@@ -1,9 +1,9 @@
+alert('3');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import 'normalize.css/normalize.css';
-
-
+alert('2');
 import './base-styles/_Hub.scss';
 
 import Maintenance from './components/maintenance/maintenance';
@@ -19,7 +19,7 @@ import Index from './components/index/_Index';
 import Profile from './components/profile/_Profile';
 import Events from './components/events/_Events';
 
-alert('1');
+alert('1'); //iOS isn't reaching this point
 //router
 const Router = () => {
 
