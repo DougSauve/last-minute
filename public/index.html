@@ -12,15 +12,17 @@
   </head>
   <body>
     <div id = "app">
-      If you are seeing this message, LastMinute is not yet working with the environment you are using. This is a known issue and is being worked on. Known non-compatible environments include iOS 10 and OSX (uncertain which version)
+      Loading... may take a few seconds.
+
+      Please note that LastMinute uses technology that is not supported by iOS version 10 and earlier (iPhone 5 / iPad 4 and earlier). Other solutions are being worked on.
     </div>
 
     <noscript>
       JavaScript must be enabled in order for this app to run.
     </noscript>
 
-    <!-- older versions of iOS are not loading bundle.js. -->
     <script src = "/socket.io/socket.io.js"></script>
+    <!-- older versions of iOS are not loading bundle.js. This extends to other browsers used on iPhone 5 and lower. -->
     <script src="./bundle.js"></script>
   </body>
 </html>
