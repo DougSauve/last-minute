@@ -1,6 +1,6 @@
 @import '../../base-styles/Settings';
 
-.orientation__row {
+.orientation__list {
   margin-top: 1rem;
 
   display: flex;
@@ -30,13 +30,11 @@
 
   //desktop
   @media (min-height: $ds) {
-    .orientation__row {
-      flex-direction: row;
-      justify-content: space-evenly;
+    .orientation__list {
+      max-width: 50vw;
     };
 
     .orientation__item {
-      max-width: 33.3%;
       padding: 1rem;
     };
   };

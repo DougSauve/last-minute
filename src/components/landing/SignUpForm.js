@@ -137,9 +137,9 @@ class SignUpForm extends React.Component {
                     className = "input width17"
                     name = "ageRange"
                   >
-                    <option value = "1">under 18</option>
-                    <option value = "2">18-30</option>
-                    <option value = "3">30-45</option>
+                    <option value = "1">18-25</option>
+                    <option value = "2">25-35</option>
+                    <option value = "3">35-45</option>
                     <option value = "4">45-60</option>
                     <option value = "5">60+</option>
                   </select>
