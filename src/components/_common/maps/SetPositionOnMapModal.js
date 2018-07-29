@@ -2,6 +2,7 @@ import React from 'react';
 import './SetPositionOnMapModal.scss';
 
 import { GoogleApiWrapper, Map, Marker } from 'google-maps-react';
+import apiKey from './apiKey';
 
 import Modal from '../modal/_Modal';
 import { getCoords } from './Geocode';
@@ -255,4 +256,4 @@ class SetPositionOnMapModal extends React.Component {
   };
 };
 
-export default GoogleApiWrapper({ apiKey: 'AIzaSyDA9D9WAez1LHMwXWEiOsPF_G5Iwgk6RQs' })(SetPositionOnMapModal);
+export default GoogleApiWrapper({ apiKey })(SetPositionOnMapModal);
